@@ -44,3 +44,5 @@ description: 다운받은 Jekyll 테마를 Github에 올려 블로깅
 ![Github Blog5]({{site.static_url}}/img/github/github-blog-init5.png)
 
 ### 페이지가 적용 되기까지 최소 30초에서 최대 3분이 걸릴 수 있음<br>홈페이지를 클릭 해보면 다운받은 테마가 개인 블로그로 설정 완료
+
+### 1. [local에서 블로그 수정](https://msnodeve.github.io/github/2019-01-09-github-blog-local/) 설치

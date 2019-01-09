@@ -26,7 +26,7 @@ description: \[Jekyll\] 윈도우에서 지킬 설치 및 블로그 생성
 
 # 3. Local에서 블로그 실행하기
 
-### 루비 콘솔창에서 이전 포스팅에서 생성한 블로그의 깃허브 저장소와 연동된 폴더로 이동
+### 루비 콘솔창에서 [이전 포스팅](https://msnodeve.github.io/github/2019-01-08-github-blog-init/)에서 생성한 블로그의 깃허브 저장소와 연동된 폴더로 이동
     > cd C:\User\Seok\...\msnodeve.github.io
     인코딩 에러 발생시 다음의 코드 실행
     > chcp 65001
