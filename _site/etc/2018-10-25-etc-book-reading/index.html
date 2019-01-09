@@ -35,20 +35,20 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 
   
 <!-- Begin Jekyll SEO tag v2.5.0 -->
-<title>Docker 설치 | Msno_Dev</title>
+<title>사이트 신뢰성 엔지니어링 도서 | Msno_Dev</title>
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="Docker 설치" />
+<meta property="og:title" content="사이트 신뢰성 엔지니어링 도서" />
 <meta name="author" content="msnoDev" />
 <meta property="og:locale" content="en" />
-<meta name="description" content="CentOS7 에서의 Docker-compose 설치 방법" />
-<meta property="og:description" content="CentOS7 에서의 Docker-compose 설치 방법" />
-<link rel="canonical" href="http://localhost:4000/infra/2019-01-08-linux-docker-compose/" />
-<meta property="og:url" content="http://localhost:4000/infra/2019-01-08-linux-docker-compose/" />
+<meta name="description" content="사이트 신뢰성 엔지니어링 도서 읽기" />
+<meta property="og:description" content="사이트 신뢰성 엔지니어링 도서 읽기" />
+<link rel="canonical" href="http://localhost:4000/etc/2018-10-25-etc-book-reading/" />
+<meta property="og:url" content="http://localhost:4000/etc/2018-10-25-etc-book-reading/" />
 <meta property="og:site_name" content="Msno_Dev" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-01-08T00:18:00+09:00" />
+<meta property="article:published_time" content="2018-10-25T17:23:00+09:00" />
 <script type="application/ld+json">
-{"url":"http://localhost:4000/infra/2019-01-08-linux-docker-compose/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/icons/icon.png"},"name":"msnoDev"},"headline":"Docker 설치","dateModified":"2019-01-08T00:18:00+09:00","datePublished":"2019-01-08T00:18:00+09:00","description":"CentOS7 에서의 Docker-compose 설치 방법","author":{"@type":"Person","name":"msnoDev"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/infra/2019-01-08-linux-docker-compose/"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"http://localhost:4000/etc/2018-10-25-etc-book-reading/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/icons/icon.png"},"name":"msnoDev"},"headline":"사이트 신뢰성 엔지니어링 도서","dateModified":"2018-10-25T17:23:00+09:00","datePublished":"2018-10-25T17:23:00+09:00","description":"사이트 신뢰성 엔지니어링 도서 읽기","author":{"@type":"Person","name":"msnoDev"},"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/etc/2018-10-25-etc-book-reading/"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -76,7 +76,7 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 
 
 
-<link rel="alternate" href="http://localhost:4000/infra/2019-01-08-linux-docker-compose/" hreflang="en">
+<link rel="alternate" href="http://localhost:4000/etc/2018-10-25-etc-book-reading/" hreflang="en">
 
 <link rel="shortcut icon" href="/assets/icons/favicon.ico">
 <link rel="apple-touch-icon" href="/assets/icons/icon.png">
@@ -193,17 +193,17 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 
 
 
-<article id="post-infra-linux-docker-compose" class="page post mb6" role="article">
+<article id="post-etc-etc-book-reading" class="page post mb6" role="article">
   <header>
     <h1 class="post-title">
       
-        Docker 설치
+        사이트 신뢰성 엔지니어링 도서
       
     </h1>
 
     <p class="post-date heading">
       
-      <time datetime="2019-01-08T00:18:00+09:00">08 Jan 2019</time>
+      <time datetime="2018-10-25T17:23:00+09:00">25 Oct 2018</time>
       
       
       
@@ -218,7 +218,7 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 
 
 
-in <a href="/infra/" class="flip-title">Infra</a>
+in <a href="/etc/" class="flip-title">Etc.</a>
 
       
 
@@ -243,7 +243,7 @@ in <a href="/infra/" class="flip-title">Infra</a>
 
   
     <p class="message" >
-      CentOS7 에서의 Docker-compose 설치 방법
+      사이트 신뢰성 엔지니어링 도서 읽기
 
     </p>
   
@@ -253,50 +253,22 @@ in <a href="/infra/" class="flip-title">Infra</a>
 
   
     
-<h2 id="옛-버전-삭제">옛 버전 삭제</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># yum remove docker \
-             docker-common \
-             docker-selinux \
-             docker-engine
-</code></pre></div></div>
+<h1 id="제목--사이트-신뢰성-엔지니어링">제목 : 사이트 신뢰성 엔지니어링</h1>
+<p>
+  <hy-img root-margin="512px"  src="/img/etc/Site_Reliability_Engineering_Book.png" alt="Book" >
+    <noscript><img data-ignore  src="/img/etc/Site_Reliability_Engineering_Book.png" alt="Book" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
 
-<h3 id="서비스를-내리고-docker를-삭제해도-varlibdocker-폴더는-지워지지-않고-여기에-기존-데이터가-모두-남아있다">서비스를 내리고 docker를 삭제해도 /var/lib/docker/ 폴더는 지워지지 않고 여기에 기존 데이터가 모두 남아있다.</h3>
+<p>저자 : 벳시 베이어 크리스 존스 제니퍼 펫오프</p>
 
-<h2 id="필수-패키지-설치">필수 패키지 설치</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># yum install -y yum-utils device-mapper-persistent-data lvm2
-docker repo를 등록한다.
-# yum-config-manager \
-            --add-repo \
-            https://download.docker.com/linux/centos/docker-ce.repo
-yum package를 업데이트
-# yum makecache fast
-</code></pre></div></div>
+<p>Google에서 출판한 책으로,</p>
 
-<h2 id="다운로드">다운로드</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># yum install docker-ce
-</code></pre></div></div>
+<p>2018년 10월 23일에 책을 주문하였다.</p>
 
-<h2 id="실행">실행</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># systemctl start docker
-# systemctl enable docker
-# docker --version
-Docker version 17.06.0-ce, build 02c1d87
-</code></pre></div></div>
-
-<h1 id="docker-compose-설치">Docker-compose 설치</h1>
-
-<h2 id="다운로드-1">다운로드</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose
-</code></pre></div></div>
-
-<h2 id="실행-권한-부여">실행 권한 부여</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># chmod +x /usr/local/bin/docker-compose
-설치 확인
-#docker-compose --version
-docker-compose version 1.14.0, build 1719ceb
-</code></pre></div></div>
-
-<h3 id="설치-완료">설치 완료</h3>
+<p>도서가 오면 바로 책을 읽어볼 예정이다.</p>
 
   
 </article>
@@ -326,8 +298,8 @@ docker-compose version 1.14.0, build 1719ceb
     
     src="https://placehold.it/128x128"
     class="avatar"
-    alt="<firstname> <lastname>"
-    srcset="https://placehold.it/128x128 1x,https://placehold.it/256x256 2x"
+    alt="MsnoDev"
+    
     
   
     
@@ -336,8 +308,8 @@ docker-compose version 1.14.0, build 1719ceb
     <noscript><img data-ignore 
     src="https://placehold.it/128x128"
     class="avatar"
-    alt="<firstname> <lastname>"
-    srcset="https://placehold.it/128x128 1x,https://placehold.it/256x256 2x"
+    alt="MsnoDev"
+    
     
   /></noscript>
     <span class="loading" slot="loading" hidden>
@@ -354,16 +326,13 @@ docker-compose version 1.14.0, build 1719ceb
     About
   </h2>
 
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-
-<p>Open <code class="highlighter-rouge">_data/authors.yml</code> to edit this text.</p>
-
-<p><a href="https://github.com/qwtel/hydejack-starter-kit/archive/v8.0.0-beta.7.zip">Download Free</a>
-– or –
-<a href="https://app.simplegoods.co/i/NATYVLYT">Buy PRO</a></p>
-
+  <p>학교공부는 그만, 새로운 것을 보고 배우기
+개발</p>
+<ul>
+  <li>Android</li>
+  <li>Javascript</li>
+  <li>LeapMotion</li>
+</ul>
 
 
   <div class="sidebar-social">
@@ -387,9 +356,9 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
   
 
   <li>
-    <a href="https://twitter.com/<username>" title="Twitter" class="no-mark-external">
-      <span class="icon-twitter"></span>
-      <span class="sr-only">Twitter</span>
+    <a href="https://github.com/msnodeve" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
     </a>
   </li>
 
@@ -411,9 +380,33 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
   
 
   <li>
-    <a href="https://github.com/<username>" title="GitHub" class="no-mark-external">
-      <span class="icon-github"></span>
-      <span class="sr-only">GitHub</span>
+    <a href="mailto:msnodeve@gmail.com" title="Email" class="no-mark-external">
+      <span class="icon-mail"></span>
+      <span class="sr-only">Email</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://msnodeve.github.io/" title="Blogger" class="no-mark-external">
+      <span class="icon-blogger"></span>
+      <span class="sr-only">Blogger</span>
     </a>
   </li>
 
@@ -438,25 +431,6 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 
 
 
-
-<aside class="related mb4" role="complementary">
-  <h2 class="hr">Related Posts</h2>
-
-  <ul class="related-posts">
-    
-      
-
-
-<li>
-  <a href="/infra/2019-01-07-linux-yum/" class="h4 flip-title">
-    <span>레드헷 리눅스에서 패키지를 손 쉽게 업데이트 하게 해주는 명령어 yum 사용중 아래와 같은 에러가 발생</span>
-  </a>
-  <time class="heading faded fine" datetime="2019-01-07T23:59:00+09:00">07 Jan 2019</time>
-</li>
-
-    
-  </ul>
-</aside>
 
 
   
@@ -526,7 +500,7 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
         <a
           id="_navigation"
           href="/etc/"
-          class="sidebar-nav-item"
+          class="sidebar-nav-item active"
           
           >
           Etc.
@@ -552,7 +526,7 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
         <a
           
           href="/infra/"
-          class="sidebar-nav-item active"
+          class="sidebar-nav-item"
           
           >
           Infra
@@ -613,9 +587,9 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
   
 
   <li>
-    <a href="https://twitter.com/<username>" title="Twitter" class="no-mark-external">
-      <span class="icon-twitter"></span>
-      <span class="sr-only">Twitter</span>
+    <a href="https://github.com/msnodeve" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
     </a>
   </li>
 
@@ -637,9 +611,33 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
   
 
   <li>
-    <a href="https://github.com/<username>" title="GitHub" class="no-mark-external">
-      <span class="icon-github"></span>
-      <span class="sr-only">GitHub</span>
+    <a href="mailto:msnodeve@gmail.com" title="Email" class="no-mark-external">
+      <span class="icon-mail"></span>
+      <span class="sr-only">Email</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://msnodeve.github.io/" title="Blogger" class="no-mark-external">
+      <span class="icon-blogger"></span>
+      <span class="sr-only">Blogger</span>
     </a>
   </li>
 
