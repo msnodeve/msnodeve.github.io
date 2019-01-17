@@ -33,8 +33,28 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 
 
-  <meta http-equiv="refresh" content="0; url=http://localhost:4000/forms-by-example/">
-  <title>Redirecting…</title>
+  
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Flask-Python 개발 환경 구축하여 배포까지(1) | Msno_Dev</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Flask-Python 개발 환경 구축하여 배포까지(1)" />
+<meta name="author" content="msnoDev" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Flask-Python 개발 환경 구축" />
+<meta property="og:description" content="Flask-Python 개발 환경 구축" />
+<link rel="canonical" href="http://localhost:4000/infra/2019-01-10-infra-python-build1/" />
+<meta property="og:url" content="http://localhost:4000/infra/2019-01-10-infra-python-build1/" />
+<meta property="og:site_name" content="Msno_Dev" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-01-10T21:25:00+09:00" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/infra/2019-01-10-infra-python-build1/"},"url":"http://localhost:4000/infra/2019-01-10-infra-python-build1/","headline":"Flask-Python 개발 환경 구축하여 배포까지(1)","datePublished":"2019-01-10T21:25:00+09:00","dateModified":"2019-01-10T21:25:00+09:00","author":{"@type":"Person","name":"msnoDev"},"description":"Flask-Python 개발 환경 구축","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/icons/m-logo-black.png"},"name":"msnoDev"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  
+
+  
 
 
 <meta name="mobile-web-app-capable" content="yes">
@@ -56,7 +76,7 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 
 
 
-<link rel="alternate" href="http://localhost:4000/docs/7.5.0/forms-by-example/" hreflang="en">
+<link rel="alternate" href="http://localhost:4000/infra/2019-01-10-infra-python-build1/" hreflang="en">
 
 <link rel="shortcut icon" href="/assets/icons/favicon.ico">
 <link rel="apple-touch-icon" href="/assets/icons/icon.png">
@@ -159,7 +179,7 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
   
     <main
   id="_main"
-  class="content fade-in layout-redirect"
+  class="content fade-in layout-post"
   role="main"
   data-color="rgb(79,177,186)"
   data-theme-color="rgb(25,55,71)"
@@ -168,12 +188,380 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
     data-overlay
   
   >
-  <div class="page">
-  <h1 class="page-title">Redirecting…</h1>
-  <p class="lead"><a href="http://localhost:4000/forms-by-example/">http://localhost:4000/forms-by-example/</a></p>
-</div>
+  
+
+
+
+
+<article id="post-infra-infra-python-build1" class="page post mb6" role="article">
+  <header>
+    <h1 class="post-title">
+      
+        Flask-Python 개발 환경 구축하여 배포까지(1)
+      
+    </h1>
+
+    <p class="post-date heading">
+      
+      <time datetime="2019-01-10T21:25:00+09:00">10 Jan 2019</time>
+      
+      
+      
+      
+      
+
+
+
+
+
+
+
+
+
+in <a href="/infra/" class="flip-title">Infra</a>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+    </p>
+
+    
+    
+
+    
+
+
 
   
+    <p class="message" >
+      Flask-Python 개발 환경 구축
+
+    </p>
+  
+
+
+  </header>
+
+  
+    
+<h3 id="포스팅에-사용-될-것">포스팅에 사용 될 것</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Docker, Docker-compose, Python3.6, Flask, Mysql
+</code></pre></div></div>
+
+<h2 id="docker"><em>Docker</em></h2>
+
+<h3 id="dockerfile-작성">Dockerfile 작성</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM centos:7
+MAINTAINER msnodeve &lt;msnodeve@gmail.com&gt;
+ENV LANG=en_US.utf8 \
+    LC_ALL=en_US.utf8
+RUN yum install -y http://centos7.iuscommunity.org/ius-release.rpm &amp;&amp; \
+    yum install -y vimclear python36u python36u-pip python36u-devel &amp;&amp; \
+    pip3.6 install pipenv
+VOLUME /code
+VOLUME ["/code"]
+# FROM : 어떤 이미지를 기반으로 할지 설정
+# MAINTAINER : 메인 테이너 정보
+# ENV : 환경 변수 설정
+# RUN : Shell 스크립트 혹은 명령을 실행
+#       이미지 생성 중에는 사용자가 입력 받을 수 없으므로 -y 옵션을 사용
+# VOLUME : 호스트(local내부)와 공유할 디렉터리 목록
+</code></pre></div></div>
+
+<h3 id="makefile-작성">Makefile 작성</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>build:
+    docker build -t mydocker:latest .
+
+run: build
+    docker run --privileged -d -p 6000:6000 -v $(pwd):/code --name mydocker mydocker:latest sbin/init
+
+stop:
+    docker stop mydocker
+
+remove: stop
+	docker rm mydocker
+
+.PHONY:
+	build run stop remove
+
+Makefile에 대한 이해
+# docker Container에 접속하기 위해
+# 'docker run --privileged -d -p 6000:6000 -v $(pwd):/code --name mydocker mydocker:latest sbin/init'
+# 의 명령어를 매번 수행하기 어려움을 해결하고자 사용
+# make run을 수행할 시 컨테이너가 생성이 되어 있지 않다면 build를 먼저 수행한 뒤 run을 수행
+# remove 또한 Container가 실행 중일 때 중지하고 삭제함
+</code></pre></div></div>
+
+<h3 id="docker-composeyml-작성">Docker-compose.yml 작성</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>version: '3.1'                      # 사용할 Docker Compose 문법의 버전을 정의
+services:
+    mydocker:                       # 실행할 컨테이너 이름을 정의
+    working_dir: /code              # 실행 시 작동 될 디렉토리 설정
+    build:                          # 빌드 옵션을 지정
+        context: .                  # Build 시 현재 디렉토리를 사용
+        dockerfile: ./Dockerfile    # Dockerfile을 기준으로 빌드(./ : 현재 이 파일의 위치)
+    image: mydocker:latest          # 사용할 이미지 이름과 태그를 정의
+    container_name: mydocker
+    hostname: mydocker
+    restart: always
+    ports:                          # 호스트 포트와 컨테이너 포트를 어떻게 연결할지 정의
+        - 6000:6000                 # &lt;호스트 포트&gt; : &lt;컨테이너 포트&gt;
+    volumes:                        # 로컬 디렉토리와 컨테이너 디렉토리를 code 폴더에 연결
+        - .:/code
+    tty: true
+</code></pre></div></div>
+
+<h1 id="설치">설치</h1>
+<h3 id="docker-docker-compose가-설치-안되어있다면-docker-docker-compose-설치작성한-docker-composeyml이-있는-폴더에서-다음-명령-수행">Docker, Docker-compose가 설치 안되어있다면, <a href="https://msnodeve.github.io/infra/2019-01-07-infra-docker-compose/">Docker, Docker-compose 설치</a><br /><br />작성한 docker-compose.yml이 있는 폴더에서 다음 명령 수행</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up -d
+</code></pre></div></div>
+
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-docker-compose1.png" alt="DockerCompose1" >
+    <noscript><img data-ignore  src="/img/infra/infra-docker-compose1.png" alt="DockerCompose1" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<h3>.<br />.<br />.<br /></h3>
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-docker-compose2.png" alt="DockerCompose2" >
+    <noscript><img data-ignore  src="/img/infra/infra-docker-compose2.png" alt="DockerCompose2" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<h3 id="사진-처럼-되면-성공">사진 처럼 되면 성공</h3>
+
+<h1 id="확인">확인</h1>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker ps       # 현재 실행 중인 docker container 확인
+docker ps -a    # 모든 docker container 확인 
+</code></pre></div></div>
+
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-docker-compose3.png" alt="DockerCompose3" >
+    <noscript><img data-ignore  src="/img/infra/infra-docker-compose3.png" alt="DockerCompose3" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+
+  
+</article>
+
+
+<hr class="dingbat related" />
+
+
+
+
+  
+     
+
+
+  <aside class="about related mt4 mb4" role="complementary">
+    
+    
+
+<div class="author mt4">
+  
+
+  
+    
+
+
+  <hy-img
+    
+    src="https://placehold.it/128x128"
+    class="avatar"
+    alt="MsnoDev"
+    
+    
+  
+    
+    root-margin="512px"
+  >
+    <noscript><img data-ignore 
+    src="https://placehold.it/128x128"
+    class="avatar"
+    alt="MsnoDev"
+    
+    
+  /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img>
+
+
+  
+
+  
+  
+  <h2  class="page-title hr">
+    About
+  </h2>
+
+  <p>학교공부는 그만, 새로운 것을 보고 배우기
+개발</p>
+<ul>
+  <li>Android</li>
+  <li>Javascript</li>
+  <li>LeapMotion</li>
+</ul>
+
+
+  <div class="sidebar-social">
+    <span class="sr-only">Social:</span>
+<ul>
+  
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://github.com/msnodeve" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="mailto:msnodeve@gmail.com" title="Email" class="no-mark-external">
+      <span class="icon-mail"></span>
+      <span class="sr-only">Email</span>
+    </a>
+  </li>
+
+
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://msnodeve.github.io/" title="Blogger" class="no-mark-external">
+      <span class="icon-blogger"></span>
+      <span class="sr-only">Blogger</span>
+    </a>
+  </li>
+
+
+    
+  
+</ul>
+
+  </div>
+</div>
+
+  </aside>
+
+
+  
+
+  
+  
+
+  
+    
+
+
+
+
+<aside class="related mb4" role="complementary">
+  <h2 class="hr">Related Posts</h2>
+
+  <ul class="related-posts">
+    
+      
+
+
+<li>
+  <a href="/infra/2019-01-08-infra-docker-compose/" class="h4 flip-title">
+    <span>Docker 설치</span>
+  </a>
+  <time class="heading faded fine" datetime="2019-01-08T00:18:00+09:00">08 Jan 2019</time>
+</li>
+
+    
+      
+
+
+<li>
+  <a href="/infra/2019-01-07-infra-yum/" class="h4 flip-title">
+    <span>레드헷 리눅스에서 패키지를 손 쉽게 업데이트 하게 해주는 명령어 yum 사용중 아래와 같은 에러가 발생</span>
+  </a>
+  <time class="heading faded fine" datetime="2019-01-07T23:59:00+09:00">07 Jan 2019</time>
+</li>
+
+    
+  </ul>
+</aside>
+
+
+  
+
+  
+  
+
+
+  
+<aside class="comments related" role="complementary">
+  <h2 class="hr">Comments</h2>
+  
+
+
+</aside>
+
 
   
 <footer role="contentinfo">
@@ -205,7 +593,7 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
       <div class="sidebar-about">
         
           <a class="no-hover" href="/" tabindex="-1">
-            <img src="/assets/icons/icon.png" class="avatar" alt="Msno_Dev" data-ignore />
+            <img src="/assets/icons/m-logo-black.png" class="avatar" alt="Msno_Dev" data-ignore />
           </a>
         
         <h2 class="h1"><a href="/">Msno_Dev</a></h2>
@@ -256,7 +644,7 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
         <a
           
           href="/infra/"
-          class="sidebar-nav-item"
+          class="sidebar-nav-item active"
           
           >
           Infra
@@ -386,13 +774,26 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 </hy-push-state>
 
 
-  <script>!function(w, d) {
-    var h = new Date().getHours();
-    var m = h <= 6 || h >= 18 ? 'add' : 'remove';
-    d.body.classList[m]('dark-mode');
-  }(window, document);</script>
 
 
+  <!--[if !IE]><!---->
+  <script>loadJSDeferred(document.getElementById('_hrefJS').href);</script>
+  
+
+  <!--<![endif]-->
+
+  
+
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      
+        navigator.serviceWorker.getRegistration()
+          .then(r => r.unregister())
+          .catch(() => {});
+      
+    }
+  </script>
 
 
 
