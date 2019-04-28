@@ -10,6 +10,7 @@ description: AWS의 EC2에 대한 이야기
 # AWS의 EC2란?
 ## EC2란 Elastic Compute Cloud의 줄인말이다.
 
+
 당연하겠지만 빌려쓰는 것 이기 때문에 사용료를 지불해야한다. 사용하는 방식(비용을 지불하려고하는 형태)에는 4가지의 방식이있다.
 [AWS 요금형식](https://aws.amazon.com/ko/ec2/pricing/) 링크를 들어가보면 4가지의 요금 형식이 있지만 2가지만 설명하겠다.
 ### 1. 온디멘드
