@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "AWS-EC2에 대해서 알아보기"
-date: 2019-04-26 15:18:00 +0900
+date: 2019-05-01 19:20:00 +0900
 categories: infra
 description: AWS의 EC2에 대한 이야기
 ---
@@ -12,9 +12,14 @@ description: AWS의 EC2에 대한 이야기
 
 <p>자 이전 포스트에서 AWS의 컴퓨터 한대를 '빌려' 쓴다고 말했다. 그럼 이제 직접 빌려봐야하지 않을까!!? 빌려 써보도록 하자.</p>
 <p>그럼 지금부터 AWS의 EC2를 생성해서 접속까지 하는 것을 해보도록 하겠다.</p>
-<p><font size="2em">본 블로그는 12개월 무료인 프리 티어에 대해서 설명 드리며, 또 한 이번 포스트는 AWS에 이미 가입 되어있는 상태에서 진행되는 점 알려드립니다.</font></p>
+<p><font size="2em">본 블로그는 12개월 무료인 프리 티어에 대해서 설명 드리며, 또 한 이번 포스트는 AWS에 이미 가입 되어있는 상태에서 진행되는 점 알려드립니다.</font></p><br><br><br>
 
-<img src="{{site.static_url}}/img/infra/infra-aws-ec2-1.png" width="50%">
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-1.png"><br>
+<font size="5em"> <code> 서비스 > 컴퓨팅 > EC2 </code> </font>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-2.png"><br>
+
+    Region - 서울
 
 EC2에 대한 이야기 시작.
 
