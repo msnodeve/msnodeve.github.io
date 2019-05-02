@@ -12,14 +12,45 @@ description: AWS의 EC2에 대한 이야기
 
 <p>자 이전 포스트에서 AWS의 컴퓨터 한대를 '빌려' 쓴다고 말했다. 그럼 이제 직접 빌려봐야하지 않을까!!? 빌려 써보도록 하자.</p>
 <p>그럼 지금부터 AWS의 EC2를 생성해서 접속까지 하는 것을 해보도록 하겠다.</p>
-<p><font size="2em">본 블로그는 12개월 무료인 프리 티어에 대해서 설명 드리며, 또 한 이번 포스트는 AWS에 이미 가입 되어있는 상태에서 진행되는 점 알려드립니다.</font></p><br><br><br>
+<p><font size="2em">본 블로그는 12개월 무료인 프리 티어에 대해서 설명 드리며, 또 한 이번 포스트는 AWS에 이미 가입 되어있는 상태에서 진행되는 점 알려드립니다.</font></p><br><br><br> 시작합니다.
 
-<img src="{{site.static_url}}/img/infra/infra-aws-ec2-1.png"><br>
-<font size="5em"> <code> 서비스 > 컴퓨팅 > EC2 </code> </font>
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-1.png">
+- 서비스 > 컴퓨팅 > EC2
+<br><br><br><br>
 
-<img src="{{site.static_url}}/img/infra/infra-aws-ec2-2.png"><br>
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-2.png">
+- Region - 서울 이 되어있는지를 확인한다. (이유는 제일 아래 설명하겠다.)
+- 인스턴스 > 인스턴스 생성
+<br><br><br><br>
 
-    Region - 서울
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-3.png">
+- Amazon Linux > 선택<br>
+프리 티어에서도 스크롤을 아래로 내려다 보면 여러가지 인스턴스 들을 생성할 수있다.
+그중에 우리는 리눅스 인스턴스를 생성해서 접속해 보도록하겠다.
+<br><br><br><br>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-4.png">
+- 유형 - t2.micro (프리티어 사용가능) 확인
+- 검토 및 시작 (세부설정은 지금은 필요없으니 넘어가도록 하겠다.)
+이렇게 하면 우리는 1개의 CPU, 1GB 메모리가 달린 AWS 컴퓨터를 장만하기 시작한다.<br>
+다른 유형에 대해서는 프리티어가 아닌 경우 시간 또는 분 단위로 요금이 나온다, 이 경우에 대해서는 제일 아래에서 설명 하겠다.
+<br><br><br><br>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-5.png">
+- 시작하기
+<br><br><br><br>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-6.png">
+- 새 키 페어 생성
+- .pem 이라는 확장자를 가진 키이다. 잃어버리지 않도록 주의하며 키 이름을 설정하고 다운로드
+- 인스턴스 시작<br>
+키 페어는 오직 지금 밖에 다운로드만 가능하다. 그러니 잃어러비리 않도록 주의하자. 잃어버렸을 경우 방법이 있다. 그러나 좀 초급자에겐 어려울 수 있으니 여기서 는 설명하지 않도록 하겠다. (그냥 잃어버리지 말길 바란다...)
+<br><br><br><br>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-7.png">
+시작한 뒤 인스턴스를 보게 되면 'Pending' 이였다가 잠시 뒤 'running'으로 바뀌게 될 것이다.<br>
+이 상태가 되면 우리는 지금 AWS의 컴퓨터 한대를 장만 하게 된 것이다. 참 쉽죠?
+<br><br><br><br>
 
 EC2에 대한 이야기 시작.
 

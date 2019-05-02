@@ -1,17 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-01T23:21:51+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 EC2란?</title><link href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" rel="alternate" type="text/html" title="AWS의 EC2란?" /><published>2019-05-01T19:20:00+09:00</published><updated>2019-05-01T19:20:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-ec2</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/">&lt;h2 id=&quot;ec2란-elastic-compute-cloud의-줄인말이다&quot;&gt;EC2란 Elastic Compute Cloud의 줄인말이다.&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-02T13:15:20+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 EC2란?</title><link href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" rel="alternate" type="text/html" title="AWS의 EC2란?" /><published>2019-05-01T19:20:00+09:00</published><updated>2019-05-01T19:20:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-ec2</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/">&lt;h2 id=&quot;ec2란-elastic-compute-cloud의-줄인말이다&quot;&gt;EC2란 Elastic Compute Cloud의 줄인말이다.&lt;/h2&gt;
 
 &lt;p&gt;자 이전 포스트에서 AWS의 컴퓨터 한대를 '빌려' 쓴다고 말했다. 그럼 이제 직접 빌려봐야하지 않을까!!? 빌려 써보도록 하자.&lt;/p&gt;
 &lt;p&gt;그럼 지금부터 AWS의 EC2를 생성해서 접속까지 하는 것을 해보도록 하겠다.&lt;/p&gt;
 &lt;p&gt;&lt;font size=&quot;2em&quot;&gt;본 블로그는 12개월 무료인 프리 티어에 대해서 설명 드리며, 또 한 이번 포스트는 AWS에 이미 가입 되어있는 상태에서 진행되는 점 알려드립니다.&lt;/font&gt;&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt; 시작합니다.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-1.png&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;font size=&quot;5em&quot;&gt; &lt;code&gt; 서비스 &amp;gt; 컴퓨팅 &amp;gt; EC2 &lt;/code&gt; &lt;/font&gt;
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-1.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;서비스 &amp;gt; 컴퓨팅 &amp;gt; EC2
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-2.png&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-2.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Region - 서울 이 되어있는지를 확인한다. (이유는 제일 아래 설명하겠다.)&lt;/li&gt;
+  &lt;li&gt;인스턴스 &amp;gt; 인스턴스 생성
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Region - 서울
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-3.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Amazon Linux &amp;gt; 선택&lt;br /&gt;
+프리 티어에서도 스크롤을 아래로 내려다 보면 여러가지 인스턴스 들을 생성할 수있다.
+그중에 우리는 리눅스 인스턴스를 생성해서 접속해 보도록하겠다.
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-4.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;유형 - t2.micro (프리티어 사용가능) 확인&lt;/li&gt;
+  &lt;li&gt;검토 및 시작 (세부설정은 지금은 필요없으니 넘어가도록 하겠다.)
+이렇게 하면 우리는 1개의 CPU, 1GB 메모리가 달린 AWS 컴퓨터를 장만하기 시작한다.&lt;br /&gt;
+다른 유형에 대해서는 프리티어가 아닌 경우 시간 또는 분 단위로 요금이 나온다, 이 경우에 대해서는 제일 아래에서 설명 하겠다.
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-5.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;시작하기
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-6.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;새 키 페어 생성&lt;/li&gt;
+  &lt;li&gt;.pem 이라는 확장자를 가진 키이다. 잃어버리지 않도록 주의하며 키 이름을 설정하고 다운로드&lt;/li&gt;
+  &lt;li&gt;인스턴스 시작&lt;br /&gt;
+키 페어는 오직 지금 밖에 다운로드만 가능하다. 그러니 잃어러비리 않도록 주의하자. 잃어버렸을 경우 방법이 있다. 그러나 좀 초급자에겐 어려울 수 있으니 여기서 는 설명하지 않도록 하겠다. (그냥 잃어버리지 말길 바란다…)
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-ec2-7.png&quot; /&gt;
+시작한 뒤 인스턴스를 보게 되면 ‘Pending’ 이였다가 잠시 뒤 ‘running’으로 바뀌게 될 것이다.&lt;br /&gt;
+이 상태가 되면 우리는 지금 AWS의 컴퓨터 한대를 장만 하게 된 것이다. 참 쉽죠?
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;EC2에 대한 이야기 시작.&lt;/p&gt;
 
