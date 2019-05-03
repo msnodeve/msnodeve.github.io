@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-03T13:23:54+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 EC2란?</title><link href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" rel="alternate" type="text/html" title="AWS의 EC2란?" /><published>2019-05-01T19:20:00+09:00</published><updated>2019-05-01T19:20:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-ec2</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/">&lt;h2 id=&quot;ec2란-elastic-compute-cloud의-줄인말이다&quot;&gt;EC2란 Elastic Compute Cloud의 줄인말이다.&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-03T13:34:34+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 EC2란?</title><link href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" rel="alternate" type="text/html" title="AWS의 EC2란?" /><published>2019-05-01T19:20:00+09:00</published><updated>2019-05-01T19:20:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-ec2</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/">&lt;h2 id=&quot;ec2란-elastic-compute-cloud의-줄인말이다&quot;&gt;EC2란 Elastic Compute Cloud의 줄인말이다.&lt;/h2&gt;
 
 &lt;p&gt;자 이전 포스트에서 AWS의 컴퓨터 한대를 '빌려' 쓴다고 말했다. 그럼 이제 직접 빌려봐야하지 않을까!!? 빌려 써보도록 하자.&lt;/p&gt;
 &lt;p&gt;그럼 지금부터 AWS의 EC2를 생성해서 접속까지 하는 것을 해보도록 하겠다.&lt;/p&gt;
@@ -174,8 +174,11 @@
 나의 AWS 사용 동기는 이와 같다. &lt;u&gt;나와 같은 사람&lt;/u&gt;이 있을 것이라 생각하며, 또 &lt;u&gt;AWS에 이제 관심을 갖기 시작한 사람들&lt;/u&gt;에게 본 블로그가 도움이 되었으면 한다.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p&gt;솔직히 말해 AWS에 대해서 깊이 다뤄보지 못했지만 AWS가 이런 것이다에 대해서 이해만 하길 바라며 읽어주길 바란다. 시작!&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;font size=&quot;5em&quot;&gt;&lt;u&gt;AWS는 어디에 위치해있는가?&lt;/u&gt;&lt;/font&gt;&lt;br /&gt;아마존 웹 서비스는 다음 그림과 같이 여러 지역(regions)에 위치해있다. 다음 그림에 표시된 곳에 엄청난 크기와 양의 컴퓨터가 있다. 우리는 AWS의 멤버(회원)이 되어 컴퓨터를 '빌려' 쓴다고 생각하면 된다. 다시말해 AWS에서 제공해주는 서비스를 이용해 내가 지금 내 컴퓨터에서 아마존 컴퓨터를 원격으로 사용하는 것이다. 이 말이 즉 클라우드 컴퓨팅이라고 생각하면 되겠다.&lt;/p&gt;
-
+&lt;h2 id=&quot;aws는-어디에-위치해있는가&quot;&gt;AWS는 어디에 위치해있는가?&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-region.png&quot; alt=&quot;aws-region&quot; /&gt;
+&lt;a href=&quot;http://jayendrapatil.com/aws-regions-availability-zones-and-edge-locations/&quot;&gt;AWS region 참조&lt;/a&gt; 관련 이미지&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;아마존 웹 서비스는 다음 그림과 같이 여러 지역(regions)에 위치해있다. 다음 그림에 표시된 곳에 엄청난 크기와 양의 컴퓨터가 있다. 우리는 AWS의 멤버(회원)이 되어 컴퓨터를 '빌려' 쓴다고 생각하면 된다. 다시말해 AWS에서 제공해주는 서비스를 이용해 내가 지금 내 컴퓨터에서 아마존 컴퓨터를 원격으로 사용하는 것이다. 이 말이 즉 클라우드 컴퓨팅이라고 생각하면 되겠다.&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p&gt;본 블로그에서는 프리티어(12개월 무료) 기준에 대해서 설명하며 AWS에서 제공하는 서비스에서 EC2, RDS, S3를 중심으로 여러가지를 살펴 보도록 하겠다. &lt;/p&gt;
 
 &lt;p&gt;&lt;br /&gt;AWS에 대해서 좀더 생각나면 쓰도록 하며 EC2에 대한 이야기를 시작하려면 다음 블로그로 이동합시다!&lt;/p&gt;
