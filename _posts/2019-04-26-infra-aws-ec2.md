@@ -60,10 +60,59 @@ description: AWS의 EC2에 대한 이야기
 
 <p>이제 EC2 인스턴스를 생성하고 껐다 켰다를 할 수 있게 되었다. 이제 EC2에 접속을 해봐야 하지 않는가!</p>
 
+<p><strong>Mac OS X</strong>에서 접속하는 방법과 <strong>Windows 10</strong>에서 접속하는 방법. 이 두 가지에 대해서 설명하고자 한다.</p>
 
+## Mac OS X 접속 방법
 
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-11.png">
+- 생성한 인스턴스 클릭 > 퍼블릭 DNS 기억
+<br><br><br><br>
 
-<p>다음으론 EC2 요금에 대해서 한번 알아보도록 하자.<br><br></p>
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-10.png">
+- 터미널 오픈 > 인스턴스를 생성할 때 다운로드 받은 키가 존재하는 폴더로 이동
+```
+    # chmod 400 <다운로드 받은 키.pem>
+    SSH가 작동하려면 키가 공개적으로 표시되지 않아야 한다. 필요할 경우 이 명령을 사용.
+    # sudo ssh -i "<다운로드 받은 키.pem>" <본인 인스턴스의 퍼블릭 DNS>
+    sudo 명령어로 관리자 권한으로 실행을 하게 될 시 비밀번호를 물어본다. 이 경우 Mac 비밀번호이다.
+```
+<br>
+
+## Windows 10 접속 방법
+본 블로그에서는 [Putty 프로그램](https://www.putty.org/)을 이용해서 접속을 할 것이다.
+```
+    시작 > 모든 프로그램 > puTTY > PuTTYgen 선택
+```
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-13.png">
+- 생성 키의 종류 - RSA
+- Load
+<br><br>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-12.png">
+- All Files(*.*) > "다운로드 받은 키"
+- Save Private Key(PuTTY가 사용할수 있는 형식으로 .ppk 비공개 키 저장)
+<br><br>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-14.png">
+- Host Name(or IP address) : 본인의 인스턴스의 퍼블릭 DNS
+- Port : 22
+- Connection type : SSH
+- Category > Connection > SSH > auth
+<br><br>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-15.png">
+- Browse.. > 비공개로 저장했던 키를 검색
+- Open
+<br><br>
+
+<img src="{{site.static_url}}/img/infra/infra-aws-ec2-16.png">
+<p>SSH를 서버에 등록하겠냐는 문구가 뜨면 당연히 Yes를 클릭하고 로그인한다.<br>
+로그인 ID : ec2-user<br></p>
+<br><br><br>
+<p><font size="5em">여러분들은 이제 AWS의 컴퓨터 한대를 빌려 접속을 성공했다!</font></p>
+<br><br><br><br>
+
+<p>다음으론 <font size="5em"><u>EC2 요금</u></font>에 대해서 한번 알아보도록 하자.</p>
 
 <p>당연하겠지만 빌려쓰는 것 이기 때문에 사용료를 지불해야한다. 사용하는 방식(비용을 지불하려고하는 형태)에는 4가지의 방식이있다.</p>
 

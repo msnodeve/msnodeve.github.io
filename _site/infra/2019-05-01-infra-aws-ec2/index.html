@@ -368,7 +368,112 @@ in <a href="/infra/" class="flip-title">Infra</a>
 
 <p>이제 EC2 인스턴스를 생성하고 껐다 켰다를 할 수 있게 되었다. 이제 EC2에 접속을 해봐야 하지 않는가!</p>
 
-<p>다음으론 EC2 요금에 대해서 한번 알아보도록 하자.<br /><br /></p>
+<p><strong>Mac OS X</strong>에서 접속하는 방법과 <strong>Windows 10</strong>에서 접속하는 방법. 이 두 가지에 대해서 설명하고자 한다.</p>
+
+<h2 id="mac-os-x-접속-방법">Mac OS X 접속 방법</h2>
+
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-11.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-11.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<ul>
+  <li>생성한 인스턴스 클릭 &gt; 퍼블릭 DNS 기억
+<br /><br /><br /><br /></li>
+</ul>
+
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-10.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-10.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<ul>
+  <li>터미널 오픈 &gt; 인스턴스를 생성할 때 다운로드 받은 키가 존재하는 폴더로 이동
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  # chmod 400 &lt;다운로드 받은 키.pem&gt;
+  SSH가 작동하려면 키가 공개적으로 표시되지 않아야 한다. 필요할 경우 이 명령을 사용.
+  # sudo ssh -i "&lt;다운로드 받은 키.pem&gt;" &lt;본인 인스턴스의 퍼블릭 DNS&gt;
+  sudo 명령어로 관리자 권한으로 실행을 하게 될 시 비밀번호를 물어본다. 이 경우 Mac 비밀번호이다.
+</code></pre></div>    </div>
+    <p><br /></p>
+  </li>
+</ul>
+
+<h2 id="windows-10-접속-방법">Windows 10 접속 방법</h2>
+<p>본 블로그에서는 <a href="https://www.putty.org/">Putty 프로그램</a>을 이용해서 접속을 할 것이다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    시작 &gt; 모든 프로그램 &gt; puTTY &gt; PuTTYgen 선택
+</code></pre></div></div>
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-13.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-13.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<ul>
+  <li>생성 키의 종류 - RSA</li>
+  <li>Load
+<br /><br /></li>
+</ul>
+
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-12.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-12.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<ul>
+  <li>All Files(<em>.</em>) &gt; “다운로드 받은 키”</li>
+  <li>Save Private Key(PuTTY가 사용할수 있는 형식으로 .ppk 비공개 키 저장)
+<br /><br /></li>
+</ul>
+
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-14.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-14.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<ul>
+  <li>Host Name(or IP address) : 본인의 인스턴스의 퍼블릭 DNS</li>
+  <li>Port : 22</li>
+  <li>Connection type : SSH</li>
+  <li>Category &gt; Connection &gt; SSH &gt; auth
+<br /><br /></li>
+</ul>
+
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-15.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-15.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<ul>
+  <li>Browse.. &gt; 비공개로 저장했던 키를 검색</li>
+  <li>Open
+<br /><br /></li>
+</ul>
+
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-16.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-16.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<p>SSH를 서버에 등록하겠냐는 문구가 뜨면 당연히 Yes를 클릭하고 로그인한다.<br />
+로그인 ID : ec2-user<br /></p>
+<p><br /><br /><br /></p>
+<p><font size="5em">여러분들은 이제 AWS의 컴퓨터 한대를 빌려 접속을 성공했다!</font></p>
+<p><br /><br /><br /><br /></p>
+
+<p>다음으론 <font size="5em"><u>EC2 요금</u></font>에 대해서 한번 알아보도록 하자.</p>
 
 <p>당연하겠지만 빌려쓰는 것 이기 때문에 사용료를 지불해야한다. 사용하는 방식(비용을 지불하려고하는 형태)에는 4가지의 방식이있다.</p>
 
