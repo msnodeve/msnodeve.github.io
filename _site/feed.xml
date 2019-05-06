@@ -1,4 +1,174 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-06T21:03:33+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 EC2란?</title><link href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" rel="alternate" type="text/html" title="AWS의 EC2란?" /><published>2019-05-01T19:20:00+09:00</published><updated>2019-05-01T19:20:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-ec2</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/">&lt;h2 id=&quot;ec2란-elastic-compute-cloud의-줄인말이다&quot;&gt;EC2란 Elastic Compute Cloud의 줄인말이다.&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-06T22:01:13+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 S3란?</title><link href="http://localhost:4000/infra/2019-05-06-infra-aws-s3/" rel="alternate" type="text/html" title="AWS의 S3란?" /><published>2019-05-06T21:12:00+09:00</published><updated>2019-05-06T21:12:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-s3</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-06-infra-aws-s3/">&lt;h2 id=&quot;s3란-simple-storage-services의-줄인말이다&quot;&gt;S3란 Simple Storage Services의 줄인말이다.&lt;/h2&gt;
+
+&lt;p&gt;자 이전 포스트에서 AWS의 EC2에 대해서 설명을 해보았고, 접속까지 해보았다.&lt;br /&gt;
+이제 S3에 대해서 설명을 좀 하고자 한다.&lt;/p&gt;
+&lt;p&gt;그전에 우리는 다음과 같은 가정을 세워 생각을 해보도록 하자.&lt;br /&gt;
+나는 어떠한 &lt;strong&gt;&lt;u&gt;중요한 파일&lt;/u&gt;&lt;/strong&gt;을 가지고 있다. 이 파일을 잃어버리면 큰일 난다. 그래서 나는 이 파일을 잃어버리면 안되겠다고 생각한다.&lt;br /&gt;
+만약 하드가 고장 날 수도 있고, 어떠한 폴더에 넣어뒀는데 그 폴더가 어디 있는지 기억이 안 나 잃어버리는 경우...&lt;br /&gt;
+이러한 위험성을 좀 해소하고자 &lt;u&gt;S3&lt;/u&gt;를 사용하기로 마음을 먹는다.&lt;br /&gt;
+S3는 내구성이 &lt;strong&gt;99.999999999%&lt;/strong&gt;이다. 이 말을 해석하자면 내가 S3에 파일을 업로드 한 경우에는 3개 이상의 여러 지역에 저장이 된다.&lt;br /&gt;
+한 건물이 무너져도 다른 지역에서 그 파일을 보존하고 있기 때문에 거의 파일을 잃어버리거나 증발할 경우는 없는 이러한 내구성을 가지고 있다.&lt;br /&gt;
+또한 S3는 이 세상 어디서든지 &lt;u&gt;인터넷&lt;/u&gt;만 연결되어 있으면 접근 가능하다.&lt;br /&gt;
+또 내가 업로드한 파일이 5년 뒤 나 10년 뒤에 쓸모가 없어 없애버렸으면 좋겠다, 6개월 뒤 더 저렴한 저장 공간(버킷)으로 옮겼으면 좋겠다는 자동화, 버전 관리 등등
+이런 기능뿐만 아니라 여러 가지 기능들을 제공하고 있다.&lt;del&gt;(내가 계속 AWS 좋다. AWS 써라. 이런 말 만하니까 광고하는 것 같지만 AWS의 광고하는 것이 아니니 오해말기 바람^^..)&lt;/del&gt;&lt;/p&gt;
+
+&lt;p&gt;이제 S3가 무엇인지와 S3를 활용해 웹을 띄워 보도록 하자!&lt;/p&gt;
+&lt;p&gt;그럼 지금부터 AWS의 S3를 이용해서 저장소를 한번 활용 해보도록 하겠다.&lt;/p&gt;
+&lt;p&gt;&lt;font size=&quot;2em&quot;&gt;본 블로그는 12개월 무료인 프리 티어에 대해서 설명드리며, 또 한 이번 포스트는 AWS에 이미 가입되어 있는 상태에서 진행되는 점 알려드립니다.&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt; 시작합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-1.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;서비스 &amp;gt; 스토리지 &amp;gt; S3
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-2.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;S3 서비스에서는 저장소하나를 생성 시키면 그 이름을 저장소라 부르지 않고 버킷(bucket)이라고 부른다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;버킷 &amp;gt; 버킷 만들기
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-3.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;버킷 이름은 전 세계 고유한 이름을 갖는다. 따라서 중복된 이름이 있을 수 있다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;버킷 이름을 설정&lt;/li&gt;
+  &lt;li&gt;다음
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-4.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;유형 - t2.micro (프리 티어 사용 가능) 확인&lt;/li&gt;
+  &lt;li&gt;검토 및 시작 (세부 설정은 지금은 필요 없으니 넘어가도록 하겠다.)
+이렇게 하면 우리는 1개의 CPU, 1GB 메모리가 달린 AWS 컴퓨터를 장만하기 시작한다.&lt;br /&gt;
+다른 유형에 대해서는 프리티 어가 아닌 경우 시간 또는 분 단위로 요금이 나온다, 이 경우에 대해서는 제일 아래에서 설명하겠다.
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-5.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;시작하기
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-6.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;새 키 페어 생성&lt;/li&gt;
+  &lt;li&gt;.pem이라는 확장자를 가진 키이다. 잃어버리지 않도록 주의하며 키 이름을 설정하고 다운로드&lt;/li&gt;
+  &lt;li&gt;인스턴스 시작&lt;br /&gt;
+키 페어는 오직 지금 밖에 다운로드만 가능하다. 그러니 잃어 버리지 않도록 주의하자. 잃어버렸을 경우 방법이 있다. 그러나 좀 초급자에겐 어려울 수 있으니 여기서는 설명하지 않도록 하겠다. (그냥 잃어버리지 말길 바란다…)
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-7.png&quot; /&gt;
+시작한 뒤 인스턴스를 보게 되면 ‘Pending’ 이였다가 잠시 뒤 ‘running’으로 바뀌게 될 것이다.&lt;br /&gt;
+이 상태가 되면 우리는 지금 AWS의 컴퓨터 한 대를 장만하게 된 것이다. 참 쉽죠?
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;지금부터 s3를 시작했으니 돈이 나가기 시작할 것이다. 그러나 걱정하지 말자. &lt;del&gt;우리는 12개월 동안 무료로 사용할 수 있는 프리 티어이니까!&lt;/del&gt;자 이제 인스턴스가 돈이 안 나가게 하는 방법에 대해서 알아보자. 의외로 간단하다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-8.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;해당 인스턴스 오른쪽 클릭 &amp;gt; 인스턴스 상태 &amp;gt; 중지&lt;br /&gt;
+이렇게 하면 해당 인스턴스가 최소 몇 초에서 최대 5분 내로 인스턴스의 상태가 ‘Stopped’의 상태가 된다.
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이제 s3 인스턴스를 생성하고 껐다 켰다를 할 수 있게 되었다. 이제 s3에 접속을 해봐야 하지 않는가!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Mac OS X&lt;/strong&gt;에서 접속하는 방법과 &lt;strong&gt;Windows 10&lt;/strong&gt;에서 접속하는 방법. 이 두 가지에 대해서 설명하고자 한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;mac-os-x-접속-방법&quot;&gt;Mac OS X 접속 방법&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-11.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;생성한 인스턴스 클릭 &amp;gt; 퍼블릭 DNS 기억
+&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-10.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;터미널 오픈 &amp;gt; 인스턴스를 생성할 때 다운로드 받은 키가 존재하는 폴더로 이동
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  # chmod 400 &amp;lt;다운로드 받은 키.pem&amp;gt;
+  SSH가 작동하려면 키가 공개적으로 표시되지 않아야 한다. 필요할 경우 이 명령을 사용.
+  # sudo ssh -i &quot;&amp;lt;다운로드 받은 키.pem&amp;gt;&quot; &amp;lt;본인 인스턴스의 퍼블릭 DNS&amp;gt;
+  sudo 명령어로 관리자 권한으로 실행을 하게 될 시 비밀번호를 물어본다. 이 경우 Mac 비밀번호이다.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;windows-10-접속-방법&quot;&gt;Windows 10 접속 방법&lt;/h2&gt;
+&lt;p&gt;본 블로그에서는 &lt;a href=&quot;https://www.putty.org/&quot;&gt;Putty 프로그램&lt;/a&gt;을 이용해서 접속을 할 것이다.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    시작 &amp;gt; 모든 프로그램 &amp;gt; puTTY &amp;gt; PuTTYgen 선택
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-13.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;생성 키의 종류 - RSA&lt;/li&gt;
+  &lt;li&gt;Load
+&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-12.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;All Files(&lt;em&gt;.&lt;/em&gt;) &amp;gt; “다운로드 받은 키”&lt;/li&gt;
+  &lt;li&gt;Save Private Key(PuTTY가 사용할수 있는 형식으로 .ppk 비공개 키 저장)
+&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-14.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Host Name(or IP address) : 본인의 인스턴스의 퍼블릭 DNS&lt;/li&gt;
+  &lt;li&gt;Port : 22&lt;/li&gt;
+  &lt;li&gt;Connection type : SSH&lt;/li&gt;
+  &lt;li&gt;Category &amp;gt; Connection &amp;gt; SSH &amp;gt; auth
+&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-15.png&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Browse.. &amp;gt; 비공개로 저장했던 키를 검색&lt;/li&gt;
+  &lt;li&gt;Open
+&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-16.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;SSH를 서버에 등록하겠냐는 문구가 뜨면 당연히 Yes를 클릭하고 로그인한다.&lt;br /&gt;
+로그인 ID : s3-user&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;font size=&quot;5em&quot;&gt;축하한다. 여러분들은 이제 AWS의 컴퓨터 한대를 빌려 접속을 성공했다!&lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;다음으론 &lt;font size=&quot;5em&quot;&gt;&lt;u&gt;s3 요금&lt;/u&gt;&lt;/font&gt;에 대해서 한번 알아보도록 하자.&lt;/p&gt;
+
+&lt;p&gt;당연하겠지만 빌려 쓰는 것이기 때문에 사용료를 지불해야 한다. 사용하는 방식(비용을 지불하려고 하는 형태)에는 4가지의 방식이 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://aws.amazon.com/ko/s3/pricing/&quot;&gt;AWS 요금 형식&lt;/a&gt; 링크를 들어가 보면 4가지의 요금 형식이 있지만 2가지만 설명하겠다.&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;1-온디멘드&quot;&gt;1. 온디멘드&lt;/h3&gt;
+&lt;p&gt;실행되고 있는 인스턴스에 따라 대게 시간당으로 비용을 지불하게 된다.&lt;/p&gt;
+
+&lt;h3 id=&quot;2-예약-인스턴스&quot;&gt;2. 예약 인스턴스&lt;/h3&gt;
+&lt;p&gt;인스턴스를 실행하는 것을 예약으로 설정하여 만약 어느 수요가 많다는 생각이 드는 시간대에 온 디멘드 방식보단 예약 인스턴스를 방식을 사용하여 계속 켜놓는 것보다 필요할 때만 인스턴스를 켜기 때문에 비용을 최대 75% 정도까지 절약할 수 있다. &lt;br /&gt;&lt;br /&gt;나머지 2 방식은 독자께서 이해해보려 노력하길 바라며 (총총...)&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;s3에-대한-다양한-요금&quot;&gt;s3에 대한 다양한 요금&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-9.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;이 그림을 보고 간단하게 설명하고 넘어가고자 한다. 프리 티어 기준으로 생성한 인스턴스를 보도록 하겠다.&lt;br /&gt;
+보다시피 CPU 1개, 메모리 1GB 짜리를 사용하는데 시간당 요금이 '시간당 0.0144 USD' 즉, 1달러(한화 약 1200원)를 쓰려면 69.4시간을 사용해야 1달러가 나온다는 말이다.&lt;br /&gt;
+이 말이 무슨 말이냐고? &lt;del&gt; 본 블로거는 멍청한 짓을 한 것이죠.&lt;/del&gt; 서버 컴퓨터 하나 맞추려고 50만 원 정도의 돈을 투자해서 맞췄는데... 단돈 1200원이라는 돈으로 70시간의 컴퓨터를 빌릴 수 있다니... 여기서 새삼 한 번 더 AWS에 대해 놀랬음.&lt;br /&gt;
+물론 본인이 개인 서비스를 진행하고자 하는데 사용자 수가 많아지면 당연히 그림에 나와 있는 사양 가지고는 터무니가 없다고 느낄 것이다. 그래서 밑으로 내려다보면 자신에게 맞는 사양을 택해서 요금을 내면 된다. 다른 사양에 대해서는 그대들이 알아서 잘 보도록 하길 바란다.&lt;/p&gt;
+
+&lt;h2 id=&quot;지역region에-대해서-설명&quot;&gt;지역(Region)에 대해서 설명&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-region.png&quot; alt=&quot;aws-region&quot; /&gt;
+&lt;a href=&quot;http://jayendrapatil.com/aws-regions-availability-zones-and-edge-locations/&quot;&gt;AWS region 참조&lt;/a&gt; 관련 이미지&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;비용 지불 형식에 대해서 이해했다면 이제 이전 포스트에 말했던 리전에 관해서 설명을 하고자 한다.&lt;br /&gt;
+위를 봤던 그림처럼 여러 리전에 AWS가 있다고 했다. 나중에 보면 알겠지만 내가 한국에 있다고 꼭 '서울' 리전을 선택해서 사용할 필요는 없다. 이러한 리전을 정하는 기준에 대해서는 이렇게 생각하면 좋겠다. &lt;br /&gt;
+&quot;내가 프로그램을 제작하였을 때 이 프로그램을 어느 리전에 있는 사용자가 많이 사용할 것인가?&quot; 이러한 질문에서 당연히 한국 사람들이 많이 사용할 것이라면 '서울' 리전을 선택해서 사용하면 되고, 유럽 사람들이 많이 사용할 것이라면 '유럽' 리전을 선택해서 사용하면 된다. 왜냐하면 한국 사람들이 많이 사용하는데 '유럽' 리전을 선택해서 사용하다 보면 한국에서 유럽까지 통신하는 거리가 있기 때문에 조금 느릴 수가 있다. (리전 선택은 본인이 선택하는 것이기 때문에 느리든 말든 알아서 해도 무관하다... 내 생각은 그렇다는 것이다.)&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;s3에 대해서 좀 더 생각나면 쓰도록 하며 S3에 대한 이야기를 시작하려면 다음 블로그로 이동합시다!&lt;/p&gt;
+
+&lt;h2 id=&quot;s3에-대한-이야기&quot;&gt;&lt;a href=&quot;https://msnodeve.github.io/infra/2019-05-01-infra-aws-s3/&quot;&gt;S3에 대한 이야기!&lt;/a&gt;&lt;/h2&gt;</content><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><summary type="html">AWS의 S3란? S3란 Simple Storage Services의 줄인말이다.</summary></entry><entry><title type="html">AWS의 EC2란?</title><link href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" rel="alternate" type="text/html" title="AWS의 EC2란?" /><published>2019-05-01T19:20:00+09:00</published><updated>2019-05-01T19:20:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-ec2</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/">&lt;h2 id=&quot;ec2란-elastic-compute-cloud의-줄인말이다&quot;&gt;EC2란 Elastic Compute Cloud의 줄인말이다.&lt;/h2&gt;
 
 &lt;p&gt;자 이전 포스트에서 AWS의 컴퓨터 한 대를 '빌려' 쓴다고 말했다. 그럼 이제 직접 빌려봐야 하지 않을까!!? 빌려 써보도록 하자.&lt;/p&gt;
 &lt;p&gt;그럼 지금부터 AWS의 EC2를 생성해서 접속까지 하는 것을 해보도록 하겠다.&lt;/p&gt;
@@ -478,13 +648,4 @@ echo &quot;source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h1 id=&quot;수고하셨습니다&quot;&gt;수고하셨습니다.&lt;/h1&gt;
-&lt;h3 id=&quot;이제-iterm2를-완전히-종료한-후에-다시-실행하여-멋진-터미널을-이용해-보세요&quot;&gt;이제 iTerm2를 완전히 종료한 후에 다시 실행하여 멋진 터미널을 이용해 보세요!&lt;/h3&gt;</content><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><summary type="html">멋진 터미널 만들기</summary></entry><entry><title type="html">…</title><link href="http://localhost:4000/linux/2018-09-30-linux-centos7-install/" rel="alternate" type="text/html" title="…" /><published>2018-09-30T19:31:00+09:00</published><updated>2018-09-30T19:31:00+09:00</updated><id>http://localhost:4000/linux/linux-centos7-install</id><content type="html" xml:base="http://localhost:4000/linux/2018-09-30-linux-centos7-install/">&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3&gt;&lt;strong&gt;…&lt;/strong&gt;&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;```bash&lt;/p&gt;
-&lt;h1 id=&quot;-1&quot;&gt;,,,&lt;/h1&gt;
-&lt;p&gt;docker pull centos:latest&lt;/p&gt;</content><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><summary type="html">… ...</summary></entry></feed>
+&lt;h3 id=&quot;이제-iterm2를-완전히-종료한-후에-다시-실행하여-멋진-터미널을-이용해-보세요&quot;&gt;이제 iTerm2를 완전히 종료한 후에 다시 실행하여 멋진 터미널을 이용해 보세요!&lt;/h3&gt;</content><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><summary type="html">멋진 터미널 만들기</summary></entry></feed>

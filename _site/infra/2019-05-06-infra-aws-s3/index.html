@@ -35,20 +35,20 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 
   
 <!-- Begin Jekyll SEO tag v2.6.0 -->
-<title>AWS의 EC2란? | Msno_Dev</title>
+<title>AWS의 S3란? | Msno_Dev</title>
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="AWS의 EC2란?" />
+<meta property="og:title" content="AWS의 S3란?" />
 <meta name="author" content="msnoDev" />
 <meta property="og:locale" content="en" />
-<meta name="description" content="AWS의 EC2에 대한 이야기" />
-<meta property="og:description" content="AWS의 EC2에 대한 이야기" />
-<link rel="canonical" href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" />
-<meta property="og:url" content="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" />
+<meta name="description" content="AWS의 S3에 대한 이야기" />
+<meta property="og:description" content="AWS의 S3에 대한 이야기" />
+<link rel="canonical" href="http://localhost:4000/infra/2019-05-06-infra-aws-s3/" />
+<meta property="og:url" content="http://localhost:4000/infra/2019-05-06-infra-aws-s3/" />
 <meta property="og:site_name" content="Msno_Dev" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-05-01T19:20:00+09:00" />
+<meta property="article:published_time" content="2019-05-06T21:12:00+09:00" />
 <script type="application/ld+json">
-{"description":"AWS의 EC2에 대한 이야기","author":{"@type":"Person","name":"msnoDev"},"@type":"BlogPosting","url":"http://localhost:4000/infra/2019-05-01-infra-aws-ec2/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/icons/m-logo-black.png"},"name":"msnoDev"},"headline":"AWS의 EC2란?","dateModified":"2019-05-01T19:20:00+09:00","datePublished":"2019-05-01T19:20:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/infra/2019-05-01-infra-aws-ec2/"},"@context":"https://schema.org"}</script>
+{"description":"AWS의 S3에 대한 이야기","author":{"@type":"Person","name":"msnoDev"},"@type":"BlogPosting","url":"http://localhost:4000/infra/2019-05-06-infra-aws-s3/","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/icons/m-logo-black.png"},"name":"msnoDev"},"headline":"AWS의 S3란?","dateModified":"2019-05-06T21:12:00+09:00","datePublished":"2019-05-06T21:12:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/infra/2019-05-06-infra-aws-s3/"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -76,7 +76,7 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 
 
 
-<link rel="alternate" href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" hreflang="en">
+<link rel="alternate" href="http://localhost:4000/infra/2019-05-06-infra-aws-s3/" hreflang="en">
 
 <link rel="shortcut icon" href="/assets/icons/favicon.ico">
 <link rel="apple-touch-icon" href="/assets/icons/icon.png">
@@ -193,17 +193,17 @@ Powered by Hydejack v8.1.1 <https://hydejack.com/>
 
 
 
-<article id="post-infra-infra-aws-ec2" class="page post mb6" role="article">
+<article id="post-infra-infra-aws-s3" class="page post mb6" role="article">
   <header>
     <h1 class="post-title">
       
-        AWS의 EC2란?
+        AWS의 S3란?
       
     </h1>
 
     <p class="post-date heading">
       
-      <time datetime="2019-05-01T19:20:00+09:00">01 May 2019</time>
+      <time datetime="2019-05-06T21:12:00+09:00">06 May 2019</time>
       
       
       
@@ -243,7 +243,7 @@ in <a href="/infra/" class="flip-title">Infra</a>
 
   
     <p class="message" >
-      AWS의 EC2에 대한 이야기
+      AWS의 S3에 대한 이야기
 
     </p>
   
@@ -253,59 +253,72 @@ in <a href="/infra/" class="flip-title">Infra</a>
 
   
     
-<h2 id="ec2란-elastic-compute-cloud의-줄인말이다">EC2란 Elastic Compute Cloud의 줄인말이다.</h2>
+<h2 id="s3란-simple-storage-services의-줄인말이다">S3란 Simple Storage Services의 줄인말이다.</h2>
 
-<p>자 이전 포스트에서 AWS의 컴퓨터 한 대를 '빌려' 쓴다고 말했다. 그럼 이제 직접 빌려봐야 하지 않을까!!? 빌려 써보도록 하자.</p>
-<p>그럼 지금부터 AWS의 EC2를 생성해서 접속까지 하는 것을 해보도록 하겠다.</p>
+<p>자 이전 포스트에서 AWS의 EC2에 대해서 설명을 해보았고, 접속까지 해보았다.<br />
+이제 S3에 대해서 설명을 좀 하고자 한다.</p>
+<p>그전에 우리는 다음과 같은 가정을 세워 생각을 해보도록 하자.<br />
+나는 어떠한 <strong><u>중요한 파일</u></strong>을 가지고 있다. 이 파일을 잃어버리면 큰일 난다. 그래서 나는 이 파일을 잃어버리면 안되겠다고 생각한다.<br />
+만약 하드가 고장 날 수도 있고, 어떠한 폴더에 넣어뒀는데 그 폴더가 어디 있는지 기억이 안 나 잃어버리는 경우...<br />
+이러한 위험성을 좀 해소하고자 <u>S3</u>를 사용하기로 마음을 먹는다.<br />
+S3는 내구성이 <strong>99.999999999%</strong>이다. 이 말을 해석하자면 내가 S3에 파일을 업로드 한 경우에는 3개 이상의 여러 지역에 저장이 된다.<br />
+한 건물이 무너져도 다른 지역에서 그 파일을 보존하고 있기 때문에 거의 파일을 잃어버리거나 증발할 경우는 없는 이러한 내구성을 가지고 있다.<br />
+또한 S3는 이 세상 어디서든지 <u>인터넷</u>만 연결되어 있으면 접근 가능하다.<br />
+또 내가 업로드한 파일이 5년 뒤 나 10년 뒤에 쓸모가 없어 없애버렸으면 좋겠다, 6개월 뒤 더 저렴한 저장 공간(버킷)으로 옮겼으면 좋겠다는 자동화, 버전 관리 등등
+이런 기능뿐만 아니라 여러 가지 기능들을 제공하고 있다.<del>(내가 계속 AWS 좋다. AWS 써라. 이런 말 만하니까 광고하는 것 같지만 AWS의 광고하는 것이 아니니 오해말기 바람^^..)</del></p>
+
+<p>이제 S3가 무엇인지와 S3를 활용해 웹을 띄워 보도록 하자!</p>
+<p>그럼 지금부터 AWS의 S3를 이용해서 저장소를 한번 활용 해보도록 하겠다.</p>
 <p><font size="2em">본 블로그는 12개월 무료인 프리 티어에 대해서 설명드리며, 또 한 이번 포스트는 AWS에 이미 가입되어 있는 상태에서 진행되는 점 알려드립니다.</font></p>
 <p><br /><br /><br /> 시작합니다.</p>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-1.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-1.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-1.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-1.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
   </hy-img></p>
 <ul>
-  <li>서비스 &gt; 컴퓨팅 &gt; EC2
+  <li>서비스 &gt; 스토리지 &gt; S3
 <br /><br /><br /><br /></li>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-2.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-2.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-2.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-2.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
   </hy-img></p>
+<p>S3 서비스에서는 저장소하나를 생성 시키면 그 이름을 저장소라 부르지 않고 버킷(bucket)이라고 부른다.</p>
 <ul>
-  <li>Region - 서울 이 되어있는지를 확인한다. (이유는 제일 아래 설명하겠다.)</li>
-  <li>인스턴스 &gt; 인스턴스 생성
+  <li>버킷 &gt; 버킷 만들기
 <br /><br /><br /><br /></li>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-3.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-3.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-3.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-3.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
   </hy-img></p>
+<p>버킷 이름은 전 세계 고유한 이름을 갖는다. 따라서 중복된 이름이 있을 수 있다.</p>
 <ul>
-  <li>Amazon Linux &gt; 선택<br />
-프리 티어에서도 스크롤을 아래로 내려다보면 여러 가지 인스턴스 들을 생성할 수 있다.
-그중에 우리는 리눅스 인스턴스를 생성해서 접속해 보도록 하겠다.
+  <li>버킷 이름을 설정</li>
+  <li>다음
 <br /><br /><br /><br /></li>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-4.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-4.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-4.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-4.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
   </hy-img></p>
+<p></p>
 <ul>
   <li>유형 - t2.micro (프리 티어 사용 가능) 확인</li>
   <li>검토 및 시작 (세부 설정은 지금은 필요 없으니 넘어가도록 하겠다.)
@@ -315,8 +328,8 @@ in <a href="/infra/" class="flip-title">Infra</a>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-5.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-5.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-5.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-5.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -327,8 +340,8 @@ in <a href="/infra/" class="flip-title">Infra</a>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-6.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-6.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-6.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-6.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -342,8 +355,8 @@ in <a href="/infra/" class="flip-title">Infra</a>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-7.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-7.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-7.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-7.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -351,11 +364,11 @@ in <a href="/infra/" class="flip-title">Infra</a>
 시작한 뒤 인스턴스를 보게 되면 ‘Pending’ 이였다가 잠시 뒤 ‘running’으로 바뀌게 될 것이다.<br />
 이 상태가 되면 우리는 지금 AWS의 컴퓨터 한 대를 장만하게 된 것이다. 참 쉽죠?
 <br /><br /><br /><br /></p>
-<p>지금부터 EC2를 시작했으니 돈이 나가기 시작할 것이다. 그러나 걱정하지 말자. <del>우리는 12개월 동안 무료로 사용할 수 있는 프리 티어이니까!</del>자 이제 인스턴스가 돈이 안 나가게 하는 방법에 대해서 알아보자. 의외로 간단하다.</p>
+<p>지금부터 s3를 시작했으니 돈이 나가기 시작할 것이다. 그러나 걱정하지 말자. <del>우리는 12개월 동안 무료로 사용할 수 있는 프리 티어이니까!</del>자 이제 인스턴스가 돈이 안 나가게 하는 방법에 대해서 알아보자. 의외로 간단하다.</p>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-8.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-8.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-8.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-8.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -366,15 +379,15 @@ in <a href="/infra/" class="flip-title">Infra</a>
 <br /><br /><br /><br /></li>
 </ul>
 
-<p>이제 EC2 인스턴스를 생성하고 껐다 켰다를 할 수 있게 되었다. 이제 EC2에 접속을 해봐야 하지 않는가!</p>
+<p>이제 s3 인스턴스를 생성하고 껐다 켰다를 할 수 있게 되었다. 이제 s3에 접속을 해봐야 하지 않는가!</p>
 
 <p><strong>Mac OS X</strong>에서 접속하는 방법과 <strong>Windows 10</strong>에서 접속하는 방법. 이 두 가지에 대해서 설명하고자 한다.</p>
 
 <h2 id="mac-os-x-접속-방법">Mac OS X 접속 방법</h2>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-11.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-11.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-11.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-11.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -385,8 +398,8 @@ in <a href="/infra/" class="flip-title">Infra</a>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-10.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-10.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-10.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-10.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -407,8 +420,8 @@ in <a href="/infra/" class="flip-title">Infra</a>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    시작 &gt; 모든 프로그램 &gt; puTTY &gt; PuTTYgen 선택
 </code></pre></div></div>
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-13.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-13.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-13.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-13.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -420,8 +433,8 @@ in <a href="/infra/" class="flip-title">Infra</a>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-12.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-12.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-12.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-12.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -433,8 +446,8 @@ in <a href="/infra/" class="flip-title">Infra</a>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-14.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-14.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-14.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-14.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -448,8 +461,8 @@ in <a href="/infra/" class="flip-title">Infra</a>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-15.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-15.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-15.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-15.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -461,33 +474,33 @@ in <a href="/infra/" class="flip-title">Infra</a>
 </ul>
 
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-16.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-16.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-16.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-16.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
   </hy-img></p>
 <p>SSH를 서버에 등록하겠냐는 문구가 뜨면 당연히 Yes를 클릭하고 로그인한다.<br />
-로그인 ID : ec2-user<br /></p>
+로그인 ID : s3-user<br /></p>
 <p><br /><br /><br /></p>
 <p><font size="5em">축하한다. 여러분들은 이제 AWS의 컴퓨터 한대를 빌려 접속을 성공했다!</font></p>
 <p><br /><br /><br /><br /></p>
 
-<p>다음으론 <font size="5em"><u>EC2 요금</u></font>에 대해서 한번 알아보도록 하자.</p>
+<p>다음으론 <font size="5em"><u>s3 요금</u></font>에 대해서 한번 알아보도록 하자.</p>
 
 <p>당연하겠지만 빌려 쓰는 것이기 때문에 사용료를 지불해야 한다. 사용하는 방식(비용을 지불하려고 하는 형태)에는 4가지의 방식이 있다.</p>
 
-<p><a href="https://aws.amazon.com/ko/ec2/pricing/">AWS 요금 형식</a> 링크를 들어가 보면 4가지의 요금 형식이 있지만 2가지만 설명하겠다.<br /></p>
+<p><a href="https://aws.amazon.com/ko/s3/pricing/">AWS 요금 형식</a> 링크를 들어가 보면 4가지의 요금 형식이 있지만 2가지만 설명하겠다.<br /></p>
 <h3 id="1-온디멘드">1. 온디멘드</h3>
 <p>실행되고 있는 인스턴스에 따라 대게 시간당으로 비용을 지불하게 된다.</p>
 
 <h3 id="2-예약-인스턴스">2. 예약 인스턴스</h3>
 <p>인스턴스를 실행하는 것을 예약으로 설정하여 만약 어느 수요가 많다는 생각이 드는 시간대에 온 디멘드 방식보단 예약 인스턴스를 방식을 사용하여 계속 켜놓는 것보다 필요할 때만 인스턴스를 켜기 때문에 비용을 최대 75% 정도까지 절약할 수 있다. <br /><br />나머지 2 방식은 독자께서 이해해보려 노력하길 바라며 (총총...)<br /><br /></p>
 
-<h2 id="ec2에-대한-다양한-요금">EC2에 대한 다양한 요금</h2>
+<h2 id="s3에-대한-다양한-요금">s3에 대한 다양한 요금</h2>
 <p>
-  <hy-img root-margin="512px"  src="/img/infra/infra-aws-ec2-9.png" >
-    <noscript><img data-ignore  src="/img/infra/infra-aws-ec2-9.png" /></noscript>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-9.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-9.png" /></noscript>
     <span class="loading" slot="loading" hidden>
       <span class="icon-cog"></span>
     </span>
@@ -510,9 +523,9 @@ in <a href="/infra/" class="flip-title">Infra</a>
 위를 봤던 그림처럼 여러 리전에 AWS가 있다고 했다. 나중에 보면 알겠지만 내가 한국에 있다고 꼭 '서울' 리전을 선택해서 사용할 필요는 없다. 이러한 리전을 정하는 기준에 대해서는 이렇게 생각하면 좋겠다. <br />
 "내가 프로그램을 제작하였을 때 이 프로그램을 어느 리전에 있는 사용자가 많이 사용할 것인가?" 이러한 질문에서 당연히 한국 사람들이 많이 사용할 것이라면 '서울' 리전을 선택해서 사용하면 되고, 유럽 사람들이 많이 사용할 것이라면 '유럽' 리전을 선택해서 사용하면 된다. 왜냐하면 한국 사람들이 많이 사용하는데 '유럽' 리전을 선택해서 사용하다 보면 한국에서 유럽까지 통신하는 거리가 있기 때문에 조금 느릴 수가 있다. (리전 선택은 본인이 선택하는 것이기 때문에 느리든 말든 알아서 해도 무관하다... 내 생각은 그렇다는 것이다.)</p>
 
-<p><br />EC2에 대해서 좀 더 생각나면 쓰도록 하며 S3에 대한 이야기를 시작하려면 다음 블로그로 이동합시다!</p>
+<p><br />s3에 대해서 좀 더 생각나면 쓰도록 하며 S3에 대한 이야기를 시작하려면 다음 블로그로 이동합시다!</p>
 
-<h2 id="s3에-대한-이야기"><a href="https://msnodeve.github.io/infra/2019-05-01-infra-aws-ec2/">S3에 대한 이야기!</a></h2>
+<h2 id="s3에-대한-이야기"><a href="https://msnodeve.github.io/infra/2019-05-01-infra-aws-s3/">S3에 대한 이야기!</a></h2>
 
 
   
@@ -686,10 +699,10 @@ in <a href="/infra/" class="flip-title">Infra</a>
 
 
 <li>
-  <a href="/infra/2019-05-06-infra-aws-s3/" class="h4 flip-title">
-    <span>AWS의 S3란?</span>
+  <a href="/infra/2019-05-01-infra-aws-ec2/" class="h4 flip-title">
+    <span>AWS의 EC2란?</span>
   </a>
-  <time class="heading faded fine" datetime="2019-05-06T21:12:00+09:00">06 May 2019</time>
+  <time class="heading faded fine" datetime="2019-05-01T19:20:00+09:00">01 May 2019</time>
 </li>
 
     
