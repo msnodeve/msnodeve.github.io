@@ -139,5 +139,5 @@ description: AWS의 EC2에 대한 이야기
 
 <p><br>EC2에 대해서 좀 더 생각나면 쓰도록 하며 S3에 대한 이야기를 시작하려면 다음 블로그로 이동합시다!</p>
 
-## [S3에 대한 이야기!](https://msnodeve.github.io/infra/2019-05-01-infra-aws-ec2/)
+## [S3에 대한 이야기!](https://msnodeve.github.io/infra/2019-05-06-infra-aws-s3/)
 
