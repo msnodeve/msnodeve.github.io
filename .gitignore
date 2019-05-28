@@ -28,3 +28,6 @@ tmp/**/*
 *.bak
 local.properties
 /src/main/resources/rebel.xml
+
+# Git Blog #
+_site/

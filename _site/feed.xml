@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-19T18:23:39+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 S3란?</title><link href="http://localhost:4000/infra/2019-05-06-infra-aws-s3/" rel="alternate" type="text/html" title="AWS의 S3란?" /><published>2019-05-06T21:12:00+09:00</published><updated>2019-05-06T21:12:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-s3</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-06-infra-aws-s3/">&lt;h2 id=&quot;s3란-simple-storage-services의-줄인말이다&quot;&gt;S3란 Simple Storage Services의 줄인말이다.&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-28T15:53:44+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 S3란?</title><link href="http://localhost:4000/infra/2019-05-06-infra-aws-s3/" rel="alternate" type="text/html" title="AWS의 S3란?" /><published>2019-05-06T21:12:00+09:00</published><updated>2019-05-06T21:12:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-s3</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-06-infra-aws-s3/">&lt;h2 id=&quot;s3란-simple-storage-services의-줄인말이다&quot;&gt;S3란 Simple Storage Services의 줄인말이다.&lt;/h2&gt;
 
 &lt;p&gt;자 이전 포스트에서 AWS의 EC2에 대해서 설명을 해보았고, 접속까지 해보았다.&lt;br /&gt;
 이제 S3에 대해서 설명을 좀 하고자 한다.&lt;/p&gt;
@@ -18,20 +18,19 @@ S3는 내구성이 &lt;strong&gt;99.999999999%&lt;/strong&gt;이다. 이 말을 
 &lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt; 시작합니다.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-1.png&quot; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;서비스 &amp;gt; 스토리지 &amp;gt; S3
-&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    서비스 &amp;gt; 스토리지 &amp;gt; S3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-2.png&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;S3 서비스에서는 저장소하나를 생성 시키면 그 이름을 저장소라 부르지 않고 버킷(bucket)이라고 부른다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;버킷 &amp;gt; 버킷 만들기
-&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    버킷 &amp;gt; 버킷 만들기
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-3.png&quot; /&gt;&lt;/p&gt;
-&lt;p&gt;버킷 이름은 전 세계 고유한 이름을 갖는다. 따라서 중복된 이름이 있을 수 있다.&lt;/p&gt;
+&lt;p&gt;버킷 이름은 전 세계 고유한 이름을 갖는다. 따라서 중복된 이름이 있을 수 있다.&lt;br /&gt;
+리전은 어느 지역의 컴퓨터에 저장하겠느냐? 를 묻는 것이다.&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;버킷 이름을 설정&lt;/li&gt;
   &lt;li&gt;다음
@@ -39,6 +38,21 @@ S3는 내구성이 &lt;strong&gt;99.999999999%&lt;/strong&gt;이다. 이 말을 
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-4.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;버킷을 만들어보자
+버킷 이름 : 고유한 이름
+리전 : 어느 지역의 컴퓨터에 저장하겠느냐?&lt;/p&gt;
+
+&lt;p&gt;버전관리를 체크하면 수정한 과거내용까지 보관할수 있다.
+서버 엑세스 : 버킷을 웹서버로 이용할때 접근로그를 기록&lt;/p&gt;
+
+&lt;p&gt;기본암호화 : 자신이 업로드한 파일이 보호해야할 경우 암호화 된 상태로 aws에 보관되게 한다.&lt;/p&gt;
+
+&lt;p&gt;다음&lt;/p&gt;
+
+&lt;p&gt;이 버킷의 퍼블릭 엑세스 설정 ( 누구나 아무나 볼수있다를 의미)
+1 새퍼블릭 및 퍼블릭 객체 업로드 차단 = 공개파일을 올리면 거절, 체크해제시 공개파일업로드 시 공개가 됨.
+2 비공개로 사용하겠다(나만 보곘다면 체크) 누구나 공개 가능하게 하겠다 이러면 둘다 체크 해제&lt;/p&gt;
 
 &lt;!-- &gt;
 &lt;p&gt;&lt;/p&gt;
