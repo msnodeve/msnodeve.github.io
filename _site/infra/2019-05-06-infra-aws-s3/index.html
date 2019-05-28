@@ -304,11 +304,10 @@ S3는 내구성이 <strong>99.999999999%</strong>이다. 이 말을 해석하자
   </hy-img></p>
 <p>버킷 이름은 전 세계 고유한 이름을 갖는다. 따라서 중복된 이름이 있을 수 있다.<br />
 리전은 어느 지역의 컴퓨터에 저장하겠느냐? 를 묻는 것이다.</p>
-<ul>
-  <li>버킷 이름을 설정</li>
-  <li>다음
-<br /><br /><br /><br /></li>
-</ul>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    버킷 이름 : 고유한 이름
+    리전 : 원하는 지역의 위치
+</code></pre></div></div>
+<p><br /><br /><br /><br /></p>
 
 <p>
   <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-4.png" >
@@ -317,21 +316,50 @@ S3는 내구성이 <strong>99.999999999%</strong>이다. 이 말을 해석하자
       <span class="icon-cog"></span>
     </span>
   </hy-img></p>
+<p> 버전 관리를 체크함녀 수정한과거 내용까지 보관할 수 있다.<br />
+서버 엑세스는 버킷을 웹서버로 이용할때 접근 로그를 기록하기 위함.<br />
+기본 암호화는 자신이 업로드한 파일을 보호해야할 경우 암호화 된 상태로 AWS에 보관되게 한다.<br />
+본 블로그에서는 기본에 충실 할 것이므로 별다른 수정없이 Default상태로 두겠다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    다음
+</code></pre></div></div>
+<p><br /><br /><br /><br /></p>
 
-<p>버킷을 만들어보자
-버킷 이름 : 고유한 이름
-리전 : 어느 지역의 컴퓨터에 저장하겠느냐?</p>
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-5.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-5.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<p>퍼블릭 엑세스 설정 (누구나 아무나 볼수있다는 의미)<br />
+공개로 사용하겠다(누구나 접근가능) : 모든 퍼블릭 엑세스 차단 해체<br />
+비공개로 사용하겠다(나만 보겠다 라면) : 그대로 둔다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    다음
+</code></pre></div></div>
+<p><br /><br /><br /><br /></p>
 
-<p>버전관리를 체크하면 수정한 과거내용까지 보관할수 있다.
-서버 엑세스 : 버킷을 웹서버로 이용할때 접근로그를 기록</p>
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-6.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-6.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<p>검토 단계, 한번 확인해 본다.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    버킷 만들기
+</code></pre></div></div>
+<p><br /><br /><br /><br /></p>
 
-<p>기본암호화 : 자신이 업로드한 파일이 보호해야할 경우 암호화 된 상태로 aws에 보관되게 한다.</p>
-
-<p>다음</p>
-
-<p>이 버킷의 퍼블릭 엑세스 설정 ( 누구나 아무나 볼수있다를 의미)
-1 새퍼블릭 및 퍼블릭 객체 업로드 차단 = 공개파일을 올리면 거절, 체크해제시 공개파일업로드 시 공개가 됨.
-2 비공개로 사용하겠다(나만 보곘다면 체크) 누구나 공개 가능하게 하겠다 이러면 둘다 체크 해제</p>
+<p>
+  <hy-img root-margin="512px"  src="/img/infra/infra-aws-s3-7.png" >
+    <noscript><img data-ignore  src="/img/infra/infra-aws-s3-7.png" /></noscript>
+    <span class="loading" slot="loading" hidden>
+      <span class="icon-cog"></span>
+    </span>
+  </hy-img></p>
+<p>위 그림과 같이 나오게 되면 우리는 AWS의 버킷 하나를 생성을 성공한 것이다!<del>축하한다.</del><br />
+그럼 이제 간단하게 웹을 한번 만들어서 띄워봐야 하지 않겠는가? 지금 바로 시작하도록 하겠다.</p>
+<p><br /><br /><br /><br /></p>
 
 <!-- >
 <p></p>
