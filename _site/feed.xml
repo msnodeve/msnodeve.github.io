@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-05-29T19:47:19+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 S3란?</title><link href="http://localhost:4000/infra/2019-05-06-infra-aws-s3/" rel="alternate" type="text/html" title="AWS의 S3란?" /><published>2019-05-06T21:12:00+09:00</published><updated>2019-05-06T21:12:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-s3</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-06-infra-aws-s3/">&lt;h2 id=&quot;s3란-simple-storage-services의-줄인말이다&quot;&gt;S3란 Simple Storage Services의 줄인말이다.&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2019-06-01T13:13:13+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Msno_Dev</title><subtitle>학교공부는 그만, 새로운 것을 보고 배우기</subtitle><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><entry><title type="html">AWS의 S3란?</title><link href="http://localhost:4000/infra/2019-05-06-infra-aws-s3/" rel="alternate" type="text/html" title="AWS의 S3란?" /><published>2019-05-06T21:12:00+09:00</published><updated>2019-05-06T21:12:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-s3</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-06-infra-aws-s3/">&lt;h2 id=&quot;s3란-simple-storage-services의-줄인말이다&quot;&gt;S3란 Simple Storage Services의 줄인말이다.&lt;/h2&gt;
 
 &lt;p&gt;자 이전 포스트에서 AWS의 EC2에 대해서 설명을 해보았고, 접속까지 해보았다.&lt;br /&gt;
 이제 S3에 대해서 설명을 좀 하고자 한다.&lt;/p&gt;
@@ -15,18 +15,18 @@ S3는 내구성이 &lt;strong&gt;99.999999999%&lt;/strong&gt;이다. 이 말을 
 &lt;p&gt;이제 S3가 무엇인지와 S3를 활용해 웹을 띄워 보도록 하자!&lt;/p&gt;
 &lt;p&gt;그럼 지금부터 AWS의 S3를 이용해서 저장소를 한번 활용 해보도록 하겠다.&lt;/p&gt;
 &lt;p&gt;&lt;font size=&quot;2em&quot;&gt;본 블로그는 12개월 무료인 프리 티어에 대해서 설명드리며, 또 한 이번 포스트는 AWS에 이미 가입되어 있는 상태에서 진행되는 점 알려드립니다.&lt;/font&gt;&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt; 시작합니다.&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt; 시작합니다.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-1.png&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    서비스 &amp;gt; 스토리지 &amp;gt; S3
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-2.png&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;S3 서비스에서는 저장소하나를 생성 시키면 그 이름을 저장소라 부르지 않고 버킷(bucket)이라고 부른다.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    버킷 &amp;gt; 버킷 만들기
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-3.png&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;버킷 이름은 전 세계 고유한 이름을 갖는다. 따라서 중복된 이름이 있을 수 있다.&lt;br /&gt;
@@ -34,7 +34,7 @@ S3는 내구성이 &lt;strong&gt;99.999999999%&lt;/strong&gt;이다. 이 말을 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    버킷 이름 : 고유한 이름
     리전 : 원하는 지역의 위치
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-4.png&quot; /&gt;&lt;/p&gt;
 &lt;p&gt; 버전 관리를 체크함녀 수정한과거 내용까지 보관할 수 있다.&lt;br /&gt;
@@ -43,7 +43,7 @@ S3는 내구성이 &lt;strong&gt;99.999999999%&lt;/strong&gt;이다. 이 말을 
 본 블로그에서는 기본에 충실 할 것이므로 별다른 수정없이 Default상태로 두겠다.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    다음
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-5.png&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;퍼블릭 엑세스 설정 (누구나 아무나 볼수있다는 의미)&lt;br /&gt;
@@ -51,40 +51,65 @@ S3는 내구성이 &lt;strong&gt;99.999999999%&lt;/strong&gt;이다. 이 말을 
 비공개로 사용하겠다(나만 보겠다 라면) : 그대로 둔다.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    다음
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-6.png&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;검토 단계, 한번 확인해 본다.&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    버킷 만들기
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-7.png&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;위 그림과 같이 나오게 되면 우리는 AWS의 버킷 하나를 생성을 성공한 것이다!&lt;del&gt;축하한다.&lt;/del&gt;&lt;br /&gt;
 그럼 이제 간단하게 웹을 한번 만들어서 띄워봐야 하지 않겠는가? 지금 바로 시작하도록 하겠다.&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;웹 호스팅을 하기전에 외부에서 이 버킷에 접근을 가능하게 하기 위한 작업을 하자.&lt;br /&gt;
 퍼블릭 엑세스를 허용하는 이유는 웹에 접속하기 위해 index.html을 클라이언트가 열 수 있도록 하기 위함이다.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-8.png&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    생성한 버킷 &amp;gt; 클릭 &amp;gt; 권한
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-9.png&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    권한 &amp;gt; 퍼블릭 엑세스 차단 &amp;gt; 편집
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-10.png&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    모든 퍼블릭 엑세스 차단 체크 해제 &amp;gt; 저장
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-11.png&quot; /&gt;&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    '확인' 입력 &amp;gt; 확인 클릭
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;</content><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><summary type="html">AWS의 S3란? S3란 Simple Storage Services의 줄인말이다.</summary></entry><entry><title type="html">AWS의 EC2란?</title><link href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" rel="alternate" type="text/html" title="AWS의 EC2란?" /><published>2019-05-01T19:20:00+09:00</published><updated>2019-05-01T19:20:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-ec2</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/">&lt;h2 id=&quot;ec2란-elastic-compute-cloud의-줄인말이다&quot;&gt;EC2란 Elastic Compute Cloud의 줄인말이다.&lt;/h2&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-12.png&quot; /&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    권한 &amp;gt; 버킷 정책 &amp;gt; 버킷 정책 편집기
+
+    {
+        &quot;Version&quot;: &quot;2012-10-17&quot;,
+        &quot;Id&quot;: &quot;Policy1484315866648&quot;,
+        &quot;Statement&quot;: [
+            {
+                &quot;Sid&quot;: &quot;Stmt1484315864175&quot;,
+                &quot;Effect&quot;: &quot;Allow&quot;,
+                &quot;Principal&quot;: &quot;*&quot;,
+                &quot;Action&quot;: &quot;s3:GetObject&quot;,
+                &quot;Resource&quot;: &quot;arn:aws:s3:::[bucket name]/*&quot;
+            }
+        ]
+    }
+
+    [bucket name]을 본인 버킷 이름을 대체하여 작성 &amp;gt; 저장
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/infra/infra-aws-s3-13.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;본인의 버킷이 퍼블릭 설정이 되어있는지를 확인&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;</content><author><name>msnoDev</name><email>&lt;msnodeve@gmail.com&gt;</email></author><summary type="html">AWS의 S3란? S3란 Simple Storage Services의 줄인말이다.</summary></entry><entry><title type="html">AWS의 EC2란?</title><link href="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/" rel="alternate" type="text/html" title="AWS의 EC2란?" /><published>2019-05-01T19:20:00+09:00</published><updated>2019-05-01T19:20:00+09:00</updated><id>http://localhost:4000/infra/infra-aws-ec2</id><content type="html" xml:base="http://localhost:4000/infra/2019-05-01-infra-aws-ec2/">&lt;h2 id=&quot;ec2란-elastic-compute-cloud의-줄인말이다&quot;&gt;EC2란 Elastic Compute Cloud의 줄인말이다.&lt;/h2&gt;
 
 &lt;p&gt;자 이전 포스트에서 AWS의 컴퓨터 한 대를 '빌려' 쓴다고 말했다. 그럼 이제 직접 빌려봐야 하지 않을까!!? 빌려 써보도록 하자.&lt;/p&gt;
 &lt;p&gt;그럼 지금부터 AWS의 EC2를 생성해서 접속까지 하는 것을 해보도록 하겠다.&lt;/p&gt;
