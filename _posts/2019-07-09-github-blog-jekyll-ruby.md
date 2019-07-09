@@ -1,19 +1,17 @@
 ---
 layout: post
 comments: true
-title: "Github 개인 블로그 생성"
+title: "Github 개인 블로그를 위한 설정"
 date: 2019-07-09 19:21:00 +0900
 categories: github
-description: 개인 Github에 웹 페이지 띄우기
+description: 개인 Github 블로그를 실행하기 위해 설정하기
 ---
-
-
 
 ## 개인 Github에 웹 페이지를 띄워봅시다.
 
 <font size="2em">본 블로그는 macOS Mojave 10.14.5 에서 수행된 작업입니다.</font>
 
-***
+<br><br>
 
 진행 순서는 다음과 같습니다.
 
@@ -22,7 +20,7 @@ description: 개인 Github에 웹 페이지 띄우기
 3. 도메인 할당
 4. 접속
 
-***
+<br>
 
 ### 1. Github에 새로운 Repository를 생성
 
