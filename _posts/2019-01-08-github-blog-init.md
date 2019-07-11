@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Github에 Jekyll 테마 올리기"
 date: 2019-01-08 19:31:00 +0900
-categories: github
+categories: etc
 description: 다운받은 Jekyll 테마를 Github에 올려 블로깅
 ---
 

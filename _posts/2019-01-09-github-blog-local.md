@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "나만의 [Github] 블로그 만들기"
 date: 2019-01-09 17:38:00 +0900
-categories: github
+categories: etc
 description: \[Jekyll\] 윈도우에서 지킬 설치 및 블로그 생성
 ---
 
