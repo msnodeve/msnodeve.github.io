@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"Website","@id":"https://msnodeve.github.io","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"https://www.gravatar.com/avatar/5fc0ccf61b942ec8c9bb18b240b03041"},"name":"msnodevLog","description":"대부분의 개발자들 처럼 이것저것 아무거나 다 손대보고 익숙해지는게 최선인 것 같다. 그렇다면 한 번이 아닌 두 번이상 개발을 해보며 익숙해 지는게 공부같다.","url":"https://msnodeve.github.io","keywords":"algorithm"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"Website","@id":"https://msnodeve.github.io","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"name":"msnodevLog","description":"대부분의 개발자들 처럼 이것저것 아무거나 다 손대보고 익숙해지는게 최선인 것 같다. 그렇다면 한 번이 아닌 두 번이상 개발을 해보며 익숙해 지는게 공부같다.","url":"https://msnodeve.github.io","keywords":"algorithm"}</script>
     <meta name="description" content="Intro김명석 입니다. Github Contribution     CoerfolioCoer 는 제가 지은 별명입니다.대학을 오고 함께 프로젝트를 하는 스스로의 모습을보며 협력하다의 Co와 –하는 사람의 –er를 생각해 만든별명입니다.다양한 분야에 관심이 많고, 넓게 보려고 노력하는개발자 김명석 코어폴리오를 소개합니다.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="about">
@@ -38,6 +38,8 @@
     
         
     
+    
+        <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
     
     
     
@@ -62,13 +64,17 @@
 
 
     
+        
+            
+        
+    
 
-<header id="header" data-behavior="5">
+<header id="header" data-behavior="1">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
         <a
             class="header-title-link"
-            href="/%20"
+            href="/"
             aria-label=""
         >
             msnodevLog
@@ -78,10 +84,12 @@
         
             <a
                 class="header-right-picture "
-                href="#about"
-                aria-label="링크 열기: /#about"
+                href="/about"
+                aria-label="링크 열기: /about"
             >
         
+        
+            <img class="header-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
         
         </a>
     
@@ -90,8 +98,26 @@
             <!-- Define author's picture -->
 
 
-<nav id="sidebar" data-behavior="5">
+
+        
+    
+
+<nav id="sidebar" data-behavior="1">
     <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Myeong Seok KIM</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</h5>
+                
+            </div>
         
         
             <ul class="sidebar-buttons">
@@ -105,7 +131,7 @@
                             rel="noopener"
                             title="Home"
                         >
-                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">Home</span>
                     </a>
             </li>
@@ -119,7 +145,7 @@
                             rel="noopener"
                             title="카테고리"
                         >
-                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">카테고리</span>
                     </a>
             </li>
@@ -133,7 +159,7 @@
                             rel="noopener"
                             title="태그"
                         >
-                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">태그</span>
                     </a>
             </li>
@@ -147,7 +173,7 @@
                             rel="noopener"
                             title="아카이브"
                         >
-                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">아카이브</span>
                     </a>
             </li>
@@ -161,7 +187,7 @@
                             rel="noopener"
                             title="검색"
                         >
-                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">검색</span>
                     </a>
             </li>
@@ -175,7 +201,7 @@
                             rel="noopener"
                             title="About"
                         >
-                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">About</span>
                     </a>
             </li>
@@ -195,7 +221,7 @@
                             rel="noopener"
                             title="GitHub"
                         >
-                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">GitHub</span>
                     </a>
             </li>
@@ -211,7 +237,7 @@
                             rel="noopener"
                             title="Facebook"
                         >
-                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">Facebook</span>
                     </a>
             </li>
@@ -227,7 +253,7 @@
                             rel="noopener"
                             title="LinkedIn"
                         >
-                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="false"></i>
                         <span class="sidebar-button-desc">LinkedIn</span>
                     </a>
             </li>
@@ -238,7 +264,7 @@
 </nav>
 
             
-            <div id="main" data-behavior="5"
+            <div id="main" data-behavior="1"
                  class="
                         hasCoverMetaIn
                         ">
@@ -397,25 +423,37 @@
         
 
 
+    
+        
+    
+
 <div id="about">
     <div id="about-card">
         <div id="about-btn-close">
             <i class="fa fa-times"></i>
         </div>
         
+            <img id="about-card-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
             <h4 id="about-card-name">Myeong Seok KIM</h4>
         
-            <div id="about-card-bio"><p>author.bio</p>
+            <div id="about-card-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
 </div>
         
         
             <div id="about-card-job">
                 <i class="fa fa-briefcase"></i>
                 <br/>
-                <p>author.job</p>
+                <p>SSAFY 3rd 교육생</p>
 
             </div>
         
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Seoul, Republic of Korea
+            </div>
         
     </div>
 </div>
