@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>나는 개발자다</title>
+  <title>msnodevLog</title>
   
   <subtitle>아직 익숙하지 않다면 두번이상 개발하는</subtitle>
   <link href="/atom.xml" rel="self"/>
