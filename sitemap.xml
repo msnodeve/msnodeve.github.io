@@ -4,12 +4,22 @@
 
     <sitemap>
         <loc>https://msnodeve.github.io/post-sitemap.xml</loc>
-        <lastmod>2020-03-07T12:57:18.465Z</lastmod>
+        <lastmod>2020-03-11T12:25:55.695Z</lastmod>
     </sitemap>
 
     <sitemap>
         <loc>https://msnodeve.github.io/page-sitemap.xml</loc>
         <lastmod>2020-03-08T06:07:35.300Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>https://msnodeve.github.io/category-sitemap.xml</loc>
+        <lastmod>2020-03-11T12:25:55.695Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>https://msnodeve.github.io/tag-sitemap.xml</loc>
+        <lastmod>2020-03-11T12:25:55.695Z</lastmod>
     </sitemap>
 
 </sitemapindex>
