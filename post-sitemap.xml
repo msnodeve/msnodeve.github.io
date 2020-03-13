@@ -8,8 +8,16 @@
     </url>
 
     <url>
+        <loc>https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/</loc>
+        <lastmod>2020-03-13T11:05:16.468Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://msnodeve.github.io/2020/03/11/story-ssafy-3rd/</loc>
-        <lastmod>2020-03-11T13:04:10.418Z</lastmod>
+        <lastmod>2020-03-13T10:57:44.659Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
