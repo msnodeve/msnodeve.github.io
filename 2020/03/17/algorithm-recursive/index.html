@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="msnodevLog">
-    <title>태그: Linux - msnodevLog</title>
+    <title>Recursive(재귀) - [Algorithm Skill] - msnodevLog</title>
     <meta name="author" content="Myeong Seok KIM">
     
-        <meta name="keywords" content="algorithm,">
+        <meta name="keywords" content="algorithm,Algorithm,Skill,Recursive,재귀,기본적인 알고리즘 스킬,알고리즘,스킬,하노이,피보나치,Hanoi,Factorial,Fibo">
     
     
         <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
@@ -19,16 +19,29 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{}</script>
-    <meta name="description" content="대부분의 개발자들 처럼 이것저것 아무거나 다 손대보고 익숙해지는게 최선인 것 같다. 그렇다면 한 번이 아닌 두 번이상 개발을 해보며 익숙해 지는게 공부같다.">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\n알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다.목차는 다음과 같습니다.\n1. Factorial2. Fibonacci3. Fibonacci Memoization4. Hanoi\n\n\nFactorial","dateCreated":"2020-03-17T10:38:59+09:00","dateModified":"2020-03-17T17:01:51+09:00","datePublished":"2020-03-17T10:38:59+09:00","description":"알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다.\nFactorial Fibonacci Fibonacci Memoization Hanoi","headline":"Recursive(재귀) - [Algorithm Skill]","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/03/17/algorithm-recursive/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/03/17/algorithm-recursive/","keywords":"Algorithm, Recursive, Factorial, Hanoi, Fibo"}</script>
+    <meta name="description" content="알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다. Factorial Fibonacci Fibonacci Memoization Hanoi">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="msnodevLog">
-<meta property="og:url" content="https://msnodeve.github.io/tags/linux/index.html">
+<meta property="og:title" content="Recursive(재귀) - [Algorithm Skill]">
+<meta property="og:url" content="https://msnodeve.github.io/2020/03/17/algorithm-recursive/index.html">
 <meta property="og:site_name" content="msnodevLog">
-<meta property="og:description" content="대부분의 개발자들 처럼 이것저것 아무거나 다 손대보고 익숙해지는게 최선인 것 같다. 그렇다면 한 번이 아닌 두 번이상 개발을 해보며 익숙해 지는게 공부같다.">
+<meta property="og:description" content="알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다. Factorial Fibonacci Fibonacci Memoization Hanoi">
 <meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2020-03-17T01:38:59.000Z">
+<meta property="article:modified_time" content="2020-03-17T08:01:51.970Z">
 <meta property="article:author" content="Myeong Seok KIM">
-<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="Skill">
+<meta property="article:tag" content="Recursive">
+<meta property="article:tag" content="재귀">
+<meta property="article:tag" content="기본적인 알고리즘 스킬">
+<meta property="article:tag" content="알고리즘">
+<meta property="article:tag" content="스킬">
+<meta property="article:tag" content="하노이">
+<meta property="article:tag" content="피보나치">
+<meta property="article:tag" content="Hanoi">
+<meta property="article:tag" content="Factorial">
+<meta property="article:tag" content="Fibo">
 <meta name="twitter:card" content="summary">
     
     
@@ -68,7 +81,9 @@
     
 
     
-    <link rel="canonical" href="https://msnodeve.github.io/tags/linux/"/>
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2020/03/17/algorithm-recursive/"/>
 </head>
     <body>
         <div id="blog">
@@ -291,79 +306,160 @@
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
                 
-    <section class="postShorten-group main-content-wrap">
+<article class="post">
     
     
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2019/12/09/devlog-linux-crontab/"
-                            aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
-                        >
-                            Linux, CentOS 작업 스케쥴러 - Crontab
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-12-09T16:46:52+09:00">
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Recursive(재귀) - [Algorithm Skill]
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-03-17T10:38:59+09:00">
 	
-		    2019/12/09
+		    2020/03/17
     	
     </time>
     
         <span>카테고리 </span>
         
-    <a class="category-link" href="/categories/devlog/">devlog</a>, <a class="category-link" href="/categories/devlog/linux/">linux</a>
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/skill/">skill</a>, <a class="category-link" href="/categories/algorithm/skill/recursive/">recursive</a>
 
 
     
 </div>
 
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    <h1 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab?"></a>Crontab?</h1><p><code>Cron</code> 은 리눅스 에서 특정한 <code>명령</code>이나 <code>스크립트</code>를 지정한 <code>날짜/시간</code>에 자동으로 실행해 주는 <code>스케쥴러</code> 입니다.</p>
-<p>주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.</p>
-                    
-                        <a
-                            href="/2019/12/09/devlog-linux-crontab/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
-                        >
-                            계속 읽기
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-            <a
-                href="/2019/12/09/devlog-linux-crontab/"
-                aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
-            >
-                <div class="postShorten-thumbnailimg">
-                    <img alt="" src="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
-                </div>
-            </a>
-            
-        
-    </article>
     
-    <div class="pagination-bar">
-    <ul class="pagination">
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<h5 id="알고리즘의-기본적인-스킬을-다룹니다-1"><a href="#알고리즘의-기본적인-스킬을-다룹니다-1" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다.<br>목차는 다음과 같습니다.</p>
+<p><a href="#Factorial">1. Factorial</a><br><a href="#Fibonacci">2. Fibonacci</a><br><a href="#Fibonacci-Memoization">3. Fibonacci Memoization</a><br><a href="#Hanoi">4. Hanoi</a></p>
+<br>
+
+<h2 id="Factorial"><a href="#Factorial" class="headerlink" title="Factorial"></a>Factorial</h2>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/algorithm/" rel="tag">Algorithm</a> <a class="tag tag--primary tag--small t-link" href="/tags/factorial/" rel="tag">Factorial</a> <a class="tag tag--primary tag--small t-link" href="/tags/fibo/" rel="tag">Fibo</a> <a class="tag tag--primary tag--small t-link" href="/tags/hanoi/" rel="tag">Hanoi</a> <a class="tag tag--primary tag--small t-link" href="/tags/recursive/" rel="tag">Recursive</a>
+
+            </div>
         
         
-        <li class="pagination-number">page 1 of 1</li>
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/03/13/devlog-hexo-syntax/"
+                    data-tooltip="Hexo[Tranquilpeak] 사용방법"
+                    aria-label="다음: Hexo[Tranquilpeak] 사용방법"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
     </ul>
 </div>
 
-</section>
+
+        
+        
+            
+        
+    </div>
+</article>
+
 
 
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -383,6 +479,151 @@
 </footer>
 
             </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/03/13/devlog-hexo-syntax/"
+                    data-tooltip="Hexo[Tranquilpeak] 사용방법"
+                    aria-label="다음: Hexo[Tranquilpeak] 사용방법"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
             
         </div>
         
@@ -600,6 +841,8 @@
 
 <!--SCRIPTS END-->
 
+
+    
 
 
 

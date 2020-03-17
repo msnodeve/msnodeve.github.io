@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="msnodevLog">
-    <title>Linux, CentOS 작업 스케쥴러 - Crontab - msnodevLog</title>
+    <title>Hexo[Tranquilpeak] 사용방법 - msnodevLog</title>
     <meta name="author" content="Myeong Seok KIM">
     
-        <meta name="keywords" content="algorithm,Linux,CronTab,리눅스,크론탭,CentOS,작업 스케쥴러">
+        <meta name="keywords" content="algorithm,Hexo,tranquilpeak,theme,문법,syntax,사용방법,글쓰기">
     
     
         <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
@@ -19,26 +19,25 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜/시간에 자동으로 실행해 주는 스케쥴러 입니다.\n주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.\n\n\n\n\nCrontab 활용 용도\n30분 단위로 이메일을 전송 할 때\n매주 일요일 새벽 4시에 서버를 재 시작 할 때\n\n위와 같이 반복적인 예약 작업이 필요할 때 다양하게 활용할 수 있는 도구 입니다.\nInstall crontab - CentOSyum 을 통해 Crontab 을 설치합니다.\n1$ yum -y install cronie\nCrontab 설치가 완료 되었다면, Crontab 서비스가 잘 작동 하고 있는지 확인합니다.\n1234567$ systemctl start crond$ systemctl list-unit-filesUNIT                        FILE STATE...crond.service               enabled...\n\nHow to use crontab?Crontab 리스트 조회1$ crontab -l\n\ncrontab에 등록된 스케쥴러 작업 리스트를 확인합니다.\n\nCrontab 편집1$ crontab -e\n\ncrontab 예약 작업 리스트를 편집 할 수 있는 에디터가 실행 되며, 편집합니다.\n\nCrontab 리스트 삭제1$ crontab -r\n\ncrontab에 등록된 모든 스케쥴러 작업 리스트를 삭제합니다.\n\n\nCrontab 작성 방법123456789* * * * *  수행할 명령어┬ ┬ ┬ ┬ ┬│ │ │ │ ││ │ │ │ ││ │ │ │ └───────── 요일 (0 - 6) (0:일요일, 1:월요일, 2:화요일, …, 6:토요일)│ │ │ └───────── 월 (1 - 12)│ │ └───────── 일 (1 - 31)│ └───────── 시 (0 - 23)└───────── 분 (0 - 59)\n\ncrontab -e 명령어를 사용해 위와 같은 형식으로 스케쥴러를 등록합니다.\n\n\nExample crontab간단한 텍스트를 파일에 쓰는 것을 해보겠습니다.\n1$ crontab -e\ncrontab 편집기를 열고 작업을 등록합니다.\n1* * * * * echo \"Hello 두번 개발하는 블로그\" &gt;&gt; ~/test.txt\nESC + qw 저장하고 밖으로 빠져 나옵니다.\n1분이 지나게 되면 root 경로에 test.txt 파일이 생긴 것을 볼 수 있으며, 파일 내부에는 Hello 두번 개발하는 블로그 라는 텍스트가 작성 되어 있는 것을 볼 수 있습니다.\n\n\n\n\n\n다른 예제특정 시간에 실행 1\n매주 일요일 새벽 4시 20분에  test! 텍스트를 root 경로 밑 test.txt 파일에 작성\n\n120 4 * * 0 echo \"test!\" &gt;&gt; ~/test.txt\n\n특정 시간에 실행 2\n매주 화요일 오후 1시 30분, 40분, 50분에 test! 텍스트를 root 경로 밑 test.txt 파일에 작성\n\n110,20,30 13 * * 2 echo \"test!\" &gt;&gt; ~/test.txt\n\n\nCrontab 작성 기호 종류1234* # 범위 내 모두 실행, # 나열된 숫자 중 일치하는 값에 실행- # 두 숫자 사이에 포함된 범위에 실행/ # 지정한 숫자에 실행","dateCreated":"2019-12-09T16:46:52+09:00","dateModified":"2020-03-13T20:24:02+09:00","datePublished":"2019-12-09T16:46:52+09:00","description":"Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜/시간에 자동으로 실행해 주는 스케쥴러 입니다.\n주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.","headline":"Linux, CentOS 작업 스케쥴러 - Crontab","image":["crontab.png","crontab.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/","keywords":"Linux, CentOS, Infra, Cron, Crontab","thumbnailUrl":"crontab.png"}</script>
-    <meta name="description" content="Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜&#x2F;시간에 자동으로 실행해 주는 스케쥴러 입니다. 주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\n이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다.목차는 다음과 같습니다.\n1. Alert를 사용하는 방법!2. Highlight Text를 사용하는 방법!\n\n\n\nTagAlert\n Alert을 사용하는 방법\n\n\n\nInfo 알림을 사용하는 방법은 어떻게!?\n\nSuccess 알림을 사용하는 방법은 어떻게!?\n\nWarning 알림을 사용하는 방법은 어떻게!?\n\nDanger 알림을 사용하는 방법은 어떻게!?\n\n\n아이콘이 거슬린다구요? 그럼 이렇게 표시는 어떨까요??\nInfo 알림을 사용하는 방법은 어떻게!?\n\nSuccess 알림을 사용하는 방법은 어떻게!?\n\nWarning 알림을 사용하는 방법은 어떻게!?\n\nDanger 알림을 사용하는 방법은 어떻게!?\n\n\n우선 위와 같이 이 테마에서 가능한 md문법에 대해서 알아보도록 하겠습니다!  \n\n\n문법은 다음과 같습니다.123&#123;% alert [classes] %&#125;content&#123;% endalert %&#125;\n\n\n\n\n파라미터 이름\n값\n\n\n\n\ninfo\n\n\n\nsuccess\n\n\nClasses\nwarning\n\n\n\ndanger\n\n\n\nno-icon\n\n\n\n위에 보시는 [classes]에 값을 넣고 작성하면 됩니다.\n또한 표에서 보이는 5번째줄의 값(no-icon)은 icon을 보여주지 않고 Alert을 쓰는 방법입니다.  \n아래와 같이 쓰시면 됩니다.\n\n\n123&#123;% alert info no-icon %&#125;Info 알림의 예시 코드&#123;% endalert %&#125;\nInfo 알림 결과 !\n\n\n\nHighlight Text\n Highlight Text을 사용하는 방법\n\nHighlight Text는 형광펜을 그은 처럼 작성하는 것 입니다.\n일단 예시를 보도록 하겠습니다.  \n\n1. 첫번째 형광펜은 기본 문법으로\n2. 두번째 형광펜은 hexa color 문법으로\n\n\n\n\n문법은 다음과 같습니다.123&#123;% hl_text [(classes | hexa code | rgb color | rgba color)] %&#125; content&#123;% endhl_text %&#125;\n\n\n\n\n파라미터 이름\n값\n\n\n\n\nred\n\n\n\ngreen\n\n\n\nblue\n\n\n\npurple\n\n\n\norange\n\n\nClasses\nyellow\n\n\n\ncyan\n\n\n\nprimary\n\n\n\nsuccess\n\n\n\nwarning\n\n\n\ndanger\n\n\n\n위에 보시는 [(classes | hexa code)]에 값을 넣고 작성하면 됩니다.\n또한 hexa code로도 작성할 수 있습니다.  \n사용 코드 예시는 아래와 같습니다.\n\n\n123456&lt;p&gt;&lt;!-- basic code --&gt;1. &#123;% hl_text orange %&#125;첫번째 형광펜&#123;% endhl_text %&#125;은 기본 문법으로&lt;br&gt;&lt;!-- hexa code --&gt;2. &#123;% hl_text #00FFFF %&#125;두번째 형광펜&#123;% endhl_text %&#125;은 hexa color 문법으로&lt;/p&gt;\n\n\n첫번째 형광펜 결과 !\n두번째 형광펜\n","dateCreated":"2020-03-13T20:09:58+09:00","dateModified":"2020-03-17T17:00:17+09:00","datePublished":"2020-03-13T20:09:58+09:00","description":"Hexo[tranquilpeak 테마]이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다.\nTag Alert Highlight Text","headline":"Hexo[Tranquilpeak] 사용방법","image":["hexo-syntax.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/","keywords":"Hexo, Syntax","thumbnailUrl":"hexo-syntax.png"}</script>
+    <meta name="description" content="Hexo[tranquilpeak 테마]이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다. Tag Alert Highlight Text">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="Linux, CentOS 작업 스케쥴러 - Crontab">
-<meta property="og:url" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/index.html">
+<meta property="og:title" content="Hexo[Tranquilpeak] 사용방법">
+<meta property="og:url" content="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/index.html">
 <meta property="og:site_name" content="msnodevLog">
-<meta property="og:description" content="Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜&#x2F;시간에 자동으로 실행해 주는 스케쥴러 입니다. 주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.">
+<meta property="og:description" content="Hexo[tranquilpeak 테마]이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다. Tag Alert Highlight Text">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="https://msnodeve.github.io/image/devlog/linux/crontab.png">
-<meta property="article:published_time" content="2019-12-09T07:46:52.000Z">
-<meta property="article:modified_time" content="2020-03-13T11:24:02.702Z">
+<meta property="article:published_time" content="2020-03-13T11:09:58.000Z">
+<meta property="article:modified_time" content="2020-03-17T08:00:17.508Z">
 <meta property="article:author" content="Myeong Seok KIM">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="CronTab">
-<meta property="article:tag" content="리눅스">
-<meta property="article:tag" content="크론탭">
-<meta property="article:tag" content="CentOS">
-<meta property="article:tag" content="작업 스케쥴러">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="tranquilpeak">
+<meta property="article:tag" content="theme">
+<meta property="article:tag" content="문법">
+<meta property="article:tag" content="syntax">
+<meta property="article:tag" content="사용방법">
+<meta property="article:tag" content="글쓰기">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://msnodeve.github.io/image/devlog/linux/crontab.png">
     
     
         
@@ -47,12 +46,9 @@
         <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
     
     
-        <meta property="og:image" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
-        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
+        <meta property="og:image" content="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/hexo-syntax.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/hexo-syntax.png"/>
     
-    
-        <meta property="og:image" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
-        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
     
     
     <!--STYLES-->
@@ -85,7 +81,7 @@
     
         
     
-    <link rel="canonical" href="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"/>
+    <link rel="canonical" href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"/>
 </head>
     <body>
         <div id="blog">
@@ -293,42 +289,8 @@
 </nav>
 
             
-        <div class="post-header-cover
-                    text-left
-                    post-header-cover--partial"
-             style="background-image:url('/2019/12/09/devlog-linux-crontab/crontab.png');"
-             data-behavior="4">
-            
-                <div class="post-header main-content-wrap text-left">
-    
-        <h1 class="post-title">
-            Linux, CentOS 작업 스케쥴러 - Crontab
-        </h1>
-    
-    
-        <div class="post-meta">
-    <time datetime="2019-12-09T16:46:52+09:00">
-	
-		    2019/12/09
-    	
-    </time>
-    
-        <span>카테고리 </span>
-        
-    <a class="category-link" href="/categories/devlog/">devlog</a>, <a class="category-link" href="/categories/devlog/linux/">linux</a>
-
-
-    
-</div>
-
-    
-</div>
-
-            
-        </div>
-
             <div id="main" data-behavior="4"
-                 class="hasCover
+                 class="
                         hasCoverMetaIn
                         ">
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -345,65 +307,187 @@
 <article class="post">
     
     
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Hexo[Tranquilpeak] 사용방법
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-03-13T20:09:58+09:00">
+	
+		    2020/03/13
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/devlog/">devlog</a>, <a class="category-link" href="/categories/devlog/hexo/">hexo</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab?"></a>Crontab?</h1><p><code>Cron</code> 은 리눅스 에서 특정한 <code>명령</code>이나 <code>스크립트</code>를 지정한 <code>날짜/시간</code>에 자동으로 실행해 주는 <code>스케쥴러</code> 입니다.</p>
-<p>주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.</p>
+            <!-- excerpt -->
+
+<p>이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다.<br>목차는 다음과 같습니다.</p>
+<p><a href="#Alert">1. Alert를 사용하는 방법!</a><br><a href="#Highlight-Text">2. Highlight Text를 사용하는 방법!</a></p>
 <a id="more"></a>
+
+<p><br><br></p>
+<h1 id="Tag"><a href="#Tag" class="headerlink" title="Tag"></a>Tag</h1><h4 id="Alert"><a href="#Alert" class="headerlink" title="Alert"></a>Alert</h4><blockquote>
+<p> <code>Alert</code>을 사용하는 방법</p>
+</blockquote>
+<br>
+
+<div class="alert info"><p>Info 알림을 사용하는 방법은 어떻게!?</p>
+</div>
+<div class="alert success"><p>Success 알림을 사용하는 방법은 어떻게!?</p>
+</div>
+<div class="alert warning"><p>Warning 알림을 사용하는 방법은 어떻게!?</p>
+</div>
+<div class="alert danger"><p>Danger 알림을 사용하는 방법은 어떻게!?</p>
+</div>
+
+<p>아이콘이 거슬린다구요? 그럼 이렇게 표시는 어떨까요??</p>
+<div class="alert info no-icon"><p>Info 알림을 사용하는 방법은 어떻게!?</p>
+</div>
+<div class="alert success no-icon"><p>Success 알림을 사용하는 방법은 어떻게!?</p>
+</div>
+<div class="alert warning no-icon"><p>Warning 알림을 사용하는 방법은 어떻게!?</p>
+</div>
+<div class="alert danger no-icon"><p>Danger 알림을 사용하는 방법은 어떻게!?</p>
+</div>
+
+<p>우선 위와 같이 이 테마에서 가능한 <code>md문법</code>에 대해서 알아보도록 하겠습니다!  </p>
+<br>
+
+<h4 id="문법은-다음과-같습니다"><a href="#문법은-다음과-같습니다" class="headerlink" title="문법은 다음과 같습니다."></a>문법은 다음과 같습니다.</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% alert [classes] %&#125;</span><br><span class="line">content</span><br><span class="line">&#123;% endalert %&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>파라미터 이름</th>
+<th>값</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>info</td>
+</tr>
+<tr>
+<td></td>
+<td>success</td>
+</tr>
+<tr>
+<td>Classes</td>
+<td>warning</td>
+</tr>
+<tr>
+<td></td>
+<td>danger</td>
+</tr>
+<tr>
+<td></td>
+<td>no-icon</td>
+</tr>
+</tbody></table>
+<p>
+위에 보시는 <span class="highlight-text danger">[classes]</span>에 값을 넣고 작성하면 됩니다.<br>
+또한 표에서 보이는 5번째줄의 값(<span class="highlight-text danger">no-icon</span>)은 icon을 보여주지 않고 Alert을 쓰는 방법입니다.<br>  
+아래와 같이 쓰시면 됩니다.
+</p>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% alert info no-icon %&#125;</span><br><span class="line">Info 알림의 예시 코드</span><br><span class="line">&#123;% endalert %&#125;</span><br></pre></td></tr></table></figure>
+<div class="alert info no-icon"><p>Info 알림 결과 !</p>
+</div>
+
+<p></br><br></p>
+<h4 id="Highlight-Text"><a href="#Highlight-Text" class="headerlink" title="Highlight Text"></a>Highlight Text</h4><blockquote>
+<p> <code>Highlight Text</code>을 사용하는 방법</p>
+</blockquote>
+<p><code>Highlight Text</code>는 형광펜을 그은 처럼 작성하는 것 입니다.</p>
+<p>일단 예시를 보도록 하겠습니다.  </p>
+<p>
+1. <span class="highlight-text orange">첫번째 형광펜</span>은 기본 문법으로</br>
+2. <span class="highlight-text" style="background-color:#00FFFF;">두번째 형광펜</span>은 hexa color 문법으로
+</p>
 
 </br>
 
-<h3 id="Crontab-활용-용도"><a href="#Crontab-활용-용도" class="headerlink" title="Crontab 활용 용도"></a>Crontab 활용 용도</h3><ul>
-<li>30분 단위로 이메일을 전송 할 때</li>
-<li>매주 일요일 새벽 4시에 서버를 재 시작 할 때</li>
-</ul>
-<p>위와 같이 반복적인 예약 작업이 필요할 때 다양하게 활용할 수 있는 도구 입니다.<br></br></br></p>
-<h1 id="Install-crontab-CentOS"><a href="#Install-crontab-CentOS" class="headerlink" title="Install crontab - CentOS"></a>Install crontab - CentOS</h1><p><code>yum</code> 을 통해 <code>Crontab</code> 을 설치합니다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum -y install cronie</span><br></pre></td></tr></table></figure>
-<p><code>Crontab</code> 설치가 완료 되었다면, <code>Crontab</code> 서비스가 잘 작동 하고 있는지 확인합니다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl start crond</span><br><span class="line">$ systemctl list-unit-files</span><br><span class="line"></span><br><span class="line">UNIT                        FILE STATE</span><br><span class="line">...</span><br><span class="line">crond.service               enabled</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p></br></br></p>
-<h1 id="How-to-use-crontab"><a href="#How-to-use-crontab" class="headerlink" title="How to use crontab?"></a>How to use crontab?</h1><h2 id="Crontab-리스트-조회"><a href="#Crontab-리스트-조회" class="headerlink" title="Crontab 리스트 조회"></a>Crontab 리스트 조회</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -l</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><code>crontab</code>에 등록된 스케쥴러 작업 리스트를 확인합니다.</p>
-</blockquote>
-<h2 id="Crontab-편집"><a href="#Crontab-편집" class="headerlink" title="Crontab 편집"></a>Crontab 편집</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -e</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><code>crontab</code> 예약 작업 리스트를 편집 할 수 있는 에디터가 실행 되며, 편집합니다.</p>
-</blockquote>
-<h2 id="Crontab-리스트-삭제"><a href="#Crontab-리스트-삭제" class="headerlink" title="Crontab 리스트 삭제"></a>Crontab 리스트 삭제</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -r</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><code>crontab</code>에 등록된 모든 스케쥴러 작업 리스트를 삭제합니다.</p>
-</blockquote>
-<p></br></br></p>
-<h2 id="Crontab-작성-방법"><a href="#Crontab-작성-방법" class="headerlink" title="Crontab 작성 방법"></a>Crontab 작성 방법</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">* * * * *  수행할 명령어</span><br><span class="line">┬ ┬ ┬ ┬ ┬</span><br><span class="line">│ │ │ │ │</span><br><span class="line">│ │ │ │ │</span><br><span class="line">│ │ │ │ └───────── 요일 (0 - 6) (0:일요일, 1:월요일, 2:화요일, …, 6:토요일)</span><br><span class="line">│ │ │ └───────── 월 (1 - 12)</span><br><span class="line">│ │ └───────── 일 (1 - 31)</span><br><span class="line">│ └───────── 시 (0 - 23)</span><br><span class="line">└───────── 분 (0 - 59)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><code>crontab -e</code> 명령어를 사용해 위와 같은 형식으로 스케쥴러를 등록합니다.</p>
-</blockquote>
-<p></br></br></p>
-<h1 id="Example-crontab"><a href="#Example-crontab" class="headerlink" title="Example crontab"></a>Example crontab</h1><p>간단한 텍스트를 파일에 쓰는 것을 해보겠습니다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ crontab -e</span><br></pre></td></tr></table></figure>
-<p><code>crontab</code> 편집기를 열고 작업을 등록합니다.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">* * * * * <span class="built_in">echo</span> <span class="string">"Hello 두번 개발하는 블로그"</span> &gt;&gt; ~/test.txt</span><br></pre></td></tr></table></figure>
-<p><code>ESC + qw</code> 저장하고 밖으로 빠져 나옵니다.</p>
-<p>1분이 지나게 되면 root 경로에 test.txt 파일이 생긴 것을 볼 수 있으며, 파일 내부에는 <code>Hello 두번 개발하는 블로그</code> 라는 텍스트가 작성 되어 있는 것을 볼 수 있습니다.</p>
-<div style="text-align: center;">
-<img src="/image/devlog/linux/crontab.png" width="80%">
-</div>
+<h4 id="문법은-다음과-같습니다-1"><a href="#문법은-다음과-같습니다-1" class="headerlink" title="문법은 다음과 같습니다."></a>문법은 다음과 같습니다.</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% hl_text [(classes | hexa code | rgb color | rgba color)] %&#125; </span><br><span class="line">content</span><br><span class="line">&#123;% endhl_text %&#125;</span><br></pre></td></tr></table></figure>
 
-<p></br></br></p>
-<h1 id="다른-예제"><a href="#다른-예제" class="headerlink" title="다른 예제"></a>다른 예제</h1><h3 id="특정-시간에-실행-1"><a href="#특정-시간에-실행-1" class="headerlink" title="특정 시간에 실행 1"></a>특정 시간에 실행 1</h3><blockquote>
-<p>매주 일요일 새벽 4시 20분에  test! 텍스트를 root 경로 밑 test.txt 파일에 작성</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">20 4 * * 0 <span class="built_in">echo</span> <span class="string">"test!"</span> &gt;&gt; ~/test.txt</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>파라미터 이름</th>
+<th>값</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>red</td>
+</tr>
+<tr>
+<td></td>
+<td>green</td>
+</tr>
+<tr>
+<td></td>
+<td>blue</td>
+</tr>
+<tr>
+<td></td>
+<td>purple</td>
+</tr>
+<tr>
+<td></td>
+<td>orange</td>
+</tr>
+<tr>
+<td>Classes</td>
+<td>yellow</td>
+</tr>
+<tr>
+<td></td>
+<td>cyan</td>
+</tr>
+<tr>
+<td></td>
+<td>primary</td>
+</tr>
+<tr>
+<td></td>
+<td>success</td>
+</tr>
+<tr>
+<td></td>
+<td>warning</td>
+</tr>
+<tr>
+<td></td>
+<td>danger</td>
+</tr>
+</tbody></table>
+<p>
+위에 보시는 <span class="highlight-text cyan">[(classes | hexa code)]</span>에 값을 넣고 작성하면 됩니다.<br>
+또한 <span class="highlight-text primary">hexa code</span>로도 작성할 수 있습니다.<br>  
+사용 코드 예시는 아래와 같습니다.
+</p>
 
-<h3 id="특정-시간에-실행-2"><a href="#특정-시간에-실행-2" class="headerlink" title="특정 시간에 실행 2"></a>특정 시간에 실행 2</h3><blockquote>
-<p>매주 화요일 오후 1시 30분, 40분, 50분에 test! 텍스트를 root 경로 밑 test.txt 파일에 작성</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10,20,30 13 * * 2 <span class="built_in">echo</span> <span class="string">"test!"</span> &gt;&gt; ~/test.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- basic code --&gt;</span></span><br><span class="line">1. &#123;% hl_text orange %&#125;첫번째 형광펜&#123;% endhl_text %&#125;은 기본 문법으로<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- hexa code --&gt;</span></span><br><span class="line">2. &#123;% hl_text #00FFFF %&#125;두번째 형광펜&#123;% endhl_text %&#125;은 hexa color 문법으로</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p></br></br></p>
-<h2 id="Crontab-작성-기호-종류"><a href="#Crontab-작성-기호-종류" class="headerlink" title="Crontab 작성 기호 종류"></a>Crontab 작성 기호 종류</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* <span class="comment"># 범위 내 모두 실행</span></span><br><span class="line">, <span class="comment"># 나열된 숫자 중 일치하는 값에 실행</span></span><br><span class="line">- <span class="comment"># 두 숫자 사이에 포함된 범위에 실행</span></span><br><span class="line">/ <span class="comment"># 지정한 숫자에 실행</span></span><br></pre></td></tr></table></figure>
+<p>
+<span class="highlight-text orange">첫번째 형광펜 결과 !</span></br>
+<span class="highlight-text" style="background-color:#00FFFF;">두번째 형광펜</span>
+</p>
             
 
 
@@ -414,7 +498,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">태그</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/centos/" rel="tag">CentOS</a> <a class="tag tag--primary tag--small t-link" href="/tags/cron/" rel="tag">Cron</a> <a class="tag tag--primary tag--small t-link" href="/tags/crontab/" rel="tag">Crontab</a> <a class="tag tag--primary tag--small t-link" href="/tags/infra/" rel="tag">Infra</a> <a class="tag tag--primary tag--small t-link" href="/tags/linux/" rel="tag">Linux</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/hexo/" rel="tag">Hexo</a> <a class="tag tag--primary tag--small t-link" href="/tags/syntax/" rel="tag">Syntax</a>
 
             </div>
         
@@ -427,9 +511,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2019/12/24/story-ssafy-3rd/"
-                    data-tooltip="SSAFY 3기를 시작하며![합격 후기]"
-                    aria-label="이전: SSAFY 3기를 시작하며![합격 후기]"
+                    href="/2020/03/17/algorithm-recursive/"
+                    data-tooltip="Recursive(재귀) - [Algorithm Skill]"
+                    aria-label="이전: Recursive(재귀) - [Algorithm Skill]"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -438,11 +522,14 @@
             </li>
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/12/24/story-ssafy-3rd/"
+                    data-tooltip="SSAFY 3기를 시작하며![합격 후기]"
+                    aria-label="다음: SSAFY 3기를 시작하며![합격 후기]"
+                >
+                    
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
                     </a>
@@ -465,7 +552,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -478,7 +565,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -491,7 +578,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -549,9 +636,9 @@
                     
                 <a
                     class="post-action-btn btn btn--default tooltip--top"
-                    href="/2019/12/24/story-ssafy-3rd/"
-                    data-tooltip="SSAFY 3기를 시작하며![합격 후기]"
-                    aria-label="이전: SSAFY 3기를 시작하며![합격 후기]"
+                    href="/2020/03/17/algorithm-recursive/"
+                    data-tooltip="Recursive(재귀) - [Algorithm Skill]"
+                    aria-label="이전: Recursive(재귀) - [Algorithm Skill]"
                 >
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
@@ -560,11 +647,14 @@
             </li>
             <li class="post-action">
                 
-                    <a
-                        class="post-action-btn btn btn--disabled"
-                        aria-hidden="true"
-                    >
-                        
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/12/24/story-ssafy-3rd/"
+                    data-tooltip="SSAFY 3기를 시작하며![합격 후기]"
+                    aria-label="다음: SSAFY 3기를 시작하며![합격 후기]"
+                >
+                    
                         <span class="hide-xs hide-sm text-small icon-mr">다음</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
                     </a>
@@ -587,7 +677,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                     title="Facebook에 공유하기"
                     aria-label="Facebook에 공유하기"
                 >
@@ -600,7 +690,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                     title="Twitter에 공유하기"
                     aria-label="Twitter에 공유하기"
                 >
@@ -613,7 +703,7 @@
             <li class="post-action hide-xs">
                 <a
                     class="post-action-btn btn btn--default"
-                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                     title="Google+에 공유하기"
                     aria-label="Google+에 공유하기"
                 >
@@ -647,7 +737,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                         aria-label="Facebook에 공유하기"
                     >
                         <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
@@ -660,7 +750,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                         aria-label="Twitter에 공유하기"
                     >
                         <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
@@ -673,7 +763,7 @@
                     <a
                         class="share-option-btn"
                         target="new"
-                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
                         aria-label="Google+에 공유하기"
                     >
                         <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>

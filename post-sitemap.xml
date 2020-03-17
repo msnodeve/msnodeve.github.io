@@ -8,16 +8,32 @@
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/</loc>
-        <lastmod>2020-03-13T11:05:16.468Z</lastmod>
+        <loc>https://msnodeve.github.io/2020/03/17/algorithm-recursive/</loc>
+        <lastmod>2020-03-17T08:01:51.970Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/2020/03/11/story-ssafy-3rd/</loc>
-        <lastmod>2020-03-13T10:57:44.659Z</lastmod>
+        <loc>https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/</loc>
+        <lastmod>2020-03-17T08:00:17.508Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/</loc>
+        <lastmod>2020-03-13T11:27:23.006Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/</loc>
+        <lastmod>2020-03-13T11:24:02.702Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
