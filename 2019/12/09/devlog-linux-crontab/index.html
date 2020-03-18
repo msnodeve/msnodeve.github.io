@@ -19,7 +19,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜/시간에 자동으로 실행해 주는 스케쥴러 입니다.\n주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.\n\n\n\n\nCrontab 활용 용도\n30분 단위로 이메일을 전송 할 때\n매주 일요일 새벽 4시에 서버를 재 시작 할 때\n\n위와 같이 반복적인 예약 작업이 필요할 때 다양하게 활용할 수 있는 도구 입니다.\nInstall crontab - CentOSyum 을 통해 Crontab 을 설치합니다.\n1$ yum -y install cronie\nCrontab 설치가 완료 되었다면, Crontab 서비스가 잘 작동 하고 있는지 확인합니다.\n1234567$ systemctl start crond$ systemctl list-unit-filesUNIT                        FILE STATE...crond.service               enabled...\n\nHow to use crontab?Crontab 리스트 조회1$ crontab -l\n\ncrontab에 등록된 스케쥴러 작업 리스트를 확인합니다.\n\nCrontab 편집1$ crontab -e\n\ncrontab 예약 작업 리스트를 편집 할 수 있는 에디터가 실행 되며, 편집합니다.\n\nCrontab 리스트 삭제1$ crontab -r\n\ncrontab에 등록된 모든 스케쥴러 작업 리스트를 삭제합니다.\n\n\nCrontab 작성 방법123456789* * * * *  수행할 명령어┬ ┬ ┬ ┬ ┬│ │ │ │ ││ │ │ │ ││ │ │ │ └───────── 요일 (0 - 6) (0:일요일, 1:월요일, 2:화요일, …, 6:토요일)│ │ │ └───────── 월 (1 - 12)│ │ └───────── 일 (1 - 31)│ └───────── 시 (0 - 23)└───────── 분 (0 - 59)\n\ncrontab -e 명령어를 사용해 위와 같은 형식으로 스케쥴러를 등록합니다.\n\n\nExample crontab간단한 텍스트를 파일에 쓰는 것을 해보겠습니다.\n1$ crontab -e\ncrontab 편집기를 열고 작업을 등록합니다.\n1* * * * * echo \"Hello 두번 개발하는 블로그\" &gt;&gt; ~/test.txt\nESC + qw 저장하고 밖으로 빠져 나옵니다.\n1분이 지나게 되면 root 경로에 test.txt 파일이 생긴 것을 볼 수 있으며, 파일 내부에는 Hello 두번 개발하는 블로그 라는 텍스트가 작성 되어 있는 것을 볼 수 있습니다.\n\n\n\n\n\n다른 예제특정 시간에 실행 1\n매주 일요일 새벽 4시 20분에  test! 텍스트를 root 경로 밑 test.txt 파일에 작성\n\n120 4 * * 0 echo \"test!\" &gt;&gt; ~/test.txt\n\n특정 시간에 실행 2\n매주 화요일 오후 1시 30분, 40분, 50분에 test! 텍스트를 root 경로 밑 test.txt 파일에 작성\n\n110,20,30 13 * * 2 echo \"test!\" &gt;&gt; ~/test.txt\n\n\nCrontab 작성 기호 종류1234* # 범위 내 모두 실행, # 나열된 숫자 중 일치하는 값에 실행- # 두 숫자 사이에 포함된 범위에 실행/ # 지정한 숫자에 실행","dateCreated":"2019-12-09T16:46:52+09:00","dateModified":"2020-03-13T20:24:02+09:00","datePublished":"2019-12-09T16:46:52+09:00","description":"Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜/시간에 자동으로 실행해 주는 스케쥴러 입니다.\n주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.","headline":"Linux, CentOS 작업 스케쥴러 - Crontab","image":["crontab.png","crontab.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/","keywords":"Linux, CentOS, Infra, Cron, Crontab","thumbnailUrl":"crontab.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜/시간에 자동으로 실행해 주는 스케쥴러 입니다.\n주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.\n\n\n\n\nCrontab 활용 용도\n30분 단위로 이메일을 전송 할 때\n매주 일요일 새벽 4시에 서버를 재 시작 할 때\n\n위와 같이 반복적인 예약 작업이 필요할 때 다양하게 활용할 수 있는 도구 입니다.\nInstall crontab - CentOSyum 을 통해 Crontab 을 설치합니다.\n1$ yum -y install cronie\nCrontab 설치가 완료 되었다면, Crontab 서비스가 잘 작동 하고 있는지 확인합니다.\n1234567$ systemctl start crond$ systemctl list-unit-filesUNIT                        FILE STATE...crond.service               enabled...\n\nHow to use crontab?Crontab 리스트 조회1$ crontab -l\n\ncrontab에 등록된 스케쥴러 작업 리스트를 확인합니다.\n\nCrontab 편집1$ crontab -e\n\ncrontab 예약 작업 리스트를 편집 할 수 있는 에디터가 실행 되며, 편집합니다.\n\nCrontab 리스트 삭제1$ crontab -r\n\ncrontab에 등록된 모든 스케쥴러 작업 리스트를 삭제합니다.\n\n\nCrontab 작성 방법123456789* * * * *  수행할 명령어┬ ┬ ┬ ┬ ┬│ │ │ │ ││ │ │ │ ││ │ │ │ └───────── 요일 (0 - 6) (0:일요일, 1:월요일, 2:화요일, …, 6:토요일)│ │ │ └───────── 월 (1 - 12)│ │ └───────── 일 (1 - 31)│ └───────── 시 (0 - 23)└───────── 분 (0 - 59)\n\ncrontab -e 명령어를 사용해 위와 같은 형식으로 스케쥴러를 등록합니다.\n\n\nExample crontab간단한 텍스트를 파일에 쓰는 것을 해보겠습니다.\n1$ crontab -e\ncrontab 편집기를 열고 작업을 등록합니다.\n1* * * * * echo \"Hello 두번 개발하는 블로그\" &gt;&gt; ~/test.txt\nESC + qw 저장하고 밖으로 빠져 나옵니다.\n1분이 지나게 되면 root 경로에 test.txt 파일이 생긴 것을 볼 수 있으며, 파일 내부에는 Hello 두번 개발하는 블로그 라는 텍스트가 작성 되어 있는 것을 볼 수 있습니다.\n\n\n\n\n\n다른 예제특정 시간에 실행 1\n매주 일요일 새벽 4시 20분에  test! 텍스트를 root 경로 밑 test.txt 파일에 작성\n\n120 4 * * 0 echo \"test!\" &gt;&gt; ~/test.txt\n\n특정 시간에 실행 2\n매주 화요일 오후 1시 30분, 40분, 50분에 test! 텍스트를 root 경로 밑 test.txt 파일에 작성\n\n110,20,30 13 * * 2 echo \"test!\" &gt;&gt; ~/test.txt\n\n\nCrontab 작성 기호 종류1234* # 범위 내 모두 실행, # 나열된 숫자 중 일치하는 값에 실행- # 두 숫자 사이에 포함된 범위에 실행/ # 지정한 숫자에 실행","dateCreated":"2019-12-09T16:46:52+09:00","dateModified":"2020-03-17T17:15:44+09:00","datePublished":"2019-12-09T16:46:52+09:00","description":"Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜/시간에 자동으로 실행해 주는 스케쥴러 입니다.\n주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.","headline":"Linux, CentOS 작업 스케쥴러 - Crontab","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/","keywords":"Linux, CentOS, Infra, Cron, Crontab"}</script>
     <meta name="description" content="Crontab?Cron 은 리눅스 에서 특정한 명령이나 스크립트를 지정한 날짜&#x2F;시간에 자동으로 실행해 주는 스케쥴러 입니다. 주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Linux, CentOS 작업 스케쥴러 - Crontab">
@@ -29,7 +29,7 @@
 <meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="https://msnodeve.github.io/image/devlog/linux/crontab.png">
 <meta property="article:published_time" content="2019-12-09T07:46:52.000Z">
-<meta property="article:modified_time" content="2020-03-13T11:24:02.702Z">
+<meta property="article:modified_time" content="2020-03-17T08:15:44.314Z">
 <meta property="article:author" content="Myeong Seok KIM">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="CronTab">
@@ -47,12 +47,6 @@
         <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
     
     
-        <meta property="og:image" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
-        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
-    
-    
-        <meta property="og:image" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
-        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png"/>
     
     
     <!--STYLES-->
@@ -293,13 +287,25 @@
 </nav>
 
             
-        <div class="post-header-cover
-                    text-left
-                    post-header-cover--partial"
-             style="background-image:url('/2019/12/09/devlog-linux-crontab/crontab.png');"
-             data-behavior="4">
-            
-                <div class="post-header main-content-wrap text-left">
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
             Linux, CentOS 작업 스케쥴러 - Crontab
@@ -324,26 +330,6 @@
     
 </div>
 
-            
-        </div>
-
-            <div id="main" data-behavior="4"
-                 class="hasCover
-                        hasCoverMetaIn
-                        ">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-2766237193476584"
-     data-ad-slot="5907900553"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-                
-<article class="post">
-    
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
@@ -745,16 +731,6 @@
             <div class="results">
                 
                 <div class="media">
-                    
-                    <div class="media-left">
-                        <a
-                            class="link-unstyled"
-                            href="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
-                            aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
-                        >
-                            <img class="media-image" src="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/crontab.png" width="90" height="90"/>
-                        </a>
-                    </div>
                     
                     <div class="media-body">
                         <a

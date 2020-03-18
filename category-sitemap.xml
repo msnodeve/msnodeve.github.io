@@ -9,35 +9,42 @@
 
     <url>
         <loc>https://msnodeve.github.io/categories/algorithm/skill/recursive/</loc>
-        <lastmod>2020-03-17T08:01:51.970Z</lastmod>
+        <lastmod>2020-03-18T09:59:14.063Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://msnodeve.github.io/categories/algorithm/skill/</loc>
-        <lastmod>2020-03-17T08:01:51.970Z</lastmod>
+        <lastmod>2020-03-18T09:59:14.063Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://msnodeve.github.io/categories/algorithm/</loc>
-        <lastmod>2020-03-17T08:01:51.970Z</lastmod>
+        <lastmod>2020-03-18T09:59:14.063Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/categories/devlog/hexo/</loc>
-        <lastmod>2020-03-17T08:00:17.508Z</lastmod>
+        <loc>https://msnodeve.github.io/categories/devlog/linux/</loc>
+        <lastmod>2020-03-17T08:15:44.314Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://msnodeve.github.io/categories/devlog/</loc>
-        <lastmod>2020-03-17T08:00:17.508Z</lastmod>
+        <lastmod>2020-03-17T08:15:44.314Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/devlog/hexo/</loc>
+        <lastmod>2020-03-17T08:15:32.830Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -52,13 +59,6 @@
     <url>
         <loc>https://msnodeve.github.io/categories/story/</loc>
         <lastmod>2020-03-13T11:27:23.006Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/categories/devlog/linux/</loc>
-        <lastmod>2020-03-13T11:24:02.702Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
