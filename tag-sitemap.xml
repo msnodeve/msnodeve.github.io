@@ -3,36 +3,57 @@
 
 
     <url>
-        <loc>https://msnodeve.github.io/tags/fibo/</loc>
-        <lastmod>2020-05-05T05:21:18.952Z</lastmod>
+        <loc>https://msnodeve.github.io/tags/bitmask/</loc>
+        <lastmod>2020-05-23T10:40:47.067Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/tags/hanoi/</loc>
-        <lastmod>2020-05-05T05:21:18.952Z</lastmod>
+        <loc>https://msnodeve.github.io/tags/bit/</loc>
+        <lastmod>2020-05-23T10:40:47.067Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/tags/factorial/</loc>
-        <lastmod>2020-05-05T05:21:18.952Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/tags/recursive/</loc>
-        <lastmod>2020-05-05T05:21:18.952Z</lastmod>
+        <loc>https://msnodeve.github.io/tags/subset/</loc>
+        <lastmod>2020-05-23T10:40:47.067Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://msnodeve.github.io/tags/algorithm/</loc>
-        <lastmod>2020-05-05T05:21:18.952Z</lastmod>
+        <lastmod>2020-05-23T10:40:47.067Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/tags/fibo/</loc>
+        <lastmod>2020-05-05T05:23:05.208Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/tags/hanoi/</loc>
+        <lastmod>2020-05-05T05:23:05.208Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/tags/factorial/</loc>
+        <lastmod>2020-05-05T05:23:05.208Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/tags/recursive/</loc>
+        <lastmod>2020-05-05T05:23:05.208Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

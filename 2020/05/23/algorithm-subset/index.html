@@ -1,0 +1,904 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="msnodevLog">
+    <title>SubSet(부분집합) - [Algorithm Skill] - msnodevLog</title>
+    <meta name="author" content="Myeong Seok KIM">
+    
+        <meta name="keywords" content="algorithm,Algorithm,Skill,Subset,Bit,BitMask,비트마스크,비트마스킹,기본적인 알고리즘 스킬,알고리즘,스킬,서브셋,부분집합">
+    
+    
+        <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\n알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.목차는 다음과 같습니다.\n1. 배열체크로 부분집합 구하기2. 비트마스크로 부분집합 구하기3. 관련 알고리즘 문제\n\n\nSubset 배열체크부분집합이라는 단어는 고등학생때 많이 들어봤던 것 같습니다.일단 부분집합에 대해서 간단하게 알아 보도록 하죠.원소의 개수가 N일때, 부분집합의 개수는 2^N 입니다.  \n어떻게 그럴까요?1234567891011121314151617181920원소의 개수가 &#123;1, 2&#125; 라고할 때, 다음과 같이 부분 집합이 나올 수 있습니다.∅121, 2총 개수 : 4개원소의 개수가 &#123;1, 2, 3&#125; 라고할 때, 다음과 같이 부분 집합이 나올 수 있습니다.∅1231, 21, 32, 31, 2, 3총 개수 : 8개\n\n그렇다면 이제 코드로 한번 작성해서 확인해 보도록 하겠습니다.\n123456789101112131415161718192021222324252627282930313233343536373839404142434445import java.util.Scanner;public class Subset_Visit &#123;    static int N, totalCnt; // 원소의 개수, 총 경우의 수    static int[] inputs;    static boolean[] visit;    public static void main(String[] args) &#123;        // 부분 집합을 구하기 위해서 원소 입력        Scanner sc = new Scanner(System.in);        N = sc.nextInt();        inputs = new int[N];        visit = new boolean[N];        for (int i = 0; i &lt; N; i++) &#123;            inputs[i] = sc.nextInt();        &#125;        // 부분집합 시작        getSubset(0);        // 출력        System.out.println(\"총 경우의 수 : \" +  totalCnt);    &#125;    private static void getSubset(int cnt) &#123;        // cnt가 원소의 개수만큼 돌았다면        if(cnt == N)&#123;            totalCnt++;            for (int i = 0; i &lt; N; i++) &#123;                // 선택된 배열과 선택되지 않은 배열 출력                System.out.print((visit[i] ? inputs[i] : \"X\") + \"\\t\");            &#125;            System.out.println();            return;        &#125;        // 현재 원소를 선택하고 다음        visit[cnt] = true;        getSubset(cnt+1);        // 현재 원소를 선택하지 않고 다음        visit[cnt] = false;        getSubset(cnt+1);    &#125;&#125;\n\n위 코드를 실행해보면 아래와 같은 결과를 얻을 수 있습니다.\n1234567891011121314151617181941 2 3 41\t2\t3\t4\t1\t2\t3\tX\t1\t2\tX\t4\t1\t2\tX\tX\t1\tX\t3\t4\t1\tX\t3\tX\t1\tX\tX\t4\t1\tX\tX\tX\tX\t2\t3\t4\tX\t2\t3\tX\tX\t2\tX\t4\tX\t2\tX\tX\tX\tX\t3\t4\tX\tX\t3\tX\tX\tX\tX\t4\tX\tX\tX\tX\t총 경우의 수 : 16\n\n\n\nSubset 비트마스킹위에서 봤던 방문배열을 사용하게 되면 원소의 개수가 커졌을 때, 메모리 사용량이 많이 들어갈 수 있습니다.이번에는 비트마스킹을 이용해서 부분집합을 구해 보도록 하겠습니다.  \n\n\n1234567891011121314151617181920212223242526272829303132import java.util.Scanner;public class Subset_Bitmask &#123;    static int N; // 원소의 개수    static int[] inputs;    public static void main(String[] args) &#123;        // 부분 집합을 구하기 위해서 원소 입력        Scanner sc = new Scanner(System.in);        N = sc.nextInt();        inputs = new int[N];        for (int i = 0; i &lt; N; i++) &#123;            inputs[i] = sc.nextInt();        &#125;        // 부분집합 시작        getSubset(1 &lt;&lt; N);        // 출력        System.out.println(\"총 경우의 수 : \" +  (1 &lt;&lt; N));    &#125;    private static void getSubset(int cnt) &#123;        for (int flag = 0; flag &lt; cnt; flag++) &#123;            // 0, 1, 2 ... flag 비트열 별로 원소 수만큼 각 자리 비트를 확인            for (int i = 0; i &lt; N; i++) &#123;                System.out.print((((flag &amp; (1 &lt;&lt; i)) != 0) ? inputs[i] : \"X\") + \"\\t\");            &#125;            System.out.println();        &#125;    &#125;&#125;\n\n위 코드의 실행 원리를 예시를 들며 설명 하겠습니다.\n\n2개의 원소가 있다고 가정하면 총 경우의 수는 4.8을 Binary로 표현하면 1 0 0 이며, 4번을 돌며 각자리 입력 받은 원소의 개수만큼 비트 이동을 합니다.\n1234567891011121314151617181920212223242526flag -&gt; 0 &#x3D; 0 0 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 0i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 0따라서 X, X 로 표현 됩니다.flag -&gt; 1 &#x3D; 0 1 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 1i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 0따라서 1, X 로 표현 됩니다.flag -&gt; 2 &#x3D; 1 0 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 0i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 1따라서 X, 1 로 표현 됩니다.flag -&gt; 3 &#x3D; 1 1 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 1i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 1따라서 1, 2 로 표현 됩니다.\n\n위 코드를 실행해보면 아래처럼 결과가 나오는 것을 확인 할 수 있습니다.\n123456721 2X\tX\t1\tX\tX\t2\t1\t2\t총 경우의 수 : 4\n\n\n이렇게 부분집합에 대해서 알아 보았습니다.그럼 관련 알고리즘 문제 링크를 걸어드리며 마무리 짓도록 하겠습니다. 감사합니다.😁\n관련 알고리즘 문제&nbsp;&nbsp;부분수열의 합","dateCreated":"2020-05-23T18:43:26+09:00","dateModified":"2020-05-23T19:40:47+09:00","datePublished":"2020-05-23T18:43:26+09:00","description":"알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.\nSubset BitMask","headline":"SubSet(부분집합) - [Algorithm Skill]","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/05/23/algorithm-subset/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/05/23/algorithm-subset/","keywords":"Algorithm, Subset, Bit, BitMask"}</script>
+    <meta name="description" content="알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다. Subset BitMask">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="SubSet(부분집합) - [Algorithm Skill]">
+<meta property="og:url" content="https://msnodeve.github.io/2020/05/23/algorithm-subset/index.html">
+<meta property="og:site_name" content="msnodevLog">
+<meta property="og:description" content="알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다. Subset BitMask">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="chrome-extension://anenheoccfogllpbpcmbbpcbjpogeehe/svg/9.svg">
+<meta property="article:published_time" content="2020-05-23T09:43:26.000Z">
+<meta property="article:modified_time" content="2020-05-23T10:40:47.067Z">
+<meta property="article:author" content="Myeong Seok KIM">
+<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="Skill">
+<meta property="article:tag" content="Subset">
+<meta property="article:tag" content="Bit">
+<meta property="article:tag" content="BitMask">
+<meta property="article:tag" content="비트마스크">
+<meta property="article:tag" content="비트마스킹">
+<meta property="article:tag" content="기본적인 알고리즘 스킬">
+<meta property="article:tag" content="알고리즘">
+<meta property="article:tag" content="스킬">
+<meta property="article:tag" content="서브셋">
+<meta property="article:tag" content="부분집합">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="chrome-extension://anenheoccfogllpbpcmbbpcbjpogeehe/svg/9.svg">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/all.css">
+
+    
+<link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+
+    
+<link rel="stylesheet" href="/assets/css/thumbs.css">
+
+    
+<link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153775936-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-153775936-1');
+    </script>
+
+
+    
+
+    
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2020/05/23/algorithm-subset/"/>
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            msnodevLog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="/about"
+                aria-label="링크 열기: /about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Myeong Seok KIM</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/msnodeve"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/Kstoo2"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            SubSet(부분집합) - [Algorithm Skill]
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-05-23T18:43:26+09:00">
+	
+		    2020/05/23
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/skill/">skill</a>, <a class="category-link" href="/categories/algorithm/skill/subset/">subset</a>, <a class="category-link" href="/categories/algorithm/skill/subset/bitmask/">bitmask</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<h5 id="알고리즘의-기본적인-스킬을-다룹니다-1"><a href="#알고리즘의-기본적인-스킬을-다룹니다-1" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.<br>목차는 다음과 같습니다.</p>
+<p><a href="#Subset-배열체크">1. 배열체크로 부분집합 구하기</a><br><a href="#Subset-비트마스킹">2. 비트마스크로 부분집합 구하기</a><br><a href="#관련-알고리즘-문제">3. 관련 알고리즘 문제</a></p>
+<br>
+
+<h2 id="Subset-배열체크"><a href="#Subset-배열체크" class="headerlink" title="Subset 배열체크"></a>Subset 배열체크</h2><p>부분집합이라는 단어는 고등학생때 많이 들어봤던 것 같습니다.<br>일단 부분집합에 대해서 간단하게 알아 보도록 하죠.<br>원소의 개수가 <code>N</code>일때, 부분집합의 개수는 <span class="highlight-text orange">2^N</span> 입니다.  </p>
+<h4 id="어떻게-그럴까요"><a href="#어떻게-그럴까요" class="headerlink" title="어떻게 그럴까요?"></a>어떻게 그럴까요?</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">원소의 개수가 &#123;1, 2&#125; 라고할 때, 다음과 같이 부분 집합이 나올 수 있습니다.</span><br><span class="line">∅</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">1, 2</span><br><span class="line"></span><br><span class="line">총 개수 : 4개</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">원소의 개수가 &#123;1, 2, 3&#125; 라고할 때, 다음과 같이 부분 집합이 나올 수 있습니다.</span><br><span class="line">∅</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">1, 2</span><br><span class="line">1, 3</span><br><span class="line">2, 3</span><br><span class="line">1, 2, 3</span><br><span class="line"></span><br><span class="line">총 개수 : 8개</span><br></pre></td></tr></table></figure>
+
+<p>그렇다면 이제 코드로 한번 작성해서 확인해 보도록 하겠습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Subset_Visit</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> N, totalCnt; <span class="comment">// 원소의 개수, 총 경우의 수</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] inputs;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">boolean</span>[] visit;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 부분 집합을 구하기 위해서 원소 입력</span></span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        N = sc.nextInt();</span><br><span class="line">        inputs = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">        visit = <span class="keyword">new</span> <span class="keyword">boolean</span>[N];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            inputs[i] = sc.nextInt();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 부분집합 시작</span></span><br><span class="line">        getSubset(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 출력</span></span><br><span class="line">        System.out.println(<span class="string">"총 경우의 수 : "</span> +  totalCnt);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getSubset</span><span class="params">(<span class="keyword">int</span> cnt)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// cnt가 원소의 개수만큼 돌았다면</span></span><br><span class="line">        <span class="keyword">if</span>(cnt == N)&#123;</span><br><span class="line">            totalCnt++;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">                <span class="comment">// 선택된 배열과 선택되지 않은 배열 출력</span></span><br><span class="line">                System.out.print((visit[i] ? inputs[i] : <span class="string">"X"</span>) + <span class="string">"\t"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 현재 원소를 선택하고 다음</span></span><br><span class="line">        visit[cnt] = <span class="keyword">true</span>;</span><br><span class="line">        getSubset(cnt+<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 현재 원소를 선택하지 않고 다음</span></span><br><span class="line">        visit[cnt] = <span class="keyword">false</span>;</span><br><span class="line">        getSubset(cnt+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 실행해보면 아래와 같은 결과를 얻을 수 있습니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">4</span><br><span class="line">1 2 3 4</span><br><span class="line">1	2	3	4	</span><br><span class="line">1	2	3	X	</span><br><span class="line">1	2	X	4	</span><br><span class="line">1	2	X	X	</span><br><span class="line">1	X	3	4	</span><br><span class="line">1	X	3	X	</span><br><span class="line">1	X	X	4	</span><br><span class="line">1	X	X	X	</span><br><span class="line">X	2	3	4	</span><br><span class="line">X	2	3	X	</span><br><span class="line">X	2	X	4	</span><br><span class="line">X	2	X	X	</span><br><span class="line">X	X	3	4	</span><br><span class="line">X	X	3	X	</span><br><span class="line">X	X	X	4	</span><br><span class="line">X	X	X	X	</span><br><span class="line">총 경우의 수 : 16</span><br></pre></td></tr></table></figure>
+
+<p><br><br></p>
+<hr>
+<h2 id="Subset-비트마스킹"><a href="#Subset-비트마스킹" class="headerlink" title="Subset 비트마스킹"></a>Subset 비트마스킹</h2><p>위에서 봤던 방문배열을 사용하게 되면 원소의 개수가 커졌을 때, 메모리 사용량이 많이 들어갈 수 있습니다.<br>이번에는 비트마스킹을 이용해서 부분집합을 구해 보도록 하겠습니다.  </p>
+<br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Subset_Bitmask</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> N; <span class="comment">// 원소의 개수</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span>[] inputs;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 부분 집합을 구하기 위해서 원소 입력</span></span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        N = sc.nextInt();</span><br><span class="line">        inputs = <span class="keyword">new</span> <span class="keyword">int</span>[N];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">            inputs[i] = sc.nextInt();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 부분집합 시작</span></span><br><span class="line">        getSubset(<span class="number">1</span> &lt;&lt; N);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 출력</span></span><br><span class="line">        System.out.println(<span class="string">"총 경우의 수 : "</span> +  (<span class="number">1</span> &lt;&lt; N));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getSubset</span><span class="params">(<span class="keyword">int</span> cnt)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> flag = <span class="number">0</span>; flag &lt; cnt; flag++) &#123;</span><br><span class="line">            <span class="comment">// 0, 1, 2 ... flag 비트열 별로 원소 수만큼 각 자리 비트를 확인</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">                System.out.print((((flag &amp; (<span class="number">1</span> &lt;&lt; i)) != <span class="number">0</span>) ? inputs[i] : <span class="string">"X"</span>) + <span class="string">"\t"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>위 코드의 실행 원리를 예시를 들며 설명 하겠습니다.</p>
+<hr>
+<p>2개의 원소가 있다고 가정하면 총 경우의 수는 4.<br>8을 Binary로 표현하면 <code>1 0 0</code> 이며, 4번을 돌며 각자리 입력 받은 원소의 개수만큼 비트 이동을 합니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">flag -&gt; 0 &#x3D; 0 0 일때</span><br><span class="line">i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 0</span><br><span class="line">i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 0</span><br><span class="line"></span><br><span class="line">따라서 X, X 로 표현 됩니다.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag -&gt; 1 &#x3D; 0 1 일때</span><br><span class="line">i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 1</span><br><span class="line">i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 0</span><br><span class="line"></span><br><span class="line">따라서 1, X 로 표현 됩니다.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag -&gt; 2 &#x3D; 1 0 일때</span><br><span class="line">i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 0</span><br><span class="line">i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 1</span><br><span class="line"></span><br><span class="line">따라서 X, 1 로 표현 됩니다.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">flag -&gt; 3 &#x3D; 1 1 일때</span><br><span class="line">i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 1</span><br><span class="line">i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 1</span><br><span class="line"></span><br><span class="line">따라서 1, 2 로 표현 됩니다.</span><br></pre></td></tr></table></figure>
+
+<p>위 코드를 실행해보면 아래처럼 결과가 나오는 것을 확인 할 수 있습니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line">1 2</span><br><span class="line">X	X	</span><br><span class="line">1	X	</span><br><span class="line">X	2	</span><br><span class="line">1	2	</span><br><span class="line">총 경우의 수 : 4</span><br></pre></td></tr></table></figure>
+
+<p><br><br></p>
+<p>이렇게 부분집합에 대해서 알아 보았습니다.<br>그럼 관련 알고리즘 문제 링크를 걸어드리며 마무리 짓도록 하겠습니다. 감사합니다.😁</p>
+<h2 id="관련-알고리즘-문제"><a href="#관련-알고리즘-문제" class="headerlink" title="관련 알고리즘 문제"></a>관련 알고리즘 문제</h2><p><img src="chrome-extension://anenheoccfogllpbpcmbbpcbjpogeehe/svg/9.svg" height="30px" width="30px" align="left">&nbsp;&nbsp;<a href="https://www.acmicpc.net/problem/1182" target="_blank" rel="noopener">부분수열의 합</a></p>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/algorithm/" rel="tag">Algorithm</a> <a class="tag tag--primary tag--small t-link" href="/tags/bit/" rel="tag">Bit</a> <a class="tag tag--primary tag--small t-link" href="/tags/bitmask/" rel="tag">BitMask</a> <a class="tag tag--primary tag--small t-link" href="/tags/subset/" rel="tag">Subset</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/03/17/algorithm-recursive/"
+                    data-tooltip="Recursive(재귀) - [Algorithm Skill]"
+                    aria-label="다음: Recursive(재귀) - [Algorithm Skill]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Myeong Seok KIM. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/03/17/algorithm-recursive/"
+                    data-tooltip="Recursive(재귀) - [Algorithm Skill]"
+                    aria-label="다음: Recursive(재귀) - [Algorithm Skill]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+            <h4 id="about-card-name">Myeong Seok KIM</h4>
+        
+            <div id="about-card-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>SSAFY 3rd 교육생</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Seoul, Republic of Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">포스트가 없습니다.</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                            aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
+                        >
+                            <h3 class="media-heading">Linux, CentOS 작업 스케쥴러 - Crontab</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 9일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab?"></a>Crontab?</h1><p><code>Cron</code> 은 리눅스 에서 특정한 <code>명령</code>이나 <code>스크립트</code>를 지정한 <code>날짜/시간</code>에 자동으로 실행해 주는 <code>스케쥴러</code> 입니다.</p>
+<p>주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/ssafy.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <h3 class="media-heading">SSAFY 3기를 시작하며![합격 후기]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 24일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="SSAFY"><a href="#SSAFY" class="headerlink" title="SSAFY"></a>SSAFY</h1><p><code>Samsung Software Academy For Youth</code>(삼성 청년 소프트웨어 아카데미) 서울 지역에 합격했습니다! 😘</p>
+<p>그런 의미로 이야기를 한 번 써내려 가려 합니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/hexo-syntax.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <h3 class="media-heading">Hexo[Tranquilpeak] 사용방법</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 13일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Hexo-tranquilpeak-테마"><a href="#Hexo-tranquilpeak-테마" class="headerlink" title="Hexo[tranquilpeak 테마]"></a>Hexo[tranquilpeak 테마]</h1><p>이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다.</p>
+<p><code>Tag</code> <code>Alert</code> <code>Highlight Text</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                            aria-label=": Recursive(재귀) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">Recursive(재귀) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 17일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다.</p>
+<p><code>Factorial</code> <code>Fibonacci</code> <code>Fibonacci Memoization</code> <code>Hanoi</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                            aria-label=": SubSet(부분집합) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">SubSet(부분집합) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 5월 23일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.</p>
+<p><code>Subset</code> <code>BitMask</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="포스트가 없습니다."
+                data-message-one="1 개의 포스트가 있습니다."
+                data-message-other="{n} 개의 포스트가 있습니다.">
+                5 개의 포스트가 있습니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/jquery.js"></script>
+
+
+<script src="/assets/js/jquery.fancybox.js"></script>
+
+
+<script src="/assets/js/thumbs.js"></script>
+
+
+<script src="/assets/js/tranquilpeak.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+    
+<script src="/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('R1M5F6PCKT', 'c742103764cdb380400cb1b22f428418');
+      var algoliaIndex = algoliaClient.initIndex('msnodeve_blog');
+    </script>
+
+
+    </body>
+</html>
