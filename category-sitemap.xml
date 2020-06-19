@@ -8,6 +8,34 @@
     </url>
 
     <url>
+        <loc>https://msnodeve.github.io/categories/backend/framework/spring/springboot/</loc>
+        <lastmod>2020-06-19T11:20:37.872Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/backend/framework/spring/</loc>
+        <lastmod>2020-06-19T11:20:37.872Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/backend/framework/</loc>
+        <lastmod>2020-06-19T11:20:37.872Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/backend/</loc>
+        <lastmod>2020-06-19T11:20:37.872Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://msnodeve.github.io/categories/algorithm/skill/lis/dp/binary-search/</loc>
         <lastmod>2020-05-24T08:04:24.158Z</lastmod>
         <changefreq>weekly</changefreq>
