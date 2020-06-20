@@ -1,0 +1,1111 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="msnodevLog">
+    <title>SpringBoot REST API 만들기(2) - [Backend Framework] - msnodevLog</title>
+    <meta name="author" content="Myeong Seok KIM">
+    <script data-ad-client="ca-pub-2766237193476584" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+        <meta name="keywords" content="algorithm,Backend,백엔드,Framework,프레임워크,Spring,SpringBoot,스프링,스프링부트,프로젝트,생성하기,예제,REST,API,RESTAPI,REST API">
+    
+    
+        <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\nINDEX\nBackend SpringBoot 프로젝트 생성 및 실행 해보기(1)\n\n\n두번째 단계 Make REST API\nBranch Name예제 브랜치 이름은 다음과 같습니다.step02-make-rest-api\n\nREST의 특성\n클라이언트/서버 클라이언트와 서버가 서로 독립적으로 구분 되어야 한다. 또한 서버 또는 클라이언트 증설 시 서로간의 의존성 때문에 확장에 문제가 되서는 안된다.\n상태 없음 서버는 클라이언트의 상태를 기억할 필요가 없다.\n레이어드 아키텍처 다계층 형태로 레이어를 추가하거나 수정, 제거 할 수 있고 확장성이 있어야한다.\n캐시 클라이언트가 캐시를 통해서 응답을 재사용 하여 이를 통해 서버의 부하를 낮춰 서버의 성능이 향상 될 수 있다.\n코드 온 디멘드 요청이 오면 코드를 준다.\n\n\n\nREST 인터페이스 규칙\n리소스 식별 웹 안에서 URI와 같은 고유 식별자를 통해 표현한다.\n표현을 통한 리소스 처리 JSON, XML, HTML 페이지와 같이 다양한 유형으로 표현 할 수 있다.\n자기 묘사 메세지 HTTP 통신 할 때 Http header에 메타 데이터 정보를 추가해서 실제 데이터와는 관련 없지만 데이터에 대한 설명을 나타내는 정보를 담을 수 있다.\n애플리케이션 상태 하이퍼미디어(HATEOAS) REST API를 개발할 때도 단순히 데이터만 전달하는 것이 아닌 링크 정보까지 포함한다.\n\n\nREST API 만들기모델 클래스 만들기데이터를 담을 수 있는 클래스를 만듭니다.\n\nsrc/main/java/seok/model 경로를 만들고, 그 밑에 Todo.java 를 생성\n\n\n\n\n\n\n\nTodo.java 내용은 다음과 같습니다.\n123456789101112131415161718192021222324252627package seok.model;public class Todo &#123;    private int id;    private String title;    public Todo(int id, String title) &#123;        this.id = id;        this.title = title;    &#125;    public int getId() &#123;        return id;    &#125;    public void setId(int id) &#123;        this.id = id;    &#125;    public String getTitle() &#123;        return title;    &#125;    public void setTitle(String title) &#123;        this.title = title;    &#125;&#125;\n\n\n\n\n컨트롤러 클래스 만들기URL을 요청하면 Todo 클래스의 인스턴스를 생성해 JSON으로 보여줄 수 있는 컨트롤러를 만듭니다.\n\nsrc/main/java/seok/controller 경로 밑에 TodoController.java 를 생성\n\nTodoController.java 내용은 다음과 같습니다.\n123456789101112131415161718package seok.controller;import org.springframework.web.bind.annotation.RequestMapping;import org.springframework.web.bind.annotation.RestController;import seok.model.Todo;import java.util.concurrent.atomic.AtomicInteger;@RestController@RequestMapping(value = \"/todo\")public class TodoController &#123;    private final AtomicInteger counter = new AtomicInteger();    @RequestMapping(\"/todo\")    public Todo todo()&#123;        return new Todo(counter.incrementAndGet(), \"코딩하기\");    &#125;&#125;\n\n\n\nAtomicInteger는 Atomic(더 이상 쪼개질 수 없는 성질)을 의미하며, 단순히 Integer 타입으로 선언한다면 서로 다른 Thread 에서 하나의 변수에 대해 값을 쓰거나 읽기 때문에 문제가 발생할 수 있지만, AtomicInteger를 쓰므로 Thread-safe 하게 처리가 가능합니다.\n\n실행해보기localhost:8080/todo/todo 를 계속 호출해보면 호출 할 때마다 숫자가 정상적으로 증가하는 것을 확인 할 수 있습니다.\n\n\n\n\n\n\n\n\n\n\n\n\n\nREST API에서 HTTP Method 사용컨트롤러 메서드에 POST 매핑TodoController.java 에 POST 메서드를 만듭니다.\n1234@PostMapping(\"/todo\")public Todo registryTodo(@RequestParam(value=\"todoTitle\") String todoTitle)&#123;    return new Todo(counter.incrementAndGet(), todoTitle);&#125;\n\n\n\n/todo/todo를 엔드 포인트로 합니다.\nGET은 Body 가 없어서 URL을 직접 호출 할 수 있지만, POST는 요청의 몸체가 되므로 도구를 사용해서 테스트 해봐야합니다.\n여기서는 Postman를 사용하도록 하겠습니다.\nPostman 설치하기\n\n\n\n\n위와 같이 실행하면 결과값을 받아 볼 수 있습니다.\n\n응답 헤더 활용하기ResponseEntity 클래스는 HttpEntity를 상속받은 클래스로 Http 응답에 대한 상태값을 표현 할 수 있습니다.\nTodoController.java 에 다음 코드를 추가합니다.\n1234@PostMapping(\"/todo/response\")public ResponseEntity&lt;Todo&gt; postRegistryTodo(@RequestParam String todoTitle)&#123;    return new ResponseEntity&lt;&gt;(new Todo(counter.incrementAndGet(), todoTitle), HttpStatus.CREATED);&#125;\n\n\n\n\n\n결과를 받아보면 Status: 201 Created 라는 결과를 받아 볼 수 있습니다.\n\nHATEOAS를 사용한 URI 정보 표현하기HATEOAS 설정build.gradle 파일에 다음 라이브러리를 추가합니다.\n123dependencies &#123;\tcompile 'org.springframework.boot:spring-boot-starter-hateoas'&#125;\n\n\n\n\n\n\n\nResourceSupport 클래스를 상속받을 모델 클래스 TodoResource.java를 만들도록 하겠습니다.\n1234567891011121314151617181920212223package seok.model;import org.springframework.hateoas.ResourceSupport;public class TodoResource extends ResourceSupport &#123;    private String title;    public TodoResource() &#123;    &#125;    public TodoResource(String title) &#123;        this.title = title;    &#125;    public String getTitle() &#123;        return title;    &#125;    public void setTitle(String title) &#123;        this.title = title;    &#125;&#125;\n\n\n\n\nController에 다음을 추가하도록 하겠습니다.\n1234567891011import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;...@PostMapping(\"/todo/hateoas\")public ResponseEntity&lt;TodoResource&gt; resourceResponseEntity(@RequestParam String todoTitle)&#123;    TodoResource todoResource = new TodoResource(todoTitle);    todoResource.add(linkTo(methodOn(TodoController.class).resourceResponseEntity(todoTitle)).withSelfRel());    return new ResponseEntity&lt;&gt;(todoResource, HttpStatus.OK);&#125;\n\n\ntodoResource 인스턴스를 생성한 후에 링크 정보 추가를 위해서 linkTo 메서드로 TodoController 클래스의 resourceResponseEntity 메서드를 매핑후, withSelfRel 메서드를 이용해 URL 정보를 만들고 add메서드로 정보를 추가했습니다.\n\n결과는 다음과 같습니다.\n\n\n\n\n\n\n\n\n\n\nREST API 문서화\nAPI를 제공하려면 가이드 문서 제공이 필수적인데, 개발할 때 마다 별도의 문서를 작성하고 업데이트하는 것은 비용이 많이 듭니다. 따라서 Swagger 를 이용해서 API를 설명하는 페이지를 자동 생성하는 방법을 알아 보도록 하겠습니다.\n\nSwagger 라이브러리 추가build.gradle에 springfox-swagger2, springfox-swagger-ui을 추가합니다.\n\ndependencies의 라이브러리들을 최신, 가장많이 사용하는 라이브러리들로 좀 교체했습니다.build.gradle의 전체 내용은 다음과 같습니다.\n\n1234567891011121314151617181920212223242526272829303132333435363738394041424344plugins &#123;    id 'java'    id 'org.springframework.boot' version '2.2.2.RELEASE'&#125;ext&#123;    springBootVersion='2.2.2.RELEASE'&#125;sourceCompatibility = 1.8targetCompatibility = 1.8sourceSets&#123;    main&#123;        java &#123;            srcDir 'src/main/java'        &#125;        resources&#123;            srcDir 'src/resources'        &#125;    &#125;&#125;repositories &#123;    jcenter()&#125;dependencies &#123;    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.2.RELEASE'    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.0.4.RELEASE'    compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.1.5.RELEASE'    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'    compile 'org.slf4j:slf4j-api:1.7.7'    testCompile 'junit:junit:4.12'    //capcha    compile group: 'com.google.code.maven-play-plugin.org.playframework', name: 'jj-imaging', version: '1.1'    compile group: 'com.google.code.maven-play-plugin.org.playframework', name: 'jj-simplecaptcha', version: '1.1'&#125;\n\n\n\nSwaggerConfiguration 클래스 만들기\nsrc/main/java/seok/configuration 패키지 생성 후 SwaggerConfiguration.java 클래스를 생성합니다.\n\n12345678910111213141516171819202122232425262728293031323334package seok.configuration;import com.google.common.base.Predicate;import org.springframework.context.annotation.Bean;import org.springframework.context.annotation.Configuration;import springfox.documentation.builders.ApiInfoBuilder;import springfox.documentation.service.ApiInfo;import springfox.documentation.spi.DocumentationType;import springfox.documentation.spring.web.plugins.Docket;import springfox.documentation.swagger2.annotations.EnableSwagger2;import static com.google.common.base.Predicates.or;import static springfox.documentation.builders.PathSelectors.regex;@Configuration@EnableSwagger2public class SwaggerConfiguration &#123;    @Bean    public Docket postsApi() &#123;        return new Docket(DocumentationType.SWAGGER_2).groupName(\"public-api\")                .apiInfo(apiInfo()).select().paths(postPaths()).build();    &#125;    private Predicate&lt;String&gt; postPaths() &#123;        return or(regex(\"/todo/.*\"));    &#125;    private ApiInfo apiInfo() &#123;        return new ApiInfoBuilder().title(\"TODO API\")                .description(\"Todo REST API 개발 문서\")                .license(\"msnodeve License\")                .licenseUrl(\"msnodeve@gmail.com\").version(\"1.0\").build();    &#125;&#125;\n\n\n\n123private Predicate&lt;String&gt; postPaths() &#123;    return or(regex(\"/todo/.*\"));&#125;\n\n해당 부분은 컨트롤러의 기본 URI 가 todo로 시작하기 때문에 /todo만 인식하도록 설정을 추가한 것 입니다.\n\n실행해보기http://localhost:8080/swagger-ui.html#/ 로 접속을 해보면 지금까지 작성해온 API가 UI로 표시되는 모습을 확인 할 수 있습니다.\n\n\n\n\n각  메서드의 별도 동작은 한번씩 작동 시켜보길 바랍니다.\n\n\n\n\nINDEX\nBackend SpringBoot 프로젝트 생성 및 실행 해보기(1)\n\n","dateCreated":"2020-06-20T19:03:02+09:00","dateModified":"2020-06-20T19:12:28+09:00","datePublished":"2020-06-20T19:03:02+09:00","description":"두번째 단계 REST API 만들기이번 포스트에서는 REST API를 만드는 방법을 알아 보도록 하겠습니다.\n스프링부트 SpringBoot IntelliJ FrameWork REST API","headline":"SpringBoot REST API 만들기(2) - [Backend Framework]","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/","keywords":"Backend, Framework, Spring, SpringBoot"}</script>
+    <meta name="description" content="두번째 단계 REST API 만들기이번 포스트에서는 REST API를 만드는 방법을 알아 보도록 하겠습니다. 스프링부트 SpringBoot IntelliJ FrameWork REST API">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="SpringBoot REST API 만들기(2) - [Backend Framework]">
+<meta property="og:url" content="https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/index.html">
+<meta property="og:site_name" content="msnodevLog">
+<meta property="og:description" content="두번째 단계 REST API 만들기이번 포스트에서는 REST API를 만드는 방법을 알아 보도록 하겠습니다. 스프링부트 SpringBoot IntelliJ FrameWork REST API">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step02/step02-1.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step02/step02-2.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step02/step02-3.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step02/step02-4.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step02/step02-5.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step02/step02-6.png">
+<meta property="article:published_time" content="2020-06-20T10:03:02.000Z">
+<meta property="article:modified_time" content="2020-06-20T10:12:28.274Z">
+<meta property="article:author" content="Myeong Seok KIM">
+<meta property="article:tag" content="Backend">
+<meta property="article:tag" content="백엔드">
+<meta property="article:tag" content="Framework">
+<meta property="article:tag" content="프레임워크">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="스프링">
+<meta property="article:tag" content="스프링부트">
+<meta property="article:tag" content="프로젝트">
+<meta property="article:tag" content="생성하기">
+<meta property="article:tag" content="예제">
+<meta property="article:tag" content="REST">
+<meta property="article:tag" content="API">
+<meta property="article:tag" content="RESTAPI">
+<meta property="article:tag" content="REST API">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://msnodeve.github.io/image/spring/boot/example/step02/step02-1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/all.css">
+
+    
+<link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+
+    
+<link rel="stylesheet" href="/assets/css/thumbs.css">
+
+    
+<link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153775936-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-153775936-1');
+    </script>
+
+
+    
+
+    
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"/>
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            msnodevLog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="/about"
+                aria-label="링크 열기: /about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Myeong Seok KIM</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/msnodeve"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/Kstoo2"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            SpringBoot REST API 만들기(2) - [Backend Framework]
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-06-20T19:03:02+09:00">
+	
+		    2020/06/20
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/backend/">backend</a>, <a class="category-link" href="/categories/backend/framework/">framework</a>, <a class="category-link" href="/categories/backend/framework/spring/">spring</a>, <a class="category-link" href="/categories/backend/framework/spring/springboot/">springboot</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<h2 id="INDEX"><a href="#INDEX" class="headerlink" title="INDEX"></a>INDEX</h2><ul>
+<li><a href="https://msnodeve.github.io/2020/06/10/springboot-stop01-create-project-run/">Backend SpringBoot 프로젝트 생성 및 실행 해보기(1)</a></li>
+</ul>
+<p><br><br></p>
+<h3 id="두번째-단계-Make-REST-API"><a href="#두번째-단계-Make-REST-API" class="headerlink" title="두번째 단계 Make REST API"></a>두번째 단계 Make REST API</h3><p><br><br></p>
+<h2 id="Branch-Name"><a href="#Branch-Name" class="headerlink" title="Branch Name"></a>Branch Name</h2><p>예제 브랜치 이름은 다음과 같습니다.<br>step02-make-rest-api</p>
+<p><br><br></p>
+<h2 id="REST의-특성"><a href="#REST의-특성" class="headerlink" title="REST의 특성"></a>REST의 특성</h2><ul>
+<li><code>클라이언트/서버</code> 클라이언트와 서버가 서로 독립적으로 구분 되어야 한다. 또한 서버 또는 클라이언트 증설 시 서로간의 의존성 때문에 확장에 문제가 되서는 안된다.</li>
+<li><code>상태 없음</code> 서버는 클라이언트의 상태를 기억할 필요가 없다.</li>
+<li><code>레이어드 아키텍처</code> 다계층 형태로 레이어를 추가하거나 수정, 제거 할 수 있고 확장성이 있어야한다.</li>
+<li><code>캐시</code> 클라이언트가 캐시를 통해서 응답을 재사용 하여 이를 통해 서버의 부하를 낮춰 서버의 성능이 향상 될 수 있다.</li>
+<li><code>코드 온 디멘드</code> 요청이 오면 코드를 준다.</li>
+</ul>
+<br>
+
+<h2 id="REST-인터페이스-규칙"><a href="#REST-인터페이스-규칙" class="headerlink" title="REST 인터페이스 규칙"></a>REST 인터페이스 규칙</h2><ul>
+<li><code>리소스 식별</code> 웹 안에서 URI와 같은 고유 식별자를 통해 표현한다.</li>
+<li><code>표현을 통한 리소스 처리</code> JSON, XML, HTML 페이지와 같이 다양한 유형으로 표현 할 수 있다.</li>
+<li><code>자기 묘사 메세지</code> HTTP 통신 할 때 Http header에 메타 데이터 정보를 추가해서 실제 데이터와는 관련 없지만 데이터에 대한 설명을 나타내는 정보를 담을 수 있다.</li>
+<li><code>애플리케이션 상태 하이퍼미디어(HATEOAS)</code> REST API를 개발할 때도 단순히 데이터만 전달하는 것이 아닌 링크 정보까지 포함한다.</li>
+</ul>
+<p><br><br></p>
+<h2 id="REST-API-만들기"><a href="#REST-API-만들기" class="headerlink" title="REST API 만들기"></a>REST API 만들기</h2><h3 id="모델-클래스-만들기"><a href="#모델-클래스-만들기" class="headerlink" title="모델 클래스 만들기"></a>모델 클래스 만들기</h3><p>데이터를 담을 수 있는 클래스를 만듭니다.</p>
+<blockquote>
+<p>src/main/java/seok/model 경로를 만들고, 그 밑에 Todo.java 를 생성</p>
+</blockquote>
+<br>
+
+<br>
+
+
+
+<p>Todo.java 내용은 다음과 같습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Todo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Todo</span><span class="params">(<span class="keyword">int</span> id, String title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">        <span class="keyword">this</span>.title = title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTitle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(String title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.title = title;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><br><br></p>
+<h3 id="컨트롤러-클래스-만들기"><a href="#컨트롤러-클래스-만들기" class="headerlink" title="컨트롤러 클래스 만들기"></a>컨트롤러 클래스 만들기</h3><p>URL을 요청하면 Todo 클래스의 인스턴스를 생성해 JSON으로 보여줄 수 있는 컨트롤러를 만듭니다.</p>
+<blockquote>
+<p>src/main/java/seok/controller 경로 밑에 TodoController.java 를 생성</p>
+</blockquote>
+<p>TodoController.java 내용은 다음과 같습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="keyword">import</span> seok.model.Todo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/todo"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TodoController</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> AtomicInteger counter = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/todo"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Todo <span class="title">todo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Todo(counter.incrementAndGet(), <span class="string">"코딩하기"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>AtomicInteger</code>는 Atomic(더 이상 쪼개질 수 없는 성질)을 의미하며, 단순히 Integer 타입으로 선언한다면 서로 다른 Thread 에서 하나의 변수에 대해 값을 쓰거나 읽기 때문에 문제가 발생할 수 있지만, <code>AtomicInteger</code>를 쓰므로 <code>Thread-safe</code> 하게 처리가 가능합니다.</p>
+<p><br><br></p>
+<h3 id="실행해보기"><a href="#실행해보기" class="headerlink" title="실행해보기"></a>실행해보기</h3><p>localhost:8080/todo/todo 를 계속 호출해보면 호출 할 때마다 숫자가 정상적으로 증가하는 것을 확인 할 수 있습니다.</p>
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step02/step02-1.png" width="100%">
+</div>
+
+
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step02/step02-2.png" width="100%">
+</div>
+
+
+
+
+
+<h2 id="REST-API에서-HTTP-Method-사용"><a href="#REST-API에서-HTTP-Method-사용" class="headerlink" title="REST API에서 HTTP Method 사용"></a>REST API에서 HTTP Method 사용</h2><h3 id="컨트롤러-메서드에-POST-매핑"><a href="#컨트롤러-메서드에-POST-매핑" class="headerlink" title="컨트롤러 메서드에 POST 매핑"></a>컨트롤러 메서드에 POST 매핑</h3><p>TodoController.java 에 POST 메서드를 만듭니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping</span>(<span class="string">"/todo"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> Todo <span class="title">registryTodo</span><span class="params">(@RequestParam(value=<span class="string">"todoTitle"</span>)</span> String todoTitle)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Todo(counter.incrementAndGet(), todoTitle);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>/todo/todo</code>를 엔드 포인트로 합니다.</p>
+<p>GET은 Body 가 없어서 URL을 직접 호출 할 수 있지만, POST는 요청의 몸체가 되므로 도구를 사용해서 테스트 해봐야합니다.</p>
+<p>여기서는 <code>Postman</code>를 사용하도록 하겠습니다.</p>
+<p><a href="https://www.postman.com/downloads/" target="_blank" rel="noopener">Postman 설치하기</a></p>
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step02/step02-3.png" width="100%">
+</div>
+
+<p>위와 같이 실행하면 결과값을 받아 볼 수 있습니다.</p>
+<p><br><br></p>
+<h3 id="응답-헤더-활용하기"><a href="#응답-헤더-활용하기" class="headerlink" title="응답 헤더 활용하기"></a>응답 헤더 활용하기</h3><p>ResponseEntity 클래스는 HttpEntity를 상속받은 클래스로 Http 응답에 대한 상태값을 표현 할 수 있습니다.</p>
+<p>TodoController.java 에 다음 코드를 추가합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping</span>(<span class="string">"/todo/response"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ResponseEntity&lt;Todo&gt; <span class="title">postRegistryTodo</span><span class="params">(@RequestParam String todoTitle)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="keyword">new</span> Todo(counter.incrementAndGet(), todoTitle), HttpStatus.CREATED);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step02/step02-4.png" width="100%">
+</div>
+
+<p>결과를 받아보면 <code>Status: 201 Created</code> 라는 결과를 받아 볼 수 있습니다.</p>
+<p><br><br></p>
+<h2 id="HATEOAS를-사용한-URI-정보-표현하기"><a href="#HATEOAS를-사용한-URI-정보-표현하기" class="headerlink" title="HATEOAS를 사용한 URI 정보 표현하기"></a>HATEOAS를 사용한 URI 정보 표현하기</h2><h3 id="HATEOAS-설정"><a href="#HATEOAS-설정" class="headerlink" title="HATEOAS 설정"></a>HATEOAS 설정</h3><p>build.gradle 파일에 다음 라이브러리를 추가합니다.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">dependencies</span> <span class="string">&#123;</span></span><br><span class="line">	<span class="string">compile</span> <span class="string">'org.springframework.boot:spring-boot-starter-hateoas'</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+
+
+
+<p><code>ResourceSupport</code> 클래스를 상속받을 모델 클래스 <code>TodoResource.java</code>를 만들도록 하겠습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.hateoas.ResourceSupport;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TodoResource</span> <span class="keyword">extends</span> <span class="title">ResourceSupport</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TodoResource</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TodoResource</span><span class="params">(String title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.title = title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTitle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> title;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(String title)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.title = title;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><br><br></p>
+<p><code>Controller</code>에 다음을 추가하도록 하겠습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">@PostMapping</span>(<span class="string">"/todo/hateoas"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> ResponseEntity&lt;TodoResource&gt; <span class="title">resourceResponseEntity</span><span class="params">(@RequestParam String todoTitle)</span></span>&#123;</span><br><span class="line">    TodoResource todoResource = <span class="keyword">new</span> TodoResource(todoTitle);</span><br><span class="line">    todoResource.add(linkTo(methodOn(TodoController<span class="class">.<span class="keyword">class</span>).<span class="title">resourceResponseEntity</span>(<span class="title">todoTitle</span>)).<span class="title">withSelfRel</span>())</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(todoResource, HttpStatus.OK);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>todoResource 인스턴스를 생성한 후에 링크 정보 추가를 위해서 linkTo 메서드로 TodoController 클래스의 resourceResponseEntity 메서드를 매핑후, withSelfRel 메서드를 이용해 URL 정보를 만들고 add메서드로 정보를 추가했습니다.</p>
+</blockquote>
+<p>결과는 다음과 같습니다.</p>
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step02/step02-5.png" width="100%">
+</div>
+
+
+
+
+
+
+
+<h2 id="REST-API-문서화"><a href="#REST-API-문서화" class="headerlink" title="REST API 문서화"></a>REST API 문서화</h2><blockquote>
+<p>API를 제공하려면 가이드 문서 제공이 필수적인데, 개발할 때 마다 별도의 문서를 작성하고 업데이트하는 것은 비용이 많이 듭니다. 따라서 <code>Swagger</code> 를 이용해서 API를 설명하는 페이지를 자동 생성하는 방법을 알아 보도록 하겠습니다.</p>
+</blockquote>
+<h3 id="Swagger-라이브러리-추가"><a href="#Swagger-라이브러리-추가" class="headerlink" title="Swagger 라이브러리 추가"></a>Swagger 라이브러리 추가</h3><p>build.gradle에 <code>springfox-swagger2</code>, <code>springfox-swagger-ui</code>을 추가합니다.</p>
+<blockquote>
+<p><code>dependencies</code>의 라이브러리들을 최신, 가장많이 사용하는 라이브러리들로 좀 교체했습니다.<br>build.gradle의 전체 내용은 다음과 같습니다.</p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">plugins</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">id</span> <span class="string">'java'</span></span><br><span class="line">    <span class="string">id</span> <span class="string">'org.springframework.boot'</span> <span class="string">version</span> <span class="string">'2.2.2.RELEASE'</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">ext&#123;</span></span><br><span class="line">    <span class="string">springBootVersion='2.2.2.RELEASE'</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">sourceCompatibility</span> <span class="string">=</span> <span class="number">1.8</span></span><br><span class="line"><span class="string">targetCompatibility</span> <span class="string">=</span> <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">sourceSets&#123;</span></span><br><span class="line">    <span class="string">main&#123;</span></span><br><span class="line">        <span class="string">java</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">srcDir</span> <span class="string">'src/main/java'</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">        <span class="string">resources&#123;</span></span><br><span class="line">            <span class="string">srcDir</span> <span class="string">'src/resources'</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">repositories</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">jcenter()</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">dependencies</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.springframework.boot'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'spring-boot-starter-web'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.2.2.RELEASE'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.springframework.boot'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'spring-boot-devtools'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.0.4.RELEASE'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.springframework.boot'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'spring-boot-starter-hateoas'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.1.5.RELEASE'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'io.springfox'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'springfox-swagger2'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.9.2'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'io.springfox'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'springfox-swagger-ui'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.9.2'</span></span><br><span class="line"></span><br><span class="line">    <span class="string">compile</span> <span class="string">'org.slf4j:slf4j-api:1.7.7'</span></span><br><span class="line"></span><br><span class="line">    <span class="string">testCompile</span> <span class="string">'junit:junit:4.12'</span></span><br><span class="line"></span><br><span class="line">    <span class="string">//capcha</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'com.google.code.maven-play-plugin.org.playframework'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'jj-imaging'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'1.1'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'com.google.code.maven-play-plugin.org.playframework'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'jj-simplecaptcha'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'1.1'</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="SwaggerConfiguration-클래스-만들기"><a href="#SwaggerConfiguration-클래스-만들기" class="headerlink" title="SwaggerConfiguration 클래스 만들기"></a>SwaggerConfiguration 클래스 만들기</h3><blockquote>
+<p>src/main/java/seok/configuration 패키지 생성 후 SwaggerConfiguration.java 클래스를 생성합니다.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.configuration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.common.base.Predicate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.ApiInfoBuilder;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.ApiInfo;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spi.DocumentationType;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> com.google.common.base.Predicates.or;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> springfox.documentation.builders.PathSelectors.regex;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger</span>2</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfiguration</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">postsApi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">"public-api"</span>)</span><br><span class="line">                .apiInfo(apiInfo()).select().paths(postPaths()).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Predicate&lt;String&gt; <span class="title">postPaths</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> or(regex(<span class="string">"/todo/.*"</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfoBuilder().title(<span class="string">"TODO API"</span>)</span><br><span class="line">                .description(<span class="string">"Todo REST API 개발 문서"</span>)</span><br><span class="line">                .license(<span class="string">"msnodeve License"</span>)</span><br><span class="line">                .licenseUrl(<span class="string">"msnodeve@gmail.com"</span>).version(<span class="string">"1.0"</span>).build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Predicate&lt;String&gt; <span class="title">postPaths</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> or(regex(<span class="string">"/todo/.*"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>해당 부분은 컨트롤러의 기본 URI 가 todo로 시작하기 때문에 /todo만 인식하도록 설정을 추가한 것 입니다.</p>
+<p><br><br></p>
+<h3 id="실행해보기-1"><a href="#실행해보기-1" class="headerlink" title="실행해보기"></a>실행해보기</h3><p><a href="http://localhost:8080/swagger-ui.html#/" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html#/</a> 로 접속을 해보면 지금까지 작성해온 API가 UI로 표시되는 모습을 확인 할 수 있습니다.</p>
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step02/step02-6.png" width="100%">
+</div>
+
+<p>각  메서드의 별도 동작은 한번씩 작동 시켜보길 바랍니다.</p>
+<br>
+<br>
+
+
+<h2 id="INDEX-1"><a href="#INDEX-1" class="headerlink" title="INDEX"></a>INDEX</h2><ul>
+<li><a href="https://msnodeve.github.io/2020/06/10/springboot-stop01-create-project-run/">Backend SpringBoot 프로젝트 생성 및 실행 해보기(1)</a></li>
+</ul>
+<p><br><br></p>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/backend/" rel="tag">Backend</a> <a class="tag tag--primary tag--small t-link" href="/tags/framework/" rel="tag">Framework</a> <a class="tag tag--primary tag--small t-link" href="/tags/spring/" rel="tag">Spring</a> <a class="tag tag--primary tag--small t-link" href="/tags/springboot/" rel="tag">SpringBoot</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/06/10/springboot-stop01-create-project-run/"
+                    data-tooltip="SpringBoot 프로젝트 생성 및 실행 해보기(1) - [Backend Framework]"
+                    aria-label="다음: SpringBoot 프로젝트 생성 및 실행 해보기(1) - [Backend Framework]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Myeong Seok KIM. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/06/10/springboot-stop01-create-project-run/"
+                    data-tooltip="SpringBoot 프로젝트 생성 및 실행 해보기(1) - [Backend Framework]"
+                    aria-label="다음: SpringBoot 프로젝트 생성 및 실행 해보기(1) - [Backend Framework]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+            <h4 id="about-card-name">Myeong Seok KIM</h4>
+        
+            <div id="about-card-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>SSAFY 3rd 교육생</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Seoul, Republic of Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">포스트가 없습니다.</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                            aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
+                        >
+                            <h3 class="media-heading">Linux, CentOS 작업 스케쥴러 - Crontab</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 9일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab?"></a>Crontab?</h1><p><code>Cron</code> 은 리눅스 에서 특정한 <code>명령</code>이나 <code>스크립트</code>를 지정한 <code>날짜/시간</code>에 자동으로 실행해 주는 <code>스케쥴러</code> 입니다.</p>
+<p>주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/ssafy.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <h3 class="media-heading">SSAFY 3기를 시작하며![합격 후기]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 24일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="SSAFY"><a href="#SSAFY" class="headerlink" title="SSAFY"></a>SSAFY</h1><p><code>Samsung Software Academy For Youth</code>(삼성 청년 소프트웨어 아카데미) 서울 지역에 합격했습니다! 😘</p>
+<p>그런 의미로 이야기를 한 번 써내려 가려 합니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/hexo-syntax.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <h3 class="media-heading">Hexo[Tranquilpeak] 사용방법</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 13일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Hexo-tranquilpeak-테마"><a href="#Hexo-tranquilpeak-테마" class="headerlink" title="Hexo[tranquilpeak 테마]"></a>Hexo[tranquilpeak 테마]</h1><p>이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다.</p>
+<p><code>Tag</code> <code>Alert</code> <code>Highlight Text</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                            aria-label=": Recursive(재귀) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">Recursive(재귀) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 17일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다.</p>
+<p><code>Factorial</code> <code>Fibonacci</code> <code>Fibonacci Memoization</code> <code>Hanoi</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                            aria-label=": SubSet(부분집합) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">SubSet(부분집합) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 5월 23일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.</p>
+<p><code>Subset</code> <code>BitMask</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/05/24/algorithm-lis/"
+                            aria-label=": LIS(최장 증가 수열) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">LIS(최장 증가 수열) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 5월 24일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 LIS(최장 증가 수열)에 대해서 알아 보려고 합니다.</p>
+<p><code>DP</code> <code>보다 효율적인 탐색 방법 Binary Search</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/06/10/springboot-stop01-create-project-run/"
+                            aria-label=": SpringBoot 프로젝트 생성 및 실행 해보기(1) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">SpringBoot 프로젝트 생성 및 실행 해보기(1) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 6월 10일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="첫번째-단계-프로젝트-생성하기"><a href="#첫번째-단계-프로젝트-생성하기" class="headerlink" title="첫번째 단계 프로젝트 생성하기"></a>첫번째 단계 프로젝트 생성하기</h3><p>이번 포스트에서는 IntelliJ 개발환경에서 SpringBoot Framework 프로젝트를 생성하고 실행해보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>스프링부트</code> <code>SpringBoot</code> <code>IntelliJ</code> <code>FrameWork</code> <code>프로젝트 생성하는 방법!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                            aria-label=": SpringBoot REST API 만들기(2) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">SpringBoot REST API 만들기(2) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 6월 20일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="두번째-단계-REST-API-만들기"><a href="#두번째-단계-REST-API-만들기" class="headerlink" title="두번째 단계 REST API 만들기"></a>두번째 단계 REST API 만들기</h3><p>이번 포스트에서는 REST API를 만드는 방법을 알아 보도록 하겠습니다.</p>
+<p><code>스프링부트</code> <code>SpringBoot</code> <code>IntelliJ</code> <code>FrameWork</code> <code>REST API</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="포스트가 없습니다."
+                data-message-one="1 개의 포스트가 있습니다."
+                data-message-other="{n} 개의 포스트가 있습니다.">
+                8 개의 포스트가 있습니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/jquery.js"></script>
+
+
+<script src="/assets/js/jquery.fancybox.js"></script>
+
+
+<script src="/assets/js/thumbs.js"></script>
+
+
+<script src="/assets/js/tranquilpeak.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+    
+<script src="/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('R1M5F6PCKT', 'c742103764cdb380400cb1b22f428418');
+      var algoliaIndex = algoliaClient.initIndex('msnodeve_blog');
+    </script>
+
+
+    </body>
+</html>
