@@ -1,0 +1,1188 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="msnodevLog">
+    <title>SpringBoot Database 활용하기(3) - [Backend Framework] - msnodevLog</title>
+    <meta name="author" content="Myeong Seok KIM">
+    <script data-ad-client="ca-pub-2766237193476584" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+        <meta name="keywords" content="algorithm,Backend,백엔드,Framework,프레임워크,Spring,SpringBoot,스프링,스프링부트,프로젝트,생성하기,예제,REST,API,RESTAPI,REST API,Database,데이터베이스">
+    
+    
+        <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\n\nINDEX\nBackend SpringBoot 프로젝트 생성 및 실행 해보기(1)\nBackend SpringBoot REST API 만들기(2)\n\n\n세번째 단계 Database 연결 및 활용하기\nBranch Name예제 브랜치 이름은 다음과 같습니다.step03-springboot-data\n\nSpringBoot와 Database 연동을 해보자\nAPI를 사용자에게 지속적으로 제공하기 위해서는 영속적인 저장소가 필요합니다.따라서 RDBMS(Relational Database Management System)에 속하는 제품을 사용합니다.\n\n\n\n\n\n\n의존성 제외 설정\nsrc/main/resources 폴더 밑에 application.properties 파일을 생성합니다.\n\n\n    \n\n\napplication.properties 에 다음 줄을 추가합니다.\n1spring.main.web-environment=false\n\n\n\n\nbuild.gradle에 필요한 라이브러리를 추가합니다.\n\n버전을 다시 고쳤습니다. 복붙해주세요.\n\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152plugins &#123;    id 'java'    id 'org.springframework.boot' version '1.5.8.RELEASE'&#125;ext&#123;    springBootVersion='1.5.8.RELEASE'&#125;sourceCompatibility = 1.8targetCompatibility = 1.8sourceSets&#123;    main&#123;        java &#123;            srcDir 'src/main/java'        &#125;        resources&#123;            srcDir 'src/resources'        &#125;    &#125;&#125;repositories &#123;    jcenter()&#125;dependencies &#123;    compile 'org.springframework.boot:spring-boot-starter-web'    compile \"org.springframework.boot:spring-boot-devtools\"    compile 'org.slf4j:slf4j-api:1.7.7'    testCompile 'junit:junit:4.12'    compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.1.5.RELEASE'    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'    compile group: 'org.hsqldb', name: 'hsqldb', version:'2.3.2'    compile \"org.springframework.boot:spring-boot-starter-data-jpa:$&#123;springBootVersion&#125;\"    compile group: 'org.hibernate', name: 'hibernate-validator', version: '4.2.0.Final'    compile group: 'javax.el', name: 'javax.el-api', version: '3.0.0'    compile group: 'javax.validation', name: 'validation-api', version: '1.0.0.GA'    //capcha    compile group: 'com.google.code.maven-play-plugin.org.playframework', name: 'jj-imaging', version: '1.1'    compile group: 'com.google.code.maven-play-plugin.org.playframework', name: 'jj-simplecaptcha', version: '1.1'&#125;\n\n\n데이터 저장소로는 hsqldb를 사용하며, 이는 소형 관계형 데이터베이스 엔진의 일종으로 JDBC를 지원하고, 라이브러리 추가만으로 사용가능해서 로컬 개발시에 많이 쓰입니다.\n\n\n\n\n\n\n\nDatabase Object Mapping값 매핑\n src/main/java/seok/model 패키지 밑에 일반 사용자와 관리자 구분을 하는 UserRole.java Enum 클래스를 하나 생성합니다.\n\n123456package seok.model;public enum UserRole &#123;    USER, // 0    ADMIN // 1&#125;\n\n\nUserEntity 클래스를 만들어 보자\nsrc/main/java/seok/model 패키지 밑에 UserEntity.java 클래스를 생성합니다.\n\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475package seok.model;import javax.persistence.*;import java.util.Date;@Entitypublic class UserEntity &#123;    @Id    @GeneratedValue(strategy = GenerationType.AUTO)    private Long id;    private String name;    private Integer age;    private Date created;    @Column(name=\"role\")    @Enumerated(EnumType.ORDINAL)    private UserRole role;    @PrePersist    public void beforeCreate()&#123;        created = new Date();    &#125;    public UserEntity() &#123;    &#125;    public UserEntity(String name, Integer age, UserRole role) &#123;        this.name = name;        this.age = age;        this.role = role;    &#125;    public Long getId() &#123;        return id;    &#125;    public void setId(Long id) &#123;        this.id = id;    &#125;    public String getName() &#123;        return name;    &#125;    public void setName(String name) &#123;        this.name = name;    &#125;    public Integer getAge() &#123;        return age;    &#125;    public void setAge(Integer age) &#123;        this.age = age;    &#125;    public Date getCreated() &#123;        return created;    &#125;    public void setCreated(Date created) &#123;        this.created = created;    &#125;    @Override    public String toString() &#123;        return \"UserEntity&#123;\" +                \"id=\" + id +                \", name='\" + name + '\\'' +                \", age=\" + age +                \", created=\" + created +                \", role=\" + role +                '&#125;';    &#125;&#125;\n\n@Entity(데이터베이스 스키마의 내용을 자바 클래스로 표현할 수 있는 대상) 어노테이션을 선언함으로써 엔티티 매니저가 관리해야 할 대상임을 명시합니다.\n@Enumerated 어노테이션 속성으로 @EnumType을 지정할 때, ORDINAL로 하면 값이 int로 할당 되며 STRING으로 지정하면 ENUM의 이름으로 할당 됩니다.\n\n\n\n\n\n\n\n\nUser Repository 인터페이스를 생성하자\nsrc/main/java/seok 패키지 밑에 repository 패키지를 생성 후, UserRepository.java 인터페이스를 생성합니다.\n\n\n\n\n\n1234567891011package seok.repository;import org.springframework.data.jpa.repository.JpaRepository;import org.springframework.data.repository.query.Param;import org.springframework.stereotype.Repository;import seok.model.UserEntity;@Repositorypublic interface UserRepository extends JpaRepository&lt;UserEntity, Long&gt; &#123;    UserEntity findByName(@Param(\"name\") String name);&#125;\n\n\n필드를 검색하기 위해 다음과 같이 사용할 수 있습니다.\n\n1반환 타입 findBy 필드명(파라미터);\n\n\n실행 결과 보기\n    \n\n\n\napplication.properties 에 spring.main.web-environment=false 를 설정해줬기 때문에 웹은 실행되지않고, 종료합니다. \n\n\n\n\n\n\n\n\n\nDatabase Server와 연동MySQL 설치MySQL DB 설치하기 각 환경에 맞는 서버를 설치합니다.\nMySQL WorkBench 도 설치하면 좋을 것 같습니다.\n\n\n\n\nDatabase, Table 생성하기\n    \n\n\n1create database exam;\n\nexam 이라는 데이터베이스를 하나 생성합니다.\n\n\n12345create table tbl_user(\tid varchar(40) not null,    username varchar(45) not null,    password varchar(45) not null);\n\nuser 정보 테이블을 생성합니다.\n \n\n \n\n\n\nDatabase Connection Pool HikariCP 사용하기build.gradle 라이브러리 추가합니다.\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253plugins &#123;    id 'java'    id 'idea'    id 'org.springframework.boot' version '1.5.8.RELEASE'&#125;ext&#123;    springBootVersion='1.5.8.RELEASE'&#125;sourceCompatibility = 1.8targetCompatibility = 1.8sourceSets&#123;    main&#123;        java &#123;            srcDir 'src/main/java'        &#125;        resources&#123;            srcDir 'src/resources'        &#125;    &#125;&#125;repositories &#123;    jcenter()&#125;dependencies &#123;    compile 'org.springframework.boot:spring-boot-starter-web'    compile \"org.springframework.boot:spring-boot-devtools\"    compile 'org.slf4j:slf4j-api:1.7.7'    testCompile 'junit:junit:4.12'    compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.1.5.RELEASE'    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.3.0.RELEASE'    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.5.1'    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.3.0'    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.13'    //capcha    compile group: 'com.google.code.maven-play-plugin.org.playframework', name: 'jj-imaging', version: '1.1'    compile group: 'com.google.code.maven-play-plugin.org.playframework', name: 'jj-simplecaptcha', version: '1.1'&#125;\n\n\n\napplication.properties 에 MySQL DB 서버 정보를 설정합니다.\n123456spring.datasource.driverClassName=com.mysql.cj.jdbc.Driverspring.datasource.url=jdbc:mysql://127.0.0.1:3306/exam?serverTimezone=UTC&amp;useUniCode=yes&amp;characterEncoding=UTF-8spring.datasource.username=ssafyspring.datasource.password=ssafymybatis.config-location=classpath:mybatis-config.xml\n\n\n\n\n\n\n\nMybitis와 MySQL 연동\nsrc/main/resources 아래 다음 파일을 생성합니다.\n\n\n    \n\n\n123456789&lt;!-- mybatis-config.xml --&gt;&lt;?xml version=\"1.0\" encoding=\"UTF-8\" ?&gt;&lt;!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\"\t\"http://mybatis.org/dtd/mybatis-3-config.dtd\"&gt;&lt;configuration&gt;\t&lt;mappers&gt;\t\t&lt;mapper resource=\"mappers/userMapper.xml\" /&gt;\t&lt;/mappers&gt;&lt;/configuration&gt;\n\n\n\n12345678910111213141516171819202122232425262728293031323334&lt;!-- userMapper.xml --&gt;&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;&lt;!DOCTYPE mapper    PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\"    \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\"&gt;&lt;mapper namespace=\"user\"&gt;    &lt;insert id=\"insertUser\"&gt;        insert into tbl_user(id, username, password)        value (#&#123;id&#125;, #&#123;username&#125;, #&#123;password&#125;)    &lt;/insert&gt;    &lt;select id=\"selectAll\" resultType=\"seok.model.User\"&gt;        select id, username, password        from tbl_user    &lt;/select&gt;    &lt;select id=\"select\" resultType=\"seok.model.User\"&gt;        select id, username, password        from tbl_user        where id = #&#123;id&#125;    &lt;/select&gt;    &lt;update id=\"update\"&gt;        update tbl_user        set username = #&#123;username&#125;, password = #&#123;password&#125;        where id = #&#123;id&#125;    &lt;/update&gt;    &lt;delete id=\"delete\"&gt;        delete from tbl_user        where id = #&#123;id&#125;    &lt;/delete&gt;&lt;/mapper&gt;\n\n\n\n\n\n\n\n\n\nMVC 패턴으로 패키지 구성하기\n    \n\n\n위 그림과 같이 파일을 구성 합니다.\n1234567891011121314151617package seok.repository;import seok.model.User;import java.util.List;public interface UserRepository &#123;    public List&lt;User&gt; selectAll() throws Exception;    public User select(String id) throws Exception;    public int insert(User user) throws Exception;    public int update(User user) throws Exception;    public int delete(String id) throws Exception;&#125;\n\n\n\n1234567891011121314151617181920212223242526272829303132333435363738394041package seok.repository;import org.apache.ibatis.session.SqlSession;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Repository;import seok.model.User;import java.util.List;@Repositorypublic class UserRepositoryImpl implements UserRepository &#123;    private static final String MAPPER_NAME_SPACE = \"user.\";    @Autowired    SqlSession sqlSession;    @Override    public List&lt;User&gt; selectAll() throws Exception &#123;        return sqlSession.selectList(MAPPER_NAME_SPACE + \"selectAll\");    &#125;    @Override    public User select(String id) throws Exception &#123;        return sqlSession.selectOne(MAPPER_NAME_SPACE + \"select\", id);    &#125;    @Override    public int insert(User user) throws Exception &#123;        return sqlSession.insert(MAPPER_NAME_SPACE + \"insertUser\", user);    &#125;    @Override    public int update(User user) throws Exception &#123;        return sqlSession.update(MAPPER_NAME_SPACE + \"update\", user);    &#125;    @Override    public int delete(String id) throws Exception &#123;        return sqlSession.delete(MAPPER_NAME_SPACE + \"delete\", id);    &#125;&#125;\n\n\n\n1234567891011121314151617package seok.service;import seok.model.User;import java.util.List;public interface UserService &#123;    public List&lt;User&gt; findAllUsers() throws Exception;    public User findByUserId(String id) throws Exception;    public int registry(User user) throws Exception;    public int modify(User user) throws Exception;    public int remove(String id) throws Exception;&#125;\n\n\n\n123456789101112131415161718192021222324252627282930313233343536373839package seok.service;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.stereotype.Service;import seok.model.User;import seok.repository.UserRepository;import java.util.List;@Servicepublic class UserServiceImpl implements UserService&#123;    @Autowired    UserRepository repository;    @Override    public List&lt;User&gt; findAllUsers() throws Exception &#123;        return repository.selectAll();    &#125;    @Override    public User findByUserId(String id) throws Exception &#123;        return repository.select(id);    &#125;    @Override    public int registry(User user) throws Exception &#123;        return repository.insert(user);    &#125;    @Override    public int modify(User user) throws Exception &#123;        return repository.update(user);    &#125;    @Override    public int remove(String id) throws Exception &#123;        return repository.delete(id);    &#125;&#125;\n\n\n\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889package seok.controller;import io.swagger.annotations.Api;import io.swagger.annotations.ApiOperation;import org.springframework.beans.factory.annotation.Autowired;import org.springframework.http.HttpStatus;import org.springframework.http.ResponseEntity;import org.springframework.web.bind.annotation.*;import seok.model.User;import seok.service.UserService;import java.util.List;@RestController@RequestMapping(value = \"/api\")@Api(value=\"msnodeve\")public class UserController &#123;    @Autowired    UserService service;    @GetMapping(\"/user\")    @ApiOperation(value = \"모든 유저의 정보를 반환한다.\", response = List.class)    public ResponseEntity&lt;List&lt;User&gt;&gt; findAllUsers() &#123;        List&lt;User&gt; users = null;        try &#123;            users = service.findAllUsers();        &#125; catch (Exception e) &#123;            e.printStackTrace();            return new ResponseEntity&lt;&gt;(null, HttpStatus.NO_CONTENT);        &#125;        return new ResponseEntity&lt;&gt;(users, HttpStatus.OK);    &#125;    @GetMapping(\"/user/&#123;id&#125;\")    @ApiOperation(value = \"유저의 정보를 반환한다.\", response = Object.class)    public ResponseEntity&lt;User&gt; findByUserId(@PathVariable String id) &#123;        User user = null;        try &#123;            user = service.findByUserId(id);        &#125; catch (Exception e) &#123;            e.printStackTrace();            return new ResponseEntity&lt;&gt;(null, HttpStatus.NO_CONTENT);        &#125;        return new ResponseEntity&lt;&gt;(user, HttpStatus.OK);    &#125;    @PostMapping(\"/user\")    @ApiOperation(value = \"유저의 정보를 입력한다.\", response = String.class)    public ResponseEntity&lt;String&gt; registryUser(@RequestBody User user) &#123;        try &#123;            if (service.registry(user) != 0)                return new ResponseEntity&lt;&gt;(\"성공적으로 등록되었습니다.\", HttpStatus.CREATED);            else                return new ResponseEntity&lt;&gt;(\"등록 실패했습니다.\", HttpStatus.BAD_REQUEST);        &#125; catch (Exception e) &#123;            e.printStackTrace();        &#125;        return new ResponseEntity&lt;&gt;(\"등록 실패했습니다.\", HttpStatus.BAD_REQUEST);    &#125;    @PutMapping(\"/user\")    @ApiOperation(value = \"유저의 정보를 수정한다.\", response = String.class)    public ResponseEntity&lt;String&gt; modifyUser(@RequestBody User user) &#123;        try &#123;            if (service.modify(user) != 0)                return new ResponseEntity&lt;&gt;(\"성공적으로 수정되었습니다.\", HttpStatus.OK);            else                return new ResponseEntity&lt;&gt;(\"수정 실패했습니다.\", HttpStatus.BAD_REQUEST);        &#125; catch (Exception e) &#123;            e.printStackTrace();        &#125;        return new ResponseEntity&lt;&gt;(\"수정 실패했습니다.\", HttpStatus.BAD_REQUEST);    &#125;    @DeleteMapping(\"/user/&#123;id&#125;\")    @ApiOperation(value = \"유저의 정보를 삭제한다.\", response = String.class)    public ResponseEntity&lt;String&gt; removeUser(@PathVariable String id) &#123;        try &#123;            if (service.remove(id) != 0)                return new ResponseEntity&lt;&gt;(\"성공적으로 삭제되었습니다.\", HttpStatus.OK);            else                return new ResponseEntity&lt;&gt;(\"삭제 실패했습니다.\", HttpStatus.BAD_REQUEST);        &#125; catch (Exception e) &#123;            e.printStackTrace();        &#125;        return new ResponseEntity&lt;&gt;(\"삭제 실패했습니다.\", HttpStatus.BAD_REQUEST);    &#125;&#125;\n\n\n\n\n\n\n\n\n\n실행해보기\n    \n\n\n등록하기\n    \n\n\nDB 결과\n    \n\n\n\n\nINDEX\nBackend SpringBoot 프로젝트 생성 및 실행 해보기(1)\nBackend SpringBoot REST API 만들기(2)\n\n","dateCreated":"2020-06-21T13:07:45+09:00","dateModified":"2020-06-21T13:17:27+09:00","datePublished":"2020-06-21T13:07:45+09:00","description":"세번째 단계 Database 연결 및 활용하기이번 포스트에서는 Database 연결 및 MyBatis 활용에 대해서 알아 보도록 하겠습니다.\nDatabase MyBatis SpringBoot MySQL","headline":"SpringBoot Database 활용하기(3) - [Backend Framework]","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/","keywords":"Backend, Framework, Spring, SpringBoot, Database"}</script>
+    <meta name="description" content="세번째 단계 Database 연결 및 활용하기이번 포스트에서는 Database 연결 및 MyBatis 활용에 대해서 알아 보도록 하겠습니다. Database MyBatis SpringBoot MySQL">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="SpringBoot Database 활용하기(3) - [Backend Framework]">
+<meta property="og:url" content="https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/index.html">
+<meta property="og:site_name" content="msnodevLog">
+<meta property="og:description" content="세번째 단계 Database 연결 및 활용하기이번 포스트에서는 Database 연결 및 MyBatis 활용에 대해서 알아 보도록 하겠습니다. Database MyBatis SpringBoot MySQL">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-1.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-2.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-3.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-4.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-5.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-6.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-7.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-8.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-9.png">
+<meta property="article:published_time" content="2020-06-21T04:07:45.000Z">
+<meta property="article:modified_time" content="2020-06-21T04:17:27.807Z">
+<meta property="article:author" content="Myeong Seok KIM">
+<meta property="article:tag" content="Backend">
+<meta property="article:tag" content="백엔드">
+<meta property="article:tag" content="Framework">
+<meta property="article:tag" content="프레임워크">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="스프링">
+<meta property="article:tag" content="스프링부트">
+<meta property="article:tag" content="프로젝트">
+<meta property="article:tag" content="생성하기">
+<meta property="article:tag" content="예제">
+<meta property="article:tag" content="REST">
+<meta property="article:tag" content="API">
+<meta property="article:tag" content="RESTAPI">
+<meta property="article:tag" content="REST API">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="데이터베이스">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://msnodeve.github.io/image/spring/boot/example/step03/step03-1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/all.css">
+
+    
+<link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+
+    
+<link rel="stylesheet" href="/assets/css/thumbs.css">
+
+    
+<link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153775936-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-153775936-1');
+    </script>
+
+
+    
+
+    
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"/>
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            msnodevLog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="/about"
+                aria-label="링크 열기: /about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Myeong Seok KIM</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/msnodeve"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/Kstoo2"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            SpringBoot Database 활용하기(3) - [Backend Framework]
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-06-21T13:07:45+09:00">
+	
+		    2020/06/21
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/backend/">backend</a>, <a class="category-link" href="/categories/backend/framework/">framework</a>, <a class="category-link" href="/categories/backend/framework/spring/">spring</a>, <a class="category-link" href="/categories/backend/framework/spring/springboot/">springboot</a>, <a class="category-link" href="/categories/backend/framework/spring/springboot/database/">database</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+
+<h2 id="INDEX"><a href="#INDEX" class="headerlink" title="INDEX"></a>INDEX</h2><ul>
+<li><a href="https://msnodeve.github.io/2020/06/10/springboot-stop01-create-project-run/">Backend SpringBoot 프로젝트 생성 및 실행 해보기(1)</a></li>
+<li><a href="https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/">Backend SpringBoot REST API 만들기(2)</a></li>
+</ul>
+<p><br><br></p>
+<h3 id="세번째-단계-Database-연결-및-활용하기-1"><a href="#세번째-단계-Database-연결-및-활용하기-1" class="headerlink" title="세번째 단계 Database 연결 및 활용하기"></a>세번째 단계 Database 연결 및 활용하기</h3><p><br><br></p>
+<h2 id="Branch-Name"><a href="#Branch-Name" class="headerlink" title="Branch Name"></a>Branch Name</h2><p>예제 브랜치 이름은 다음과 같습니다.<br>step03-springboot-data</p>
+<p><br><br></p>
+<h2 id="SpringBoot와-Database-연동을-해보자"><a href="#SpringBoot와-Database-연동을-해보자" class="headerlink" title="SpringBoot와 Database 연동을 해보자"></a>SpringBoot와 Database 연동을 해보자</h2><blockquote>
+<p>API를 사용자에게 지속적으로 제공하기 위해서는 영속적인 저장소가 필요합니다.<br>따라서 RDBMS(Relational Database Management System)에 속하는 제품을 사용합니다.</p>
+</blockquote>
+<br>
+<br>
+
+
+
+<h3 id="의존성-제외-설정"><a href="#의존성-제외-설정" class="headerlink" title="의존성 제외 설정"></a>의존성 제외 설정</h3><blockquote>
+<p>src/main/resources 폴더 밑에 <code>application.properties</code> 파일을 생성합니다.</p>
+</blockquote>
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-1.png" width="50%">    
+</div>
+
+<p><code>application.properties</code> 에 다음 줄을 추가합니다.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">spring.main.web-environment=false</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><br><br></p>
+<p>build.gradle에 필요한 라이브러리를 추가합니다.</p>
+<blockquote>
+<p>버전을 다시 고쳤습니다. 복붙해주세요.</p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">plugins</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">id</span> <span class="string">'java'</span></span><br><span class="line">    <span class="string">id</span> <span class="string">'org.springframework.boot'</span> <span class="string">version</span> <span class="string">'1.5.8.RELEASE'</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">ext&#123;</span></span><br><span class="line">    <span class="string">springBootVersion='1.5.8.RELEASE'</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">sourceCompatibility</span> <span class="string">=</span> <span class="number">1.8</span></span><br><span class="line"><span class="string">targetCompatibility</span> <span class="string">=</span> <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">sourceSets&#123;</span></span><br><span class="line">    <span class="string">main&#123;</span></span><br><span class="line">        <span class="string">java</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">srcDir</span> <span class="string">'src/main/java'</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">        <span class="string">resources&#123;</span></span><br><span class="line">            <span class="string">srcDir</span> <span class="string">'src/resources'</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">repositories</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">jcenter()</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">dependencies</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">compile</span> <span class="string">'org.springframework.boot:spring-boot-starter-web'</span></span><br><span class="line">    <span class="string">compile</span> <span class="string">"org.springframework.boot:spring-boot-devtools"</span></span><br><span class="line"></span><br><span class="line">    <span class="string">compile</span> <span class="string">'org.slf4j:slf4j-api:1.7.7'</span></span><br><span class="line"></span><br><span class="line">    <span class="string">testCompile</span> <span class="string">'junit:junit:4.12'</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.springframework.boot'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'spring-boot-starter-hateoas'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.1.5.RELEASE'</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'io.springfox'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'springfox-swagger2'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.9.2'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'io.springfox'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'springfox-swagger-ui'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.9.2'</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.hsqldb'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'hsqldb'</span><span class="string">,</span> <span class="string">version:'2.3.2'</span></span><br><span class="line">    <span class="string">compile</span> <span class="string">"org.springframework.boot:spring-boot-starter-data-jpa:$&#123;springBootVersion&#125;"</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.hibernate'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'hibernate-validator'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'4.2.0.Final'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'javax.el'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'javax.el-api'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'3.0.0'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'javax.validation'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'validation-api'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'1.0.0.GA'</span></span><br><span class="line"></span><br><span class="line">    <span class="string">//capcha</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'com.google.code.maven-play-plugin.org.playframework'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'jj-imaging'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'1.1'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'com.google.code.maven-play-plugin.org.playframework'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'jj-simplecaptcha'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'1.1'</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>데이터 저장소로는 hsqldb를 사용하며, 이는 소형 관계형 데이터베이스 엔진의 일종으로 JDBC를 지원하고, 라이브러리 추가만으로 사용가능해서 로컬 개발시에 많이 쓰입니다.</p>
+</blockquote>
+<br>
+
+<br>
+
+
+
+<h2 id="Database-Object-Mapping"><a href="#Database-Object-Mapping" class="headerlink" title="Database Object Mapping"></a>Database Object Mapping</h2><h4 id="값-매핑"><a href="#값-매핑" class="headerlink" title="값 매핑"></a>값 매핑</h4><blockquote>
+<p> src/main/java/seok/model 패키지 밑에 일반 사용자와 관리자 구분을 하는 UserRole.java Enum 클래스를 하나 생성합니다.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> UserRole &#123;</span><br><span class="line">    USER, <span class="comment">// 0</span></span><br><span class="line">    ADMIN <span class="comment">// 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><br><br></p>
+<h4 id="UserEntity-클래스를-만들어-보자"><a href="#UserEntity-클래스를-만들어-보자" class="headerlink" title="UserEntity 클래스를 만들어 보자"></a>UserEntity 클래스를 만들어 보자</h4><blockquote>
+<p>src/main/java/seok/model 패키지 밑에 UserEntity.java 클래스를 생성합니다.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.persistence.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserEntity</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue</span>(strategy = GenerationType.AUTO)</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">    <span class="keyword">private</span> Date created;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column</span>(name=<span class="string">"role"</span>)</span><br><span class="line">    <span class="meta">@Enumerated</span>(EnumType.ORDINAL)</span><br><span class="line">    <span class="keyword">private</span> UserRole role;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PrePersist</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beforeCreate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        created = <span class="keyword">new</span> Date();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserEntity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UserEntity</span><span class="params">(String name, Integer age, UserRole role)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">        <span class="keyword">this</span>.role = role;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Long <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Long id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(Integer age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Date <span class="title">getCreated</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> created;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCreated</span><span class="params">(Date created)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.created = created;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"UserEntity&#123;"</span> +</span><br><span class="line">                <span class="string">"id="</span> + id +</span><br><span class="line">                <span class="string">", name='"</span> + name + <span class="string">'\''</span> +</span><br><span class="line">                <span class="string">", age="</span> + age +</span><br><span class="line">                <span class="string">", created="</span> + created +</span><br><span class="line">                <span class="string">", role="</span> + role +</span><br><span class="line">                <span class="string">'&#125;'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Entity(데이터베이스 스키마의 내용을 자바 클래스로 표현할 수 있는 대상)</code> 어노테이션을 선언함으로써 엔티티 매니저가 관리해야 할 대상임을 명시합니다.</p>
+<p><code>@Enumerated</code> 어노테이션 속성으로 <code>@EnumType</code>을 지정할 때, <code>ORDINAL</code>로 하면 값이 <code>int</code>로 할당 되며 <code>STRING</code>으로 지정하면 <code>ENUM의 이름</code>으로 할당 됩니다.</p>
+<br>
+
+<br>
+
+
+
+
+
+<h3 id="User-Repository-인터페이스를-생성하자"><a href="#User-Repository-인터페이스를-생성하자" class="headerlink" title="User Repository 인터페이스를 생성하자"></a>User Repository 인터페이스를 생성하자</h3><blockquote>
+<p>src/main/java/seok 패키지 밑에 repository 패키지를 생성 후, UserRepository.java 인터페이스를 생성합니다.</p>
+</blockquote>
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-2.png" width="50%">
+</div>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.repository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.data.jpa.repository.JpaRepository;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.repository.query.Param;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Repository;</span><br><span class="line"><span class="keyword">import</span> seok.model.UserEntity;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserRepository</span> <span class="keyword">extends</span> <span class="title">JpaRepository</span>&lt;<span class="title">UserEntity</span>, <span class="title">Long</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">UserEntity <span class="title">findByName</span><span class="params">(@Param(<span class="string">"name"</span>)</span> String name)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>필드를 검색하기 위해 다음과 같이 사용할 수 있습니다.</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">반환 타입 findBy 필드명(파라미터);</span><br></pre></td></tr></table></figure>
+
+<p><br><br></p>
+<h3 id="실행-결과-보기"><a href="#실행-결과-보기" class="headerlink" title="실행 결과 보기"></a>실행 결과 보기</h3><div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-3.png" width="100%">    
+</div>
+
+<blockquote>
+<p><code>application.properties</code> 에 spring.main.web-environment=false 를 설정해줬기 때문에 웹은 실행되지않고, 종료합니다. </p>
+</blockquote>
+<br>
+
+<br>
+
+<br>
+
+
+
+<h2 id="Database-Server와-연동"><a href="#Database-Server와-연동" class="headerlink" title="Database Server와 연동"></a>Database Server와 연동</h2><h3 id="MySQL-설치"><a href="#MySQL-설치" class="headerlink" title="MySQL 설치"></a>MySQL 설치</h3><p><a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">MySQL DB 설치하기</a> 각 환경에 맞는 서버를 설치합니다.</p>
+<p><a href="https://dev.mysql.com/downloads/workbench/" target="_blank" rel="noopener">MySQL WorkBench</a> 도 설치하면 좋을 것 같습니다.</p>
+<br>
+
+<br>
+
+<h3 id="Database-Table-생성하기"><a href="#Database-Table-생성하기" class="headerlink" title="Database, Table 생성하기"></a>Database, Table 생성하기</h3><div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-4.png" width="70%">    
+</div>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create database exam;</span><br></pre></td></tr></table></figure>
+
+<p><code>exam</code> 이라는 데이터베이스를 하나 생성합니다.</p>
+<br>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">create table tbl_user(</span><br><span class="line">	id varchar(40) not null,</span><br><span class="line">    username varchar(45) not null,</span><br><span class="line">    password varchar(45) not null</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p><code>user</code> 정보 테이블을 생성합니다.</p>
+ <br>
+
+ <br>
+
+
+
+<h3 id="Database-Connection-Pool-HikariCP-사용하기"><a href="#Database-Connection-Pool-HikariCP-사용하기" class="headerlink" title="Database Connection Pool HikariCP 사용하기"></a>Database Connection Pool <code>HikariCP</code> 사용하기</h3><p>build.gradle 라이브러리 추가합니다.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">plugins</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">id</span> <span class="string">'java'</span></span><br><span class="line">    <span class="string">id</span> <span class="string">'idea'</span></span><br><span class="line">    <span class="string">id</span> <span class="string">'org.springframework.boot'</span> <span class="string">version</span> <span class="string">'1.5.8.RELEASE'</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">ext&#123;</span></span><br><span class="line">    <span class="string">springBootVersion='1.5.8.RELEASE'</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">sourceCompatibility</span> <span class="string">=</span> <span class="number">1.8</span></span><br><span class="line"><span class="string">targetCompatibility</span> <span class="string">=</span> <span class="number">1.8</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">sourceSets&#123;</span></span><br><span class="line">    <span class="string">main&#123;</span></span><br><span class="line">        <span class="string">java</span> <span class="string">&#123;</span></span><br><span class="line">            <span class="string">srcDir</span> <span class="string">'src/main/java'</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">        <span class="string">resources&#123;</span></span><br><span class="line">            <span class="string">srcDir</span> <span class="string">'src/resources'</span></span><br><span class="line">        <span class="string">&#125;</span></span><br><span class="line">    <span class="string">&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">repositories</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">jcenter()</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="string">dependencies</span> <span class="string">&#123;</span></span><br><span class="line">    <span class="string">compile</span> <span class="string">'org.springframework.boot:spring-boot-starter-web'</span></span><br><span class="line">    <span class="string">compile</span> <span class="string">"org.springframework.boot:spring-boot-devtools"</span></span><br><span class="line"></span><br><span class="line">    <span class="string">compile</span> <span class="string">'org.slf4j:slf4j-api:1.7.7'</span></span><br><span class="line"></span><br><span class="line">    <span class="string">testCompile</span> <span class="string">'junit:junit:4.12'</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.springframework.boot'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'spring-boot-starter-hateoas'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.1.5.RELEASE'</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'io.springfox'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'springfox-swagger2'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.9.2'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'io.springfox'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'springfox-swagger-ui'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.9.2'</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.springframework.boot'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'spring-boot-starter-jdbc'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.3.0.RELEASE'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'com.zaxxer'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'HikariCP'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'2.5.1'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'org.mybatis.spring.boot'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'mybatis-spring-boot-starter'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'1.3.0'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'mysql'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'mysql-connector-java'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'8.0.13'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="string">//capcha</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'com.google.code.maven-play-plugin.org.playframework'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'jj-imaging'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'1.1'</span></span><br><span class="line">    <span class="attr">compile group:</span> <span class="string">'com.google.code.maven-play-plugin.org.playframework'</span><span class="string">,</span> <span class="attr">name:</span> <span class="string">'jj-simplecaptcha'</span><span class="string">,</span> <span class="attr">version:</span> <span class="string">'1.1'</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>application.properties</code> 에 MySQL DB 서버 정보를 설정합니다.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver</span></span><br><span class="line"><span class="string">spring.datasource.url=jdbc:mysql://127.0.0.1:3306/exam?serverTimezone=UTC&amp;useUniCode=yes&amp;characterEncoding=UTF-8</span></span><br><span class="line"><span class="string">spring.datasource.username=ssafy</span></span><br><span class="line"><span class="string">spring.datasource.password=ssafy</span></span><br><span class="line"></span><br><span class="line"><span class="string">mybatis.config-location=classpath:mybatis-config.xml</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+
+
+
+<h3 id="Mybitis와-MySQL-연동"><a href="#Mybitis와-MySQL-연동" class="headerlink" title="Mybitis와 MySQL 연동"></a>Mybitis와 MySQL 연동</h3><blockquote>
+<p>src/main/resources 아래 다음 파일을 생성합니다.</p>
+</blockquote>
+<div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-5.png" width="50%">    
+</div>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- mybatis-config.xml --&gt;</span></span><br><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//mybatis.org//DTD Config 3.0//EN"</span></span></span><br><span class="line"><span class="meta">	<span class="meta-string">"http://mybatis.org/dtd/mybatis-3-config.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">"mappers/userMapper.xml"</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- userMapper.xml --&gt;</span></span><br><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">mapper</span></span></span><br><span class="line"><span class="meta">    <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//mybatis.org//DTD Mapper 3.0//EN"</span></span></span><br><span class="line"><span class="meta">    <span class="meta-string">"http://mybatis.org/dtd/mybatis-3-mapper.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"user"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"insertUser"</span>&gt;</span></span><br><span class="line">        insert into tbl_user(id, username, password)</span><br><span class="line">        value (#&#123;id&#125;, #&#123;username&#125;, #&#123;password&#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectAll"</span> <span class="attr">resultType</span>=<span class="string">"seok.model.User"</span>&gt;</span></span><br><span class="line">        select id, username, password</span><br><span class="line">        from tbl_user</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"select"</span> <span class="attr">resultType</span>=<span class="string">"seok.model.User"</span>&gt;</span></span><br><span class="line">        select id, username, password</span><br><span class="line">        from tbl_user</span><br><span class="line">        where id = #&#123;id&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">"update"</span>&gt;</span></span><br><span class="line">        update tbl_user</span><br><span class="line">        set username = #&#123;username&#125;, password = #&#123;password&#125;</span><br><span class="line">        where id = #&#123;id&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">"delete"</span>&gt;</span></span><br><span class="line">        delete from tbl_user</span><br><span class="line">        where id = #&#123;id&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">delete</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<br>
+
+<br>
+
+
+
+<h3 id="MVC-패턴으로-패키지-구성하기"><a href="#MVC-패턴으로-패키지-구성하기" class="headerlink" title="MVC 패턴으로 패키지 구성하기"></a>MVC 패턴으로 패키지 구성하기</h3><div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-6.png" width="50%">    
+</div>
+
+<p>위 그림과 같이 파일을 구성 합니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.repository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> seok.model.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserRepository</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">selectAll</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">select</span><span class="params">(String id)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">insert</span><span class="params">(User user)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">update</span><span class="params">(User user)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">delete</span><span class="params">(String id)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.repository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSession;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Repository;</span><br><span class="line"><span class="keyword">import</span> seok.model.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserRepositoryImpl</span> <span class="keyword">implements</span> <span class="title">UserRepository</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String MAPPER_NAME_SPACE = <span class="string">"user."</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    SqlSession sqlSession;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">selectAll</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sqlSession.selectList(MAPPER_NAME_SPACE + <span class="string">"selectAll"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">select</span><span class="params">(String id)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sqlSession.selectOne(MAPPER_NAME_SPACE + <span class="string">"select"</span>, id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">insert</span><span class="params">(User user)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sqlSession.insert(MAPPER_NAME_SPACE + <span class="string">"insertUser"</span>, user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">update</span><span class="params">(User user)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sqlSession.update(MAPPER_NAME_SPACE + <span class="string">"update"</span>, user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">delete</span><span class="params">(String id)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sqlSession.delete(MAPPER_NAME_SPACE + <span class="string">"delete"</span>, id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> seok.model.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">findAllUsers</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">findByUserId</span><span class="params">(String id)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">registry</span><span class="params">(User user)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">modify</span><span class="params">(User user)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">remove</span><span class="params">(String id)</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"><span class="keyword">import</span> seok.model.User;</span><br><span class="line"><span class="keyword">import</span> seok.repository.UserRepository;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title">UserService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    UserRepository repository;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;User&gt; <span class="title">findAllUsers</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> repository.selectAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> User <span class="title">findByUserId</span><span class="params">(String id)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> repository.select(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">registry</span><span class="params">(User user)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> repository.insert(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">modify</span><span class="params">(User user)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> repository.update(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">remove</span><span class="params">(String id)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> repository.delete(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> seok.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.swagger.annotations.Api;</span><br><span class="line"><span class="keyword">import</span> io.swagger.annotations.ApiOperation;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.HttpStatus;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.ResponseEntity;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.*;</span><br><span class="line"><span class="keyword">import</span> seok.model.User;</span><br><span class="line"><span class="keyword">import</span> seok.service.UserService;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"/api"</span>)</span><br><span class="line"><span class="meta">@Api</span>(value=<span class="string">"msnodeve"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    UserService service;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/user"</span>)</span><br><span class="line">    <span class="meta">@ApiOperation</span>(value = <span class="string">"모든 유저의 정보를 반환한다."</span>, response = List<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">ResponseEntity</span>&lt;<span class="title">List</span>&lt;<span class="title">User</span>&gt;&gt; <span class="title">findAllUsers</span>() </span>&#123;</span><br><span class="line">        List&lt;User&gt; users = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            users = service.findAllUsers();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="keyword">null</span>, HttpStatus.NO_CONTENT);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(users, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/user/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="meta">@ApiOperation</span>(value = <span class="string">"유저의 정보를 반환한다."</span>, response = Object<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">ResponseEntity</span>&lt;<span class="title">User</span>&gt; <span class="title">findByUserId</span>(@<span class="title">PathVariable</span> <span class="title">String</span> <span class="title">id</span>) </span>&#123;</span><br><span class="line">        User user = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            user = service.findByUserId(id);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="keyword">null</span>, HttpStatus.NO_CONTENT);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(user, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"/user"</span>)</span><br><span class="line">    <span class="meta">@ApiOperation</span>(value = <span class="string">"유저의 정보를 입력한다."</span>, response = String<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">ResponseEntity</span>&lt;<span class="title">String</span>&gt; <span class="title">registryUser</span>(@<span class="title">RequestBody</span> <span class="title">User</span> <span class="title">user</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (service.registry(user) != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"성공적으로 등록되었습니다."</span>, HttpStatus.CREATED);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"등록 실패했습니다."</span>, HttpStatus.BAD_REQUEST);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"등록 실패했습니다."</span>, HttpStatus.BAD_REQUEST);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PutMapping</span>(<span class="string">"/user"</span>)</span><br><span class="line">    <span class="meta">@ApiOperation</span>(value = <span class="string">"유저의 정보를 수정한다."</span>, response = String<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">ResponseEntity</span>&lt;<span class="title">String</span>&gt; <span class="title">modifyUser</span>(@<span class="title">RequestBody</span> <span class="title">User</span> <span class="title">user</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (service.modify(user) != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"성공적으로 수정되었습니다."</span>, HttpStatus.OK);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"수정 실패했습니다."</span>, HttpStatus.BAD_REQUEST);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"수정 실패했습니다."</span>, HttpStatus.BAD_REQUEST);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@DeleteMapping</span>(<span class="string">"/user/&#123;id&#125;"</span>)</span><br><span class="line">    <span class="meta">@ApiOperation</span>(value = <span class="string">"유저의 정보를 삭제한다."</span>, response = String<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">ResponseEntity</span>&lt;<span class="title">String</span>&gt; <span class="title">removeUser</span>(@<span class="title">PathVariable</span> <span class="title">String</span> <span class="title">id</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (service.remove(id) != <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"성공적으로 삭제되었습니다."</span>, HttpStatus.OK);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"삭제 실패했습니다."</span>, HttpStatus.BAD_REQUEST);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="string">"삭제 실패했습니다."</span>, HttpStatus.BAD_REQUEST);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<br>
+
+<br>
+
+
+
+<h3 id="실행해보기"><a href="#실행해보기" class="headerlink" title="실행해보기"></a>실행해보기</h3><div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-7.png" width="100%">    
+</div>
+
+<h4 id="등록하기"><a href="#등록하기" class="headerlink" title="등록하기"></a>등록하기</h4><div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-8.png" width="100%">    
+</div>
+
+<h4 id="DB-결과"><a href="#DB-결과" class="headerlink" title="DB 결과"></a>DB 결과</h4><div style="text-align: center;">
+<img src="/image/spring/boot/example/step03/step03-9.png" width="50%">    
+</div>
+
+
+<p><br><br></p>
+<h2 id="INDEX-1"><a href="#INDEX-1" class="headerlink" title="INDEX"></a>INDEX</h2><ul>
+<li><a href="https://msnodeve.github.io/2020/06/10/springboot-stop01-create-project-run/">Backend SpringBoot 프로젝트 생성 및 실행 해보기(1)</a></li>
+<li><a href="https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/">Backend SpringBoot REST API 만들기(2)</a></li>
+</ul>
+<p><br><br></p>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/backend/" rel="tag">Backend</a> <a class="tag tag--primary tag--small t-link" href="/tags/database/" rel="tag">Database</a> <a class="tag tag--primary tag--small t-link" href="/tags/framework/" rel="tag">Framework</a> <a class="tag tag--primary tag--small t-link" href="/tags/spring/" rel="tag">Spring</a> <a class="tag tag--primary tag--small t-link" href="/tags/springboot/" rel="tag">SpringBoot</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/06/20/springboot-step02-make-rest-api/"
+                    data-tooltip="SpringBoot REST API 만들기(2) - [Backend Framework]"
+                    aria-label="다음: SpringBoot REST API 만들기(2) - [Backend Framework]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Myeong Seok KIM. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/06/20/springboot-step02-make-rest-api/"
+                    data-tooltip="SpringBoot REST API 만들기(2) - [Backend Framework]"
+                    aria-label="다음: SpringBoot REST API 만들기(2) - [Backend Framework]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+            <h4 id="about-card-name">Myeong Seok KIM</h4>
+        
+            <div id="about-card-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>SSAFY 3rd 교육생</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Seoul, Republic of Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">포스트가 없습니다.</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                            aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
+                        >
+                            <h3 class="media-heading">Linux, CentOS 작업 스케쥴러 - Crontab</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 9일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab?"></a>Crontab?</h1><p><code>Cron</code> 은 리눅스 에서 특정한 <code>명령</code>이나 <code>스크립트</code>를 지정한 <code>날짜/시간</code>에 자동으로 실행해 주는 <code>스케쥴러</code> 입니다.</p>
+<p>주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/ssafy.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <h3 class="media-heading">SSAFY 3기를 시작하며![합격 후기]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 24일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="SSAFY"><a href="#SSAFY" class="headerlink" title="SSAFY"></a>SSAFY</h1><p><code>Samsung Software Academy For Youth</code>(삼성 청년 소프트웨어 아카데미) 서울 지역에 합격했습니다! 😘</p>
+<p>그런 의미로 이야기를 한 번 써내려 가려 합니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/hexo-syntax.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <h3 class="media-heading">Hexo[Tranquilpeak] 사용방법</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 13일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Hexo-tranquilpeak-테마"><a href="#Hexo-tranquilpeak-테마" class="headerlink" title="Hexo[tranquilpeak 테마]"></a>Hexo[tranquilpeak 테마]</h1><p>이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다.</p>
+<p><code>Tag</code> <code>Alert</code> <code>Highlight Text</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                            aria-label=": Recursive(재귀) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">Recursive(재귀) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 17일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다.</p>
+<p><code>Factorial</code> <code>Fibonacci</code> <code>Fibonacci Memoization</code> <code>Hanoi</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                            aria-label=": SubSet(부분집합) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">SubSet(부분집합) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 5월 23일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.</p>
+<p><code>Subset</code> <code>BitMask</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/05/24/algorithm-lis/"
+                            aria-label=": LIS(최장 증가 수열) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">LIS(최장 증가 수열) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 5월 24일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 LIS(최장 증가 수열)에 대해서 알아 보려고 합니다.</p>
+<p><code>DP</code> <code>보다 효율적인 탐색 방법 Binary Search</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/06/10/springboot-stop01-create-project-run/"
+                            aria-label=": SpringBoot 프로젝트 생성 및 실행 해보기(1) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">SpringBoot 프로젝트 생성 및 실행 해보기(1) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 6월 10일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="첫번째-단계-프로젝트-생성하기"><a href="#첫번째-단계-프로젝트-생성하기" class="headerlink" title="첫번째 단계 프로젝트 생성하기"></a>첫번째 단계 프로젝트 생성하기</h3><p>이번 포스트에서는 IntelliJ 개발환경에서 SpringBoot Framework 프로젝트를 생성하고 실행해보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>스프링부트</code> <code>SpringBoot</code> <code>IntelliJ</code> <code>FrameWork</code> <code>프로젝트 생성하는 방법!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/"
+                            aria-label=": SpringBoot REST API 만들기(2) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">SpringBoot REST API 만들기(2) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 6월 20일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="두번째-단계-REST-API-만들기"><a href="#두번째-단계-REST-API-만들기" class="headerlink" title="두번째 단계 REST API 만들기"></a>두번째 단계 REST API 만들기</h3><p>이번 포스트에서는 REST API를 만드는 방법을 알아 보도록 하겠습니다.</p>
+<p><code>스프링부트</code> <code>SpringBoot</code> <code>IntelliJ</code> <code>FrameWork</code> <code>REST API</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/"
+                            aria-label=": SpringBoot Database 활용하기(3) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">SpringBoot Database 활용하기(3) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 6월 21일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="세번째-단계-Database-연결-및-활용하기"><a href="#세번째-단계-Database-연결-및-활용하기" class="headerlink" title="세번째 단계 Database 연결 및 활용하기"></a>세번째 단계 Database 연결 및 활용하기</h3><p>이번 포스트에서는 Database 연결 및 MyBatis 활용에 대해서 알아 보도록 하겠습니다.</p>
+<p><code>Database</code> <code>MyBatis</code> <code>SpringBoot</code> <code>MySQL</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="포스트가 없습니다."
+                data-message-one="1 개의 포스트가 있습니다."
+                data-message-other="{n} 개의 포스트가 있습니다.">
+                9 개의 포스트가 있습니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/jquery.js"></script>
+
+
+<script src="/assets/js/jquery.fancybox.js"></script>
+
+
+<script src="/assets/js/thumbs.js"></script>
+
+
+<script src="/assets/js/tranquilpeak.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+    
+<script src="/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('R1M5F6PCKT', 'c742103764cdb380400cb1b22f428418');
+      var algoliaIndex = algoliaClient.initIndex('msnodeve_blog');
+    </script>
+
+
+    </body>
+</html>

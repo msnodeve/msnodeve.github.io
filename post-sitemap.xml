@@ -8,16 +8,24 @@
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/</loc>
-        <lastmod>2020-06-20T10:12:28.274Z</lastmod>
+        <loc>https://msnodeve.github.io/2020/06/10/springboot-stop01-create-project-run/</loc>
+        <lastmod>2020-06-21T04:17:56.098Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/2020/06/10/springboot-stop01-create-project-run/</loc>
-        <lastmod>2020-06-20T10:11:57.051Z</lastmod>
+        <loc>https://msnodeve.github.io/2020/06/21/springboot-step03-springboot-data/</loc>
+        <lastmod>2020-06-21T04:17:27.807Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/2020/06/20/springboot-step02-make-rest-api/</loc>
+        <lastmod>2020-06-21T04:13:24.532Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
