@@ -8,29 +8,43 @@
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/categories/backend/framework/spring/springboot/</loc>
-        <lastmod>2020-06-21T04:17:56.098Z</lastmod>
+        <loc>https://msnodeve.github.io/categories/backend/framework/python/flask/</loc>
+        <lastmod>2020-06-22T02:16:59.494Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/categories/backend/framework/spring/</loc>
-        <lastmod>2020-06-21T04:17:56.098Z</lastmod>
+        <loc>https://msnodeve.github.io/categories/backend/framework/python/</loc>
+        <lastmod>2020-06-22T02:16:59.494Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://msnodeve.github.io/categories/backend/framework/</loc>
-        <lastmod>2020-06-21T04:17:56.098Z</lastmod>
+        <lastmod>2020-06-22T02:16:59.494Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://msnodeve.github.io/categories/backend/</loc>
-        <lastmod>2020-06-21T04:17:56.098Z</lastmod>
+        <lastmod>2020-06-22T02:16:59.494Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/backend/framework/spring/springboot/</loc>
+        <lastmod>2020-06-22T01:50:51.596Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/backend/framework/spring/</loc>
+        <lastmod>2020-06-22T01:50:51.596Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

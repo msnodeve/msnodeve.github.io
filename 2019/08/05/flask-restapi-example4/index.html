@@ -1,0 +1,1142 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="msnodevLog">
+    <title>Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework] - msnodevLog</title>
+    <meta name="author" content="Myeong Seok KIM">
+    <script data-ad-client="ca-pub-2766237193476584" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+        <meta name="keywords" content="algorithm,Backend,백엔드,Framework,프레임워크,Flask,플라스크,프로젝트,생성하기,예제,REST,API,RESTAPI,REST API">
+    
+    
+        <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\nINDEX\nFlask RESTPlus CRUD Board 만들기 실행 (1)\nFlask RESTPlus CRUD Board 만들기 설정 및 MySQL (2)\nFlask RESTPlus CRUD Board 만들기 ORM 그리고 Model (3)\nFlask RESTPlus CRUD Board 만들기 MVC 그리고 REST API Swagger (4)\nFlask RESTPlus CRUD Board 만들기 Auth 그리고 암호화 (5)\n\n\n이번 포스트는 macOS Mojave 10.14.5 에서 수행된 작업입니다.\n개발 환경\nMacBook Pro (13-inch, 2017, Four Thunderbolt 3 Ports)\nPython 3.7\nvscode\nDocker-Compose version 1.23.2, build 1110ad01\n\n\nRESTPlus 라이브러리를 사용해 REST API 만들기(Users Part)flask-restplus 종속성을 설치합니다\n1$ pipenv install flask-restplus\n\n이제 app에 설치한 RESTPlus를 달아 봅시다\n1234567891011121314151617181920212223242526# ./app/__init__.py\"\"\"    APP을 실행하기 위해 config file\"\"\"from flask import Flaskfrom app.api.database import DB, MAfrom app.api import REST_APIfrom app.constants import SQLALCHEMY_DATABASE_URI_FORMATdef create_app()-&gt;(Flask):    \"\"\" create_app()을 호출하여 app을 초기화 \"\"\"    app = Flask(__name__)    app.app_context().push()        app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI_FORMAT    app.config['SQLALCHEMY_ECHO'] = True    app.config['DEBUG'] = True    DB.init_app(app)    REST_API.init_app(app)    MA.init_app(app)        return app\n\nMVC 패턴을 이용해 User 부분을 작성합니다\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667# ./app/users/views.py\"\"\"    User views file\"\"\"from http import HTTPStatusfrom flask import jsonify, make_responsefrom sqlalchemy.exc import SQLAlchemyErrorfrom flask_restplus import Namespace, Resource, reqparse, fieldsfrom app.users.models import Users, UsersSchemafrom app.api.database import DBAPI = Namespace('Users', description=\"User's RESTPlus - API\")USERS_SCHEMA = UsersSchema()@API.route('s')class UsersAuth(Resource):    parser = reqparse.RequestParser()    parser.add_argument('user_id', required=True, type=str, help=\"User's ID\", location='json')    parser.add_argument('user_password', required=True, type=str, help=\"User's PW\", location='json')    parser.add_argument('user_email', required=True, type=str, help=\"User's Email\", location='json')    users_field = API.model('Sign up', &#123;        'user_id' : fields.String,        'user_password' : fields.String,        'user_email' : fields.String    &#125;)    @API.doc('post')    @API.expect(users_field)    def post(self):        args_ = self.parser.parse_args()        user = Users(args_['user_id'], args_['user_password'], args_['user_email'])        try:            DB.session.add(user)            DB.session.commit()            body = jsonify(&#123;'users' : USERS_SCHEMA.dump(user).data&#125;)            code = HTTPStatus.OK        except SQLAlchemyError as err:            DB.session.rollback()            body = jsonify(&#123;'message' : str(err)&#125;)            code = HTTPStatus.INTERNAL_SERVER_ERROR        return make_response(body, code.value)@API.route('/auth')class UserAuth(Resource):    parser = reqparse.RequestParser()    parser.add_argument('user_id', required=True, type=str, help=\"User's ID\", location='json')    parser.add_argument('user_password', required=True, type=str, help=\"User's PW\", location='json')    user_login_field = API.model('Sign in', &#123;        'user_id' : fields.String,        'user_password' : fields.String    &#125;)    @API.doc('post')    @API.expect(user_login_field)    def post(self):        args_ = self.parser.parse_args()        try:            user = Users.query.filter(Users.user_id == args_['user_id']).first()            body = jsonify(&#123;'user_id' : user.user_id&#125;)            code = HTTPStatus.OK        except SQLAlchemyError as err:            body = jsonify(&#123;'message' : str(err)&#125;)            code = HTTPStatus.INTERNAL_SERVER_ERROR        return make_response(body, code.value)\n\nSwagger를 달아 API를 호출 할수있는 Docs를 만듭시다\n12345678# ./app/api/**init**.pyfrom flask_restplus import Apifrom app.users.views import API as users_apiREST_API = Api()REST_API.add_namespace(users_api, '/user')\n\n앱을 한번 실행해 봅시다\n1$ python manage.py run\n\n\n\n\n\n\n\n\nRESTPlus API 만들기(Posts Part)이전 포스트와 같이 Posts에 대한 Model을 만듭니다\n1234567891011121314151617181920212223242526272829303132333435# ./app/posts/models.py\"\"\"    Posts model file\"\"\"from app.api.database import DB, MAfrom marshmallow import Schema, fields, validatefrom app.users.models import Users, UsersSchemafrom sqlalchemy.sql import textclass Posts(DB.Model):    __tablename__ = 'posts'    __table_args__ = &#123;'mysql_collate': 'utf8_general_ci'&#125;    id = DB.Column(DB.Integer, primary_key=True)    author_id = DB.Column(DB.String(255), DB.ForeignKey(Users.user_id))    title = DB.Column(DB.String(512), nullable=False)    body = DB.Column(DB.String(1024), nullable=False)    author = DB.relationship('Users', uselist=False)    created = DB.Column(DB.TIMESTAMP, server_default=text(\"CURRENT_TIMESTAMP\"), nullable=False)    def __init__(self, author_id, title, body):        self.author_id = author_id        self.title = title        self.body = bodyclass PostsSchema(MA.Schema):    not_blank = validate.Length(min=1, error='Field cannot be blank')    id = fields.Integer()    author_id = fields.String(validate=not_blank)    title = fields.String(validate=not_blank)    body = fields.String(validate=not_blank)    author = fields.Nested(UsersSchema)    created = fields.String(validate=not_blank)\n\nMVC 패턴을 이용해 Posts 부분을 작성합니다\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768# ./app/posts/views.py\"\"\"    Posts view file\"\"\"from flask_restplus import Namespace, Resource, reqparse, fieldsfrom flask import jsonify, make_responsefrom http import HTTPStatusfrom sqlalchemy.exc import SQLAlchemyErrorfrom app.posts.models import Posts, PostsSchemafrom app.users.models import Users, UsersSchemafrom app.api.database import DBAPI = Namespace('Posts', description=\"Post's REST API\")POSTS_SCHEMA = PostsSchema()@API.route('s')class Post(Resource):    parser = reqparse.RequestParser()    parser.add_argument('author_id', required=True, type=str, help=\"Post's author ID\", location='json')    parser.add_argument('title', required=True, type=str, help=\"Post's title\", location='json')    parser.add_argument('body', required=True, type=str, help=\"Post's body\", location='json')    post_field = API.model('Post', &#123;        'author_id': fields.String,        'title': fields.String,        'body': fields.String    &#125;)    @API.doc('get')    def get(self):        try:            posts = Posts.query.all()            body = jsonify(POSTS_SCHEMA.dump(posts, many=True).data)            code = HTTPStatus.OK        except SQLAlchemyError as err:            body = jsonify(&#123;'message' : str(err)&#125;)            code = HTTPStatus.INTERNAL_SERVER_ERROR        return make_response(body, code.value)    @API.expect(post_field)    @API.doc('post')    def post(self):        args_ = self.parser.parse_args()        post = Posts(author_id=args_['author_id'], title=args_['title'], body=args_['body'])        try:            DB.session.add(post)            DB.session.commit()            body = jsonify(&#123;'post', POSTS_SCHEMA.dump(post).data&#125;)            code = HTTPStatus.OK        except SQLAlchemyError as err:            body = jsonify(&#123;'message' : str(err)&#125;)            code = HTTPStatus.INTERNAL_SERVER_ERROR        return make_response(body, code.value)@API.route('/&lt;int:reqno&gt;')class PostItem(Resource):    def get(self, reqno):        try:            post = DB.session.query(Posts).outerjoin(                Users, Users.user_id == Posts.author_id).filter(Posts.id==reqno).first()            body = jsonify(&#123;'post' : POSTS_SCHEMA.dump(post).data&#125;)            code = HTTPStatus.OK        except SQLAlchemyError as err:            body = jsonify(&#123;'message' : str(err)&#125;)            code = HTTPStatus.INTERNAL_SERVER_ERROR        return make_response(body, code.value)\n\nSwagger를 달아 API를 호출 할수있는 Docs를 만듭시다\n123456789101112# ./app/api/__init__.py\"\"\"    API config file\"\"\"from flask_restplus import Apifrom app.posts.views import API as posts_apiREST_API = Api()REST_API.add_namespace(users_api, '/user')REST_API.add_namespace(posts_api, '/post')\n\nMVC(Model, View, Controller) 분리12345678910111213141516171819202122232425262728293031323334# ./app/api/database.py\"\"\"    Create db\"\"\"from flask import jsonifyfrom flask import make_responsefrom http import HTTPStatusfrom flask_sqlalchemy import SQLAlchemyfrom sqlalchemy.exc import IntegrityErrorfrom flask_marshmallow import MarshmallowDB = SQLAlchemy()MA = Marshmallow()class CRUD:    body = ''    status_code = HTTPStatus.NOT_IMPLEMENTED    def add(self, resource, schema):        try:            DB.session.add(resource)            DB.session.commit()            self.body = jsonify(schema.dump(resource).data)            self.status_code = HTTPStatus.OK        except IntegrityError as err:            DB.session.rollback()            err_meg = str(err)            self.body = jsonify(&#123;'error' : err_meg, 'type' : 'IntegrityError'&#125;)            if \"Duplicate entry\" in err_meg:                self.status_code = HTTPStatus.CONFLICT            else:                self.status_code = HTTPStatus.BAD_REQUEST        return make_response(self.body, self.status_code)\n\nUser, Post Model을 따로 빼 줍니다\n1234567891011121314151617181920212223242526272829303132# ./app/users/models.py\"\"\"    Users models file\"\"\"from sqlalchemy.sql import textfrom app.api.database import DB, MA, CRUDfrom flask_sqlalchemy import SQLAlchemyfrom marshmallow import Schema, fields, validateclass Users(DB.Model, CRUD):    __tablename__ = 'users'    __table_args__ = &#123;'mysql_collate': 'utf8_general_ci'&#125;    id = DB.Column(DB.Integer, primary_key=True)    user_id = DB.Column(DB.String(255), unique=True, nullable=False)    user_password = DB.Column(DB.String(255), nullable=False)    user_email = DB.Column(DB.String(255), nullable=False)    created = DB.Column(DB.TIMESTAMP, server_default=text(\"CURRENT_TIMESTAMP\"), nullable=False)    def __init__(self, user_id : str, user_password : str, user_email : str):        self.user_id = user_id        self.user_password = user_password        self.user_email = user_emailclass UsersSchema(MA.Schema):    not_blank = validate.Length(min=1, error='Field cannot be blank')    id = fields.Integer(dump_only=True)    user_id = fields.String(validate=not_blank)    user_password = fields.String(validate=not_blank)    user_email = fields.String(validate=not_blank)    created = fields.String(validate=not_blank)\n\n1234567891011121314151617181920212223242526272829303132333435# ./app/posts/models.py\"\"\"    Posts model file\"\"\"from app.api.database import DB, MA, CRUDfrom marshmallow import Schema, fields, validatefrom app.users.models import Users, UsersSchemafrom sqlalchemy.sql import textclass Posts(DB.Model, CRUD):    __tablename__ = 'posts'    __table_args__ = &#123;'mysql_collate': 'utf8_general_ci'&#125;    id = DB.Column(DB.Integer, primary_key=True)    author_id = DB.Column(DB.String(255), DB.ForeignKey(Users.user_id))    title = DB.Column(DB.String(512), nullable=False)    body = DB.Column(DB.String(1024), nullable=False)    author = DB.relationship('Users', uselist=False)    created = DB.Column(DB.TIMESTAMP, server_default=text(\"CURRENT_TIMESTAMP\"), nullable=False)    def __init__(self, author_id, title, body):        self.author_id = author_id        self.title = title        self.body = bodyclass PostsSchema(MA.Schema):    not_blank = validate.Length(min=1, error='Field cannot be blank')    id = fields.Integer()    author_id = fields.String(validate=not_blank)    title = fields.String(validate=not_blank)    body = fields.String(validate=not_blank)    author = fields.Nested(UsersSchema)    created = fields.String(validate=not_blank)\n\nview 부분도 빼 줍시다\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061# ./app/users/views.py\"\"\"    User views file\"\"\"from http import HTTPStatusfrom flask import jsonify, make_responsefrom sqlalchemy.exc import SQLAlchemyErrorfrom flask_restplus import Namespace, Resource, reqparse, fieldsfrom app.users.models import Users, UsersSchemafrom app.api.database import DBAPI = Namespace('Users', description=\"User's RESTPlus - API\")USERS_SCHEMA = UsersSchema()@API.route('s')class UsersAuth(Resource):    parser = reqparse.RequestParser()    parser.add_argument('user_id', required=True, type=str, help=\"User's ID\", location='json')    parser.add_argument('user_password', required=True, type=str, help=\"User's PW\", location='json')    parser.add_argument('user_email', required=True, type=str, help=\"User's Email\", location='json')    users_field = API.model('userRegister', &#123;        'user_id' : fields.String,        'user_password' : fields.String,        'user_email' : fields.String    &#125;)    @API.doc('post')    @API.expect(users_field)    def post(self):        args_ = self.parser.parse_args()        user = Users(args_['user_id'], args_['user_password'], args_['user_email'])        return user.add(user, USERS_SCHEMA)@API.route('/auth')class UserAuth(Resource):    parser = reqparse.RequestParser()    parser.add_argument('user_id', required=True, type=str, help=\"User's ID\", location='json')    parser.add_argument('user_password', required=True, type=str, help=\"User's PW\", location='json')    user_login_field = API.model('userLogin', &#123;        'user_id' : fields.String,        'user_password' : fields.String    &#125;)    @API.doc('post')    @API.expect(user_login_field)    def post(self):        args_ = self.parser.parse_args()        try:            user = Users.query.filter(Users.user_id == args_['user_id'], Users.user_password  == args_['user_password']).first()            body = jsonify(&#123;'user_id' : user.user_id&#125;)            if user:                code = HTTPStatus.OK            else:                code = HTTPStatus.NOT_FOUND        except SQLAlchemyError as err:            body = jsonify(&#123;'message' : str(err)&#125;)            code = HTTPStatus.INTERNAL_SERVER_ERROR        return make_response(body, code.value)\n\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566# ./app/posts/views.py\"\"\"    Posts view file\"\"\"from flask_restplus import Namespace, Resource, reqparse, fieldsfrom flask import jsonify, make_responsefrom http import HTTPStatusfrom sqlalchemy.exc import SQLAlchemyErrorfrom app.posts.models import Posts, PostsSchemafrom app.users.models import Users, UsersSchemafrom app.api.database import DBAPI = Namespace('Posts', description=\"Post's REST API\")POSTS_SCHEMA = PostsSchema()@API.route('s')class Post(Resource):    parser = reqparse.RequestParser()    parser.add_argument('author_id', required=True, type=str, help=\"Post's author ID\", location='json')    parser.add_argument('title', required=True, type=str, help=\"Post's title\", location='json')    parser.add_argument('body', required=True, type=str, help=\"Post's body\", location='json')    post_field = API.model('Post', &#123;        'author_id': fields.String,        'title': fields.String,        'body': fields.String    &#125;)    @API.doc('get')    def get(self):        try:            posts = Posts.query.all()            body = jsonify(POSTS_SCHEMA.dump(posts, many=True).data)            if posts:                code = HTTPStatus.OK            else:                code = HTTPStatus.NOT_FOUND        except SQLAlchemyError as err:            body = jsonify(&#123;'message' : str(err)&#125;)            code = HTTPStatus.INTERNAL_SERVER_ERROR        return make_response(body, code.value)    @API.expect(post_field)    @API.doc('post')    def post(self):        args_ = self.parser.parse_args()        post = Posts(author_id=args_['author_id'], title=args_['title'], body=args_['body'])        return post.add(post, POSTS_SCHEMA)@API.route('/&lt;int:reqno&gt;')class PostItem(Resource):    def get(self, reqno):        try:            post = DB.session.query(Posts).outerjoin(                Users, Users.user_id == Posts.author_id).filter(Posts.id==reqno).first()            body = POSTS_SCHEMA.dump(post).data            if post:                code = HTTPStatus.OK            else:                code = HTTPStatus.NOT_FOUND        except SQLAlchemyError as err:            body = jsonify(&#123;'message' : str(err)&#125;)            code = HTTPStatus.INTERNAL_SERVER_ERROR        return make_response(body, code.value)\n\n이제 최종적으로 실행을 해봅시다\n1$ python manage.py run\n\n\n\n\n\n\n\nINDEX\nFlask RESTPlus CRUD Board 만들기 실행 (1)\nFlask RESTPlus CRUD Board 만들기 설정 및 MySQL (2)\nFlask RESTPlus CRUD Board 만들기 ORM 그리고 Model (3)\nFlask RESTPlus CRUD Board 만들기 MVC 그리고 REST API Swagger (4)\nFlask RESTPlus CRUD Board 만들기 Auth 그리고 암호화 (5)\n\n","dateCreated":"2019-08-05T13:07:25+09:00","dateModified":"2020-06-22T11:16:26+09:00","datePublished":"2019-08-05T13:07:25+09:00","description":"네번째 단계이번 포스트에서는 vscode 개발환경에서 Flask Framework MVC, Swagger API 문서 자동화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.\n플라스크 Flask vscode Framework Swagger MVC","headline":"Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]","image":["flask-thumbnail4.png","noImage.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2019/08/05/flask-restapi-example4/","keywords":"Backend, Framework, Flask, Python","thumbnailUrl":"flask-thumbnail4.png"}</script>
+    <meta name="description" content="네번째 단계이번 포스트에서는 vscode 개발환경에서 Flask Framework MVC, Swagger API 문서 자동화에 대해서 알아보는 시간을 가져 보도록 하겠습니다. 플라스크 Flask vscode Framework Swagger MVC">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]">
+<meta property="og:url" content="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/index.html">
+<meta property="og:site_name" content="msnodevLog">
+<meta property="og:description" content="네번째 단계이번 포스트에서는 vscode 개발환경에서 Flask Framework MVC, Swagger API 문서 자동화에 대해서 알아보는 시간을 가져 보도록 하겠습니다. 플라스크 Flask vscode Framework Swagger MVC">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://msnodeve.github.io/image/backend-flask-restplus11.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/flask/backend-flask-restplus12.png">
+<meta property="article:published_time" content="2019-08-05T04:07:25.000Z">
+<meta property="article:modified_time" content="2020-06-22T02:16:26.539Z">
+<meta property="article:author" content="Myeong Seok KIM">
+<meta property="article:tag" content="Backend">
+<meta property="article:tag" content="백엔드">
+<meta property="article:tag" content="Framework">
+<meta property="article:tag" content="프레임워크">
+<meta property="article:tag" content="Flask">
+<meta property="article:tag" content="플라스크">
+<meta property="article:tag" content="프로젝트">
+<meta property="article:tag" content="생성하기">
+<meta property="article:tag" content="예제">
+<meta property="article:tag" content="REST">
+<meta property="article:tag" content="API">
+<meta property="article:tag" content="RESTAPI">
+<meta property="article:tag" content="REST API">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://msnodeve.github.io/image/backend-flask-restplus11.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/flask-thumbnail4.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/flask-thumbnail4.png"/>
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/noImage.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/noImage.png"/>
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/all.css">
+
+    
+<link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+
+    
+<link rel="stylesheet" href="/assets/css/thumbs.css">
+
+    
+<link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153775936-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-153775936-1');
+    </script>
+
+
+    
+
+    
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"/>
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            msnodevLog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="/about"
+                aria-label="링크 열기: /about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Myeong Seok KIM</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/msnodeve"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/Kstoo2"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+        <div class="post-header-cover
+                    text-left
+                    post-header-cover--partial"
+             style="background-image:url('/2019/08/05/flask-restapi-example4/noImage.png');"
+             data-behavior="4">
+            
+                <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-08-05T13:07:25+09:00">
+	
+		    2019/08/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/backend/">backend</a>, <a class="category-link" href="/categories/backend/framework/">framework</a>, <a class="category-link" href="/categories/backend/framework/python/">python</a>, <a class="category-link" href="/categories/backend/framework/python/flask/">flask</a>
+
+
+    
+</div>
+
+    
+</div>
+
+            
+        </div>
+
+            <div id="main" data-behavior="4"
+                 class="hasCover
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<h2 id="INDEX"><a href="#INDEX" class="headerlink" title="INDEX"></a>INDEX</h2><ul>
+<li><a href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/">Flask RESTPlus CRUD Board 만들기 실행 (1)</a></li>
+<li><a href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/">Flask RESTPlus CRUD Board 만들기 설정 및 MySQL (2)</a></li>
+<li><a href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/">Flask RESTPlus CRUD Board 만들기 ORM 그리고 Model (3)</a></li>
+<li><a href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/">Flask RESTPlus CRUD Board 만들기 MVC 그리고 REST API Swagger (4)</a></li>
+<li><a href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/">Flask RESTPlus CRUD Board 만들기 Auth 그리고 암호화 (5)</a></li>
+</ul>
+<p></br></br></p>
+<p><font size="2em">이번 포스트는 macOS Mojave 10.14.5 에서 수행된 작업입니다.</font></p>
+<h1 id="개발-환경"><a href="#개발-환경" class="headerlink" title="개발 환경"></a>개발 환경</h1><ul>
+<li>MacBook Pro (13-inch, 2017, Four Thunderbolt 3 Ports)</li>
+<li>Python 3.7</li>
+<li>vscode</li>
+<li>Docker-Compose version 1.23.2, build 1110ad01</li>
+</ul>
+<p></br></br></p>
+<h1 id="RESTPlus-라이브러리를-사용해-REST-API-만들기-Users-Part"><a href="#RESTPlus-라이브러리를-사용해-REST-API-만들기-Users-Part" class="headerlink" title="RESTPlus 라이브러리를 사용해 REST API 만들기(Users Part)"></a>RESTPlus 라이브러리를 사용해 REST API 만들기(Users Part)</h1><p><code>flask-restplus</code> 종속성을 설치합니다</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pipenv install flask-restplus</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p>이제 <code>app</code>에 설치한 <code>RESTPlus</code>를 달아 봅시다</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/__init__.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    APP을 실행하기 위해 config file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="keyword">from</span> app.api.database <span class="keyword">import</span> DB, MA</span><br><span class="line"><span class="keyword">from</span> app.api <span class="keyword">import</span> REST_API</span><br><span class="line"><span class="keyword">from</span> app.constants <span class="keyword">import</span> SQLALCHEMY_DATABASE_URI_FORMAT</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_app</span><span class="params">()</span>-&gt;(Flask):</span></span><br><span class="line">    <span class="string">""" create_app()을 호출하여 app을 초기화 """</span></span><br><span class="line">    app = Flask(__name__)</span><br><span class="line">    app.app_context().push()</span><br><span class="line">    </span><br><span class="line">    app.config[<span class="string">'SQLALCHEMY_DATABASE_URI'</span>] = SQLALCHEMY_DATABASE_URI_FORMAT</span><br><span class="line">    app.config[<span class="string">'SQLALCHEMY_ECHO'</span>] = <span class="literal">True</span></span><br><span class="line">    app.config[<span class="string">'DEBUG'</span>] = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    DB.init_app(app)</span><br><span class="line">    REST_API.init_app(app)</span><br><span class="line">    MA.init_app(app)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> app</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p><code>MVC</code> 패턴을 이용해 <code>User</code> 부분을 작성합니다</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/users/views.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    User views file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">from</span> http <span class="keyword">import</span> HTTPStatus</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> jsonify, make_response</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.exc <span class="keyword">import</span> SQLAlchemyError</span><br><span class="line"><span class="keyword">from</span> flask_restplus <span class="keyword">import</span> Namespace, Resource, reqparse, fields</span><br><span class="line"><span class="keyword">from</span> app.users.models <span class="keyword">import</span> Users, UsersSchema</span><br><span class="line"><span class="keyword">from</span> app.api.database <span class="keyword">import</span> DB</span><br><span class="line"></span><br><span class="line">API = Namespace(<span class="string">'Users'</span>, description=<span class="string">"User's RESTPlus - API"</span>)</span><br><span class="line">USERS_SCHEMA = UsersSchema()</span><br><span class="line"></span><br><span class="line"><span class="meta">@API.route('s')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UsersAuth</span><span class="params">(Resource)</span>:</span></span><br><span class="line">    parser = reqparse.RequestParser()</span><br><span class="line">    parser.add_argument(<span class="string">'user_id'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's ID"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'user_password'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's PW"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'user_email'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's Email"</span>, location=<span class="string">'json'</span>)</span><br><span class="line"></span><br><span class="line">    users_field = API.model(<span class="string">'Sign up'</span>, &#123;</span><br><span class="line">        <span class="string">'user_id'</span> : fields.String,</span><br><span class="line">        <span class="string">'user_password'</span> : fields.String,</span><br><span class="line">        <span class="string">'user_email'</span> : fields.String</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @API.doc('post')</span></span><br><span class="line"><span class="meta">    @API.expect(users_field)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self)</span>:</span></span><br><span class="line">        args_ = self.parser.parse_args()</span><br><span class="line">        user = Users(args_[<span class="string">'user_id'</span>], args_[<span class="string">'user_password'</span>], args_[<span class="string">'user_email'</span>])</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            DB.session.add(user)</span><br><span class="line">            DB.session.commit()</span><br><span class="line">            body = jsonify(&#123;<span class="string">'users'</span> : USERS_SCHEMA.dump(user).data&#125;)</span><br><span class="line">            code = HTTPStatus.OK</span><br><span class="line">        <span class="keyword">except</span> SQLAlchemyError <span class="keyword">as</span> err:</span><br><span class="line">            DB.session.rollback()</span><br><span class="line">            body = jsonify(&#123;<span class="string">'message'</span> : str(err)&#125;)</span><br><span class="line">            code = HTTPStatus.INTERNAL_SERVER_ERROR</span><br><span class="line">        <span class="keyword">return</span> make_response(body, code.value)</span><br><span class="line"></span><br><span class="line"><span class="meta">@API.route('/auth')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserAuth</span><span class="params">(Resource)</span>:</span></span><br><span class="line">    parser = reqparse.RequestParser()</span><br><span class="line">    parser.add_argument(<span class="string">'user_id'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's ID"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'user_password'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's PW"</span>, location=<span class="string">'json'</span>)</span><br><span class="line"></span><br><span class="line">    user_login_field = API.model(<span class="string">'Sign in'</span>, &#123;</span><br><span class="line">        <span class="string">'user_id'</span> : fields.String,</span><br><span class="line">        <span class="string">'user_password'</span> : fields.String</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @API.doc('post')</span></span><br><span class="line"><span class="meta">    @API.expect(user_login_field)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self)</span>:</span></span><br><span class="line">        args_ = self.parser.parse_args()</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            user = Users.query.filter(Users.user_id == args_[<span class="string">'user_id'</span>]).first()</span><br><span class="line">            body = jsonify(&#123;<span class="string">'user_id'</span> : user.user_id&#125;)</span><br><span class="line">            code = HTTPStatus.OK</span><br><span class="line">        <span class="keyword">except</span> SQLAlchemyError <span class="keyword">as</span> err:</span><br><span class="line">            body = jsonify(&#123;<span class="string">'message'</span> : str(err)&#125;)</span><br><span class="line">            code = HTTPStatus.INTERNAL_SERVER_ERROR</span><br><span class="line">        <span class="keyword">return</span> make_response(body, code.value)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p><code>Swagger</code>를 달아 <code>API</code>를 호출 할수있는 <code>Docs</code>를 만듭시다</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/api/**init**.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask_restplus <span class="keyword">import</span> Api</span><br><span class="line"><span class="keyword">from</span> app.users.views <span class="keyword">import</span> API <span class="keyword">as</span> users_api</span><br><span class="line"></span><br><span class="line">REST_API = Api()</span><br><span class="line"></span><br><span class="line">REST_API.add_namespace(users_api, <span class="string">'/user'</span>)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p>앱을 한번 실행해 봅시다</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python manage.py run</span><br></pre></td></tr></table></figure>
+
+<div style="text-align: center;">
+<img src="/image/backend-flask-restplus11.png" width="100%">
+</div>
+</br></br></br>
+
+
+
+<h1 id="RESTPlus-API-만들기-Posts-Part"><a href="#RESTPlus-API-만들기-Posts-Part" class="headerlink" title="RESTPlus API 만들기(Posts Part)"></a>RESTPlus API 만들기(Posts Part)</h1><p>이전 포스트와 같이 <code>Posts</code>에 대한 <code>Model</code>을 만듭니다</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/posts/models.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    Posts model file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> app.api.database <span class="keyword">import</span> DB, MA</span><br><span class="line"><span class="keyword">from</span> marshmallow <span class="keyword">import</span> Schema, fields, validate</span><br><span class="line"><span class="keyword">from</span> app.users.models <span class="keyword">import</span> Users, UsersSchema</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.sql <span class="keyword">import</span> text</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Posts</span><span class="params">(DB.Model)</span>:</span></span><br><span class="line">    __tablename__ = <span class="string">'posts'</span></span><br><span class="line">    __table_args__ = &#123;<span class="string">'mysql_collate'</span>: <span class="string">'utf8_general_ci'</span>&#125;</span><br><span class="line"></span><br><span class="line">    id = DB.Column(DB.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    author_id = DB.Column(DB.String(<span class="number">255</span>), DB.ForeignKey(Users.user_id))</span><br><span class="line">    title = DB.Column(DB.String(<span class="number">512</span>), nullable=<span class="literal">False</span>)</span><br><span class="line">    body = DB.Column(DB.String(<span class="number">1024</span>), nullable=<span class="literal">False</span>)</span><br><span class="line">    author = DB.relationship(<span class="string">'Users'</span>, uselist=<span class="literal">False</span>)</span><br><span class="line">    created = DB.Column(DB.TIMESTAMP, server_default=text(<span class="string">"CURRENT_TIMESTAMP"</span>), nullable=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, author_id, title, body)</span>:</span></span><br><span class="line">        self.author_id = author_id</span><br><span class="line">        self.title = title</span><br><span class="line">        self.body = body</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostsSchema</span><span class="params">(MA.Schema)</span>:</span></span><br><span class="line">    not_blank = validate.Length(min=<span class="number">1</span>, error=<span class="string">'Field cannot be blank'</span>)</span><br><span class="line">    id = fields.Integer()</span><br><span class="line">    author_id = fields.String(validate=not_blank)</span><br><span class="line">    title = fields.String(validate=not_blank)</span><br><span class="line">    body = fields.String(validate=not_blank)</span><br><span class="line">    author = fields.Nested(UsersSchema)</span><br><span class="line">    created = fields.String(validate=not_blank)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p><code>MVC</code> 패턴을 이용해 <code>Posts</code> 부분을 작성합니다</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/posts/views.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    Posts view file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask_restplus <span class="keyword">import</span> Namespace, Resource, reqparse, fields</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> jsonify, make_response</span><br><span class="line"><span class="keyword">from</span> http <span class="keyword">import</span> HTTPStatus</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.exc <span class="keyword">import</span> SQLAlchemyError</span><br><span class="line"><span class="keyword">from</span> app.posts.models <span class="keyword">import</span> Posts, PostsSchema</span><br><span class="line"><span class="keyword">from</span> app.users.models <span class="keyword">import</span> Users, UsersSchema</span><br><span class="line"><span class="keyword">from</span> app.api.database <span class="keyword">import</span> DB</span><br><span class="line"></span><br><span class="line">API = Namespace(<span class="string">'Posts'</span>, description=<span class="string">"Post's REST API"</span>)</span><br><span class="line">POSTS_SCHEMA = PostsSchema()</span><br><span class="line"></span><br><span class="line"><span class="meta">@API.route('s')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span><span class="params">(Resource)</span>:</span></span><br><span class="line">    parser = reqparse.RequestParser()</span><br><span class="line">    parser.add_argument(<span class="string">'author_id'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"Post's author ID"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'title'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"Post's title"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'body'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"Post's body"</span>, location=<span class="string">'json'</span>)</span><br><span class="line"></span><br><span class="line">    post_field = API.model(<span class="string">'Post'</span>, &#123;</span><br><span class="line">        <span class="string">'author_id'</span>: fields.String,</span><br><span class="line">        <span class="string">'title'</span>: fields.String,</span><br><span class="line">        <span class="string">'body'</span>: fields.String</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @API.doc('get')</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            posts = Posts.query.all()</span><br><span class="line">            body = jsonify(POSTS_SCHEMA.dump(posts, many=<span class="literal">True</span>).data)</span><br><span class="line">            code = HTTPStatus.OK</span><br><span class="line">        <span class="keyword">except</span> SQLAlchemyError <span class="keyword">as</span> err:</span><br><span class="line">            body = jsonify(&#123;<span class="string">'message'</span> : str(err)&#125;)</span><br><span class="line">            code = HTTPStatus.INTERNAL_SERVER_ERROR</span><br><span class="line">        <span class="keyword">return</span> make_response(body, code.value)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @API.expect(post_field)</span></span><br><span class="line"><span class="meta">    @API.doc('post')</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self)</span>:</span></span><br><span class="line">        args_ = self.parser.parse_args()</span><br><span class="line">        post = Posts(author_id=args_[<span class="string">'author_id'</span>], title=args_[<span class="string">'title'</span>], body=args_[<span class="string">'body'</span>])</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            DB.session.add(post)</span><br><span class="line">            DB.session.commit()</span><br><span class="line">            body = jsonify(&#123;<span class="string">'post'</span>, POSTS_SCHEMA.dump(post).data&#125;)</span><br><span class="line">            code = HTTPStatus.OK</span><br><span class="line">        <span class="keyword">except</span> SQLAlchemyError <span class="keyword">as</span> err:</span><br><span class="line">            body = jsonify(&#123;<span class="string">'message'</span> : str(err)&#125;)</span><br><span class="line">            code = HTTPStatus.INTERNAL_SERVER_ERROR</span><br><span class="line">        <span class="keyword">return</span> make_response(body, code.value)</span><br><span class="line"></span><br><span class="line"><span class="meta">@API.route('/&lt;int:reqno&gt;')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostItem</span><span class="params">(Resource)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, reqno)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            post = DB.session.query(Posts).outerjoin(</span><br><span class="line">                Users, Users.user_id == Posts.author_id).filter(Posts.id==reqno).first()</span><br><span class="line">            body = jsonify(&#123;<span class="string">'post'</span> : POSTS_SCHEMA.dump(post).data&#125;)</span><br><span class="line">            code = HTTPStatus.OK</span><br><span class="line">        <span class="keyword">except</span> SQLAlchemyError <span class="keyword">as</span> err:</span><br><span class="line">            body = jsonify(&#123;<span class="string">'message'</span> : str(err)&#125;)</span><br><span class="line">            code = HTTPStatus.INTERNAL_SERVER_ERROR</span><br><span class="line">        <span class="keyword">return</span> make_response(body, code.value)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p><code>Swagger</code>를 달아 <code>API</code>를 호출 할수있는 <code>Docs</code>를 만듭시다</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/api/__init__.py</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    API config file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask_restplus <span class="keyword">import</span> Api</span><br><span class="line"><span class="keyword">from</span> app.posts.views <span class="keyword">import</span> API <span class="keyword">as</span> posts_api</span><br><span class="line"></span><br><span class="line">REST_API = Api()</span><br><span class="line"></span><br><span class="line">REST_API.add_namespace(users_api, <span class="string">'/user'</span>)</span><br><span class="line">REST_API.add_namespace(posts_api, <span class="string">'/post'</span>)</span><br></pre></td></tr></table></figure>
+<p></br></br></br></p>
+<h1 id="MVC-Model-View-Controller-분리"><a href="#MVC-Model-View-Controller-분리" class="headerlink" title="MVC(Model, View, Controller) 분리"></a>MVC(Model, View, Controller) 분리</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/api/database.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    Create db</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> jsonify</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> make_response</span><br><span class="line"><span class="keyword">from</span> http <span class="keyword">import</span> HTTPStatus</span><br><span class="line"><span class="keyword">from</span> flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.exc <span class="keyword">import</span> IntegrityError</span><br><span class="line"><span class="keyword">from</span> flask_marshmallow <span class="keyword">import</span> Marshmallow</span><br><span class="line"></span><br><span class="line">DB = SQLAlchemy()</span><br><span class="line">MA = Marshmallow()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CRUD</span>:</span></span><br><span class="line">    body = <span class="string">''</span></span><br><span class="line">    status_code = HTTPStatus.NOT_IMPLEMENTED</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(self, resource, schema)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            DB.session.add(resource)</span><br><span class="line">            DB.session.commit()</span><br><span class="line">            self.body = jsonify(schema.dump(resource).data)</span><br><span class="line">            self.status_code = HTTPStatus.OK</span><br><span class="line">        <span class="keyword">except</span> IntegrityError <span class="keyword">as</span> err:</span><br><span class="line">            DB.session.rollback()</span><br><span class="line">            err_meg = str(err)</span><br><span class="line">            self.body = jsonify(&#123;<span class="string">'error'</span> : err_meg, <span class="string">'type'</span> : <span class="string">'IntegrityError'</span>&#125;)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">"Duplicate entry"</span> <span class="keyword">in</span> err_meg:</span><br><span class="line">                self.status_code = HTTPStatus.CONFLICT</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.status_code = HTTPStatus.BAD_REQUEST</span><br><span class="line">        <span class="keyword">return</span> make_response(self.body, self.status_code)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p><code>User</code>, <code>Post</code> <code>Model</code>을 따로 빼 줍니다</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/users/models.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    Users models file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">from</span> sqlalchemy.sql <span class="keyword">import</span> text</span><br><span class="line"><span class="keyword">from</span> app.api.database <span class="keyword">import</span> DB, MA, CRUD</span><br><span class="line"><span class="keyword">from</span> flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line"><span class="keyword">from</span> marshmallow <span class="keyword">import</span> Schema, fields, validate</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Users</span><span class="params">(DB.Model, CRUD)</span>:</span></span><br><span class="line">    __tablename__ = <span class="string">'users'</span></span><br><span class="line">    __table_args__ = &#123;<span class="string">'mysql_collate'</span>: <span class="string">'utf8_general_ci'</span>&#125;</span><br><span class="line"></span><br><span class="line">    id = DB.Column(DB.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    user_id = DB.Column(DB.String(<span class="number">255</span>), unique=<span class="literal">True</span>, nullable=<span class="literal">False</span>)</span><br><span class="line">    user_password = DB.Column(DB.String(<span class="number">255</span>), nullable=<span class="literal">False</span>)</span><br><span class="line">    user_email = DB.Column(DB.String(<span class="number">255</span>), nullable=<span class="literal">False</span>)</span><br><span class="line">    created = DB.Column(DB.TIMESTAMP, server_default=text(<span class="string">"CURRENT_TIMESTAMP"</span>), nullable=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, user_id : str, user_password : str, user_email : str)</span>:</span></span><br><span class="line">        self.user_id = user_id</span><br><span class="line">        self.user_password = user_password</span><br><span class="line">        self.user_email = user_email</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UsersSchema</span><span class="params">(MA.Schema)</span>:</span></span><br><span class="line">    not_blank = validate.Length(min=<span class="number">1</span>, error=<span class="string">'Field cannot be blank'</span>)</span><br><span class="line">    id = fields.Integer(dump_only=<span class="literal">True</span>)</span><br><span class="line">    user_id = fields.String(validate=not_blank)</span><br><span class="line">    user_password = fields.String(validate=not_blank)</span><br><span class="line">    user_email = fields.String(validate=not_blank)</span><br><span class="line">    created = fields.String(validate=not_blank)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/posts/models.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    Posts model file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> app.api.database <span class="keyword">import</span> DB, MA, CRUD</span><br><span class="line"><span class="keyword">from</span> marshmallow <span class="keyword">import</span> Schema, fields, validate</span><br><span class="line"><span class="keyword">from</span> app.users.models <span class="keyword">import</span> Users, UsersSchema</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.sql <span class="keyword">import</span> text</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Posts</span><span class="params">(DB.Model, CRUD)</span>:</span></span><br><span class="line">    __tablename__ = <span class="string">'posts'</span></span><br><span class="line">    __table_args__ = &#123;<span class="string">'mysql_collate'</span>: <span class="string">'utf8_general_ci'</span>&#125;</span><br><span class="line"></span><br><span class="line">    id = DB.Column(DB.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    author_id = DB.Column(DB.String(<span class="number">255</span>), DB.ForeignKey(Users.user_id))</span><br><span class="line">    title = DB.Column(DB.String(<span class="number">512</span>), nullable=<span class="literal">False</span>)</span><br><span class="line">    body = DB.Column(DB.String(<span class="number">1024</span>), nullable=<span class="literal">False</span>)</span><br><span class="line">    author = DB.relationship(<span class="string">'Users'</span>, uselist=<span class="literal">False</span>)</span><br><span class="line">    created = DB.Column(DB.TIMESTAMP, server_default=text(<span class="string">"CURRENT_TIMESTAMP"</span>), nullable=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, author_id, title, body)</span>:</span></span><br><span class="line">        self.author_id = author_id</span><br><span class="line">        self.title = title</span><br><span class="line">        self.body = body</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostsSchema</span><span class="params">(MA.Schema)</span>:</span></span><br><span class="line">    not_blank = validate.Length(min=<span class="number">1</span>, error=<span class="string">'Field cannot be blank'</span>)</span><br><span class="line">    id = fields.Integer()</span><br><span class="line">    author_id = fields.String(validate=not_blank)</span><br><span class="line">    title = fields.String(validate=not_blank)</span><br><span class="line">    body = fields.String(validate=not_blank)</span><br><span class="line">    author = fields.Nested(UsersSchema)</span><br><span class="line">    created = fields.String(validate=not_blank)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p><code>view</code> 부분도 빼 줍시다</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/users/views.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    User views file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">from</span> http <span class="keyword">import</span> HTTPStatus</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> jsonify, make_response</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.exc <span class="keyword">import</span> SQLAlchemyError</span><br><span class="line"><span class="keyword">from</span> flask_restplus <span class="keyword">import</span> Namespace, Resource, reqparse, fields</span><br><span class="line"><span class="keyword">from</span> app.users.models <span class="keyword">import</span> Users, UsersSchema</span><br><span class="line"><span class="keyword">from</span> app.api.database <span class="keyword">import</span> DB</span><br><span class="line"></span><br><span class="line">API = Namespace(<span class="string">'Users'</span>, description=<span class="string">"User's RESTPlus - API"</span>)</span><br><span class="line">USERS_SCHEMA = UsersSchema()</span><br><span class="line"></span><br><span class="line"><span class="meta">@API.route('s')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UsersAuth</span><span class="params">(Resource)</span>:</span></span><br><span class="line">    parser = reqparse.RequestParser()</span><br><span class="line">    parser.add_argument(<span class="string">'user_id'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's ID"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'user_password'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's PW"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'user_email'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's Email"</span>, location=<span class="string">'json'</span>)</span><br><span class="line"></span><br><span class="line">    users_field = API.model(<span class="string">'userRegister'</span>, &#123;</span><br><span class="line">        <span class="string">'user_id'</span> : fields.String,</span><br><span class="line">        <span class="string">'user_password'</span> : fields.String,</span><br><span class="line">        <span class="string">'user_email'</span> : fields.String</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @API.doc('post')</span></span><br><span class="line"><span class="meta">    @API.expect(users_field)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self)</span>:</span></span><br><span class="line">        args_ = self.parser.parse_args()</span><br><span class="line">        user = Users(args_[<span class="string">'user_id'</span>], args_[<span class="string">'user_password'</span>], args_[<span class="string">'user_email'</span>])</span><br><span class="line">        <span class="keyword">return</span> user.add(user, USERS_SCHEMA)</span><br><span class="line"></span><br><span class="line"><span class="meta">@API.route('/auth')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserAuth</span><span class="params">(Resource)</span>:</span></span><br><span class="line">    parser = reqparse.RequestParser()</span><br><span class="line">    parser.add_argument(<span class="string">'user_id'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's ID"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'user_password'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"User's PW"</span>, location=<span class="string">'json'</span>)</span><br><span class="line"></span><br><span class="line">    user_login_field = API.model(<span class="string">'userLogin'</span>, &#123;</span><br><span class="line">        <span class="string">'user_id'</span> : fields.String,</span><br><span class="line">        <span class="string">'user_password'</span> : fields.String</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @API.doc('post')</span></span><br><span class="line"><span class="meta">    @API.expect(user_login_field)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self)</span>:</span></span><br><span class="line">        args_ = self.parser.parse_args()</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            user = Users.query.filter(Users.user_id == args_[<span class="string">'user_id'</span>], Users.user_password  == args_[<span class="string">'user_password'</span>]).first()</span><br><span class="line">            body = jsonify(&#123;<span class="string">'user_id'</span> : user.user_id&#125;)</span><br><span class="line">            <span class="keyword">if</span> user:</span><br><span class="line">                code = HTTPStatus.OK</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                code = HTTPStatus.NOT_FOUND</span><br><span class="line">        <span class="keyword">except</span> SQLAlchemyError <span class="keyword">as</span> err:</span><br><span class="line">            body = jsonify(&#123;<span class="string">'message'</span> : str(err)&#125;)</span><br><span class="line">            code = HTTPStatus.INTERNAL_SERVER_ERROR</span><br><span class="line">        <span class="keyword">return</span> make_response(body, code.value)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ./app/posts/views.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">    Posts view file</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask_restplus <span class="keyword">import</span> Namespace, Resource, reqparse, fields</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> jsonify, make_response</span><br><span class="line"><span class="keyword">from</span> http <span class="keyword">import</span> HTTPStatus</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.exc <span class="keyword">import</span> SQLAlchemyError</span><br><span class="line"><span class="keyword">from</span> app.posts.models <span class="keyword">import</span> Posts, PostsSchema</span><br><span class="line"><span class="keyword">from</span> app.users.models <span class="keyword">import</span> Users, UsersSchema</span><br><span class="line"><span class="keyword">from</span> app.api.database <span class="keyword">import</span> DB</span><br><span class="line"></span><br><span class="line">API = Namespace(<span class="string">'Posts'</span>, description=<span class="string">"Post's REST API"</span>)</span><br><span class="line">POSTS_SCHEMA = PostsSchema()</span><br><span class="line"></span><br><span class="line"><span class="meta">@API.route('s')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span><span class="params">(Resource)</span>:</span></span><br><span class="line">    parser = reqparse.RequestParser()</span><br><span class="line">    parser.add_argument(<span class="string">'author_id'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"Post's author ID"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'title'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"Post's title"</span>, location=<span class="string">'json'</span>)</span><br><span class="line">    parser.add_argument(<span class="string">'body'</span>, required=<span class="literal">True</span>, type=str, help=<span class="string">"Post's body"</span>, location=<span class="string">'json'</span>)</span><br><span class="line"></span><br><span class="line">    post_field = API.model(<span class="string">'Post'</span>, &#123;</span><br><span class="line">        <span class="string">'author_id'</span>: fields.String,</span><br><span class="line">        <span class="string">'title'</span>: fields.String,</span><br><span class="line">        <span class="string">'body'</span>: fields.String</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @API.doc('get')</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            posts = Posts.query.all()</span><br><span class="line">            body = jsonify(POSTS_SCHEMA.dump(posts, many=<span class="literal">True</span>).data)</span><br><span class="line">            <span class="keyword">if</span> posts:</span><br><span class="line">                code = HTTPStatus.OK</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                code = HTTPStatus.NOT_FOUND</span><br><span class="line">        <span class="keyword">except</span> SQLAlchemyError <span class="keyword">as</span> err:</span><br><span class="line">            body = jsonify(&#123;<span class="string">'message'</span> : str(err)&#125;)</span><br><span class="line">            code = HTTPStatus.INTERNAL_SERVER_ERROR</span><br><span class="line">        <span class="keyword">return</span> make_response(body, code.value)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @API.expect(post_field)</span></span><br><span class="line"><span class="meta">    @API.doc('post')</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self)</span>:</span></span><br><span class="line">        args_ = self.parser.parse_args()</span><br><span class="line">        post = Posts(author_id=args_[<span class="string">'author_id'</span>], title=args_[<span class="string">'title'</span>], body=args_[<span class="string">'body'</span>])</span><br><span class="line">        <span class="keyword">return</span> post.add(post, POSTS_SCHEMA)</span><br><span class="line"></span><br><span class="line"><span class="meta">@API.route('/&lt;int:reqno&gt;')</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostItem</span><span class="params">(Resource)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, reqno)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            post = DB.session.query(Posts).outerjoin(</span><br><span class="line">                Users, Users.user_id == Posts.author_id).filter(Posts.id==reqno).first()</span><br><span class="line">            body = POSTS_SCHEMA.dump(post).data</span><br><span class="line">            <span class="keyword">if</span> post:</span><br><span class="line">                code = HTTPStatus.OK</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                code = HTTPStatus.NOT_FOUND</span><br><span class="line">        <span class="keyword">except</span> SQLAlchemyError <span class="keyword">as</span> err:</span><br><span class="line">            body = jsonify(&#123;<span class="string">'message'</span> : str(err)&#125;)</span><br><span class="line">            code = HTTPStatus.INTERNAL_SERVER_ERROR</span><br><span class="line">        <span class="keyword">return</span> make_response(body, code.value)</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p>이제 최종적으로 실행을 해봅시다</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python manage.py run</span><br></pre></td></tr></table></figure>
+
+<div style="text-align: center;">
+<img src="/image/flask/backend-flask-restplus12.png" width="100%">
+</div>
+
+
+<p><br><br></p>
+<h2 id="INDEX-1"><a href="#INDEX-1" class="headerlink" title="INDEX"></a>INDEX</h2><ul>
+<li><a href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/">Flask RESTPlus CRUD Board 만들기 실행 (1)</a></li>
+<li><a href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/">Flask RESTPlus CRUD Board 만들기 설정 및 MySQL (2)</a></li>
+<li><a href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/">Flask RESTPlus CRUD Board 만들기 ORM 그리고 Model (3)</a></li>
+<li><a href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/">Flask RESTPlus CRUD Board 만들기 MVC 그리고 REST API Swagger (4)</a></li>
+<li><a href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/">Flask RESTPlus CRUD Board 만들기 Auth 그리고 암호화 (5)</a></li>
+</ul>
+<p></br></br></p>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/backend/" rel="tag">Backend</a> <a class="tag tag--primary tag--small t-link" href="/tags/flask/" rel="tag">Flask</a> <a class="tag tag--primary tag--small t-link" href="/tags/framework/" rel="tag">Framework</a> <a class="tag tag--primary tag--small t-link" href="/tags/python/" rel="tag">Python</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/08/06/flask-restapi-example5/"
+                    data-tooltip="Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                    aria-label="이전: Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/08/04/flask-restapi-example3/"
+                    data-tooltip="Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                    aria-label="다음: Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Myeong Seok KIM. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/08/06/flask-restapi-example5/"
+                    data-tooltip="Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                    aria-label="이전: Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/08/04/flask-restapi-example3/"
+                    data-tooltip="Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                    aria-label="다음: Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+            <h4 id="about-card-name">Myeong Seok KIM</h4>
+        
+            <div id="about-card-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>SSAFY 3rd 교육생</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Seoul, Republic of Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">포스트가 없습니다.</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/"
+                            aria-label=": Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/flask-thumbnail1.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/"
+                            aria-label=": Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 7월 30일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="첫번째-단계"><a href="#첫번째-단계" class="headerlink" title="첫번째 단계"></a>첫번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework 프로젝트를 생성하고 실행해보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>프로젝트 생성하는 방법!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/"
+                            aria-label=": Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/flask-thumbnail2.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/"
+                            aria-label=": Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 1일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="두번째-단계"><a href="#두번째-단계" class="headerlink" title="두번째 단계"></a>두번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework 설정 및 MySQL에 관하여 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>MySQL</code> <code>설정</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/"
+                            aria-label=": Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/flask-thumbnail3.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/"
+                            aria-label=": Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 4일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="세번째-단계"><a href="#세번째-단계" class="headerlink" title="세번째 단계"></a>세번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework ORM, Model에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>ORM</code> <code>Model</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                            aria-label=": Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/flask-thumbnail4.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                            aria-label=": Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 5일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="네번째-단계"><a href="#네번째-단계" class="headerlink" title="네번째 단계"></a>네번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework MVC, Swagger API 문서 자동화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>Swagger</code> <code>MVC</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/"
+                            aria-label=": Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/flask-thumbnail5.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/"
+                            aria-label=": Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 6일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="다섯번째-단계"><a href="#다섯번째-단계" class="headerlink" title="다섯번째 단계"></a>다섯번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework Auth, 암호화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>암호화</code> <code>Auth</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                            aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
+                        >
+                            <h3 class="media-heading">Linux, CentOS 작업 스케쥴러 - Crontab</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 9일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab?"></a>Crontab?</h1><p><code>Cron</code> 은 리눅스 에서 특정한 <code>명령</code>이나 <code>스크립트</code>를 지정한 <code>날짜/시간</code>에 자동으로 실행해 주는 <code>스케쥴러</code> 입니다.</p>
+<p>주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/ssafy.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <h3 class="media-heading">SSAFY 3기를 시작하며![합격 후기]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 24일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="SSAFY"><a href="#SSAFY" class="headerlink" title="SSAFY"></a>SSAFY</h1><p><code>Samsung Software Academy For Youth</code>(삼성 청년 소프트웨어 아카데미) 서울 지역에 합격했습니다! 😘</p>
+<p>그런 의미로 이야기를 한 번 써내려 가려 합니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/hexo-syntax.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <h3 class="media-heading">Hexo[Tranquilpeak] 사용방법</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 13일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Hexo-tranquilpeak-테마"><a href="#Hexo-tranquilpeak-테마" class="headerlink" title="Hexo[tranquilpeak 테마]"></a>Hexo[tranquilpeak 테마]</h1><p>이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다.</p>
+<p><code>Tag</code> <code>Alert</code> <code>Highlight Text</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/17/algorithm-recursive/"
+                            aria-label=": Recursive(재귀) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">Recursive(재귀) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 17일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 재귀에 대해서 알아 보려고 합니다.</p>
+<p><code>Factorial</code> <code>Fibonacci</code> <code>Fibonacci Memoization</code> <code>Hanoi</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/05/23/algorithm-subset/"
+                            aria-label=": SubSet(부분집합) - [Algorithm Skill]"
+                        >
+                            <h3 class="media-heading">SubSet(부분집합) - [Algorithm Skill]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 5월 23일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.</p>
+<p><code>Subset</code> <code>BitMask</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="포스트가 없습니다."
+                data-message-one="1 개의 포스트가 있습니다."
+                data-message-other="{n} 개의 포스트가 있습니다.">
+                14 개의 포스트가 있습니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/jquery.js"></script>
+
+
+<script src="/assets/js/jquery.fancybox.js"></script>
+
+
+<script src="/assets/js/thumbs.js"></script>
+
+
+<script src="/assets/js/tranquilpeak.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+    
+<script src="/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('R1M5F6PCKT', 'c742103764cdb380400cb1b22f428418');
+      var algoliaIndex = algoliaClient.initIndex('msnodeve_blog');
+    </script>
+
+
+    </body>
+</html>
