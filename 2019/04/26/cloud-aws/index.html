@@ -1,0 +1,1096 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="msnodevLog">
+    <title>AWS? AWS가 뭐야? - [Cloud Infra] - msnodevLog</title>
+    <meta name="author" content="Myeong Seok KIM">
+    <script data-ad-client="ca-pub-2766237193476584" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+        <meta name="keywords" content="algorithm,Infra,AWS,Clude,아마존,웹,서비스,Amazon,Web,Services,EC2,S3,RDS,비용,AWS란?">
+    
+    
+        <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\nAWS(Amazon Web Services)요즘 클라우드에 많은 관심을 갖고 있거나 서버를 다뤄본 개발자라면… 아마 AWS라는 단어를 들어보았을 겁니다제가 왜 AWS를 사용하게 되었는지부터 설명하겠습니다서버에 대한 기본 배경지식은 2018년 여름방학 때 부산 ETRI 연구연수생으로 인턴 과정을 하며 서버(리눅스 운영체제 기반 ; CentOS7기준)를 알게 되었고, 이로 인해 서버는 컴퓨터 한 대가 필요하다는 것을 느끼게 되었습니다당시 AWS의 존재조차 모르고 있었던 3학년 이였고 졸업을 1년 앞둔 저는 졸업작품을 제작해야 한다는 과제를 마주하게 되었습니다 그래도 안드로이드 애플리케이션을 건드릴 줄 알고 있던 저는 애플리케이션을 제작해서 졸업 과제를 수행해야겠다는 생각을 하게 되었습니다2명의 디자이너와 5명의 디벨로퍼로 내가 메인 디벨로퍼 겸 팀장을 맡아 팀원에게 할 일을 분배하며 팀 프로젝트를 진행하고 있었으며 시작은 좋았고(기획은 그럴싸했고 아이디어도 좋다는 생각이 듦), 기능 구현도 매우 훌륭하게 진행되고 있었습니다(클라이언트 만..)기획 때 클라이언트 부분을 깊게 생각하며 기획을 진행했었고, 서버 부분은 틀만 잡아놓고 나중에 천천히 구조를 짜야 겠다고 했습니다 사용자가 늘어감에 따라 서버와 어떻게 통신을 해야 할지 서버 구조는 어떻게 짜야 할지에 대해 아무런 구조를 짜놓은 상태가 아니었습니다 기능 구현이 점차 점차 완성됨에 따라 서버가 필요했고, 그로 인해 저는 서버용 컴퓨터를 한대 사야겠다는 결심을 내린 뒤 무작정 부품들을 하나하나 사기 시작했습니다 맞춘 컴퓨터의 사양은 다음과 같았습니다\n\n\n\n\n글을 읽는 사람들 중 서버로 사용하기에 “엥?” 하는 사람 물론 있을 것입니다 알고 있습니다… 저는 그냥 컴퓨터 한 대가 필요했고 서버에 대한 적합한 사양을 몰랐었습니다 그래도 이러한 컴퓨터를 기반으로 서버에 대해서 많은 것을 알게 되었으니 저는 만족합니다 주문으로 온 부품들을 하나하나 조립했고, 운영체제는 CentOS7을 설치했습니다 배웠던 기본 지식으로 서버 세팅을 완료하고 안드로이드와 서버 통신을 하기 시작했다. 이때 사용한 기술 스택은 다른 포스트에서 설명하도록 하겠습니다어느 한날 같은 연구실 졸업 선배가 밥을 사준다고 나오라고 했으며, 그때 졸업작품에 대해서 이야기를 시작했습니다 클라이언트와 서버가 잘 통신되고 있던 저에게 선배가 다음과 같은 말을 했습니다 “왜 너는 굳이 노동을 하고 있느냐? 요즘 클라우드 서비스가 대세인데 하나 한 세팅을 언제 하며 몇 번의 클릭만으로 지금까지 구현해놓은 서비스를 다 할 수 있을 텐데 왜 그렇게 시간 낭비를 하고 있냐?”라고… 서버 컴퓨터는 당연히 있어야 통신을 하는 건 알고 있겠으려니 하며 그 말을 들은 저는 한편으론 의아해하며 또 한편으론 신기했습니다 조금만 익숙해지면 충분히 사용 가능하다며 저에게 제안을 했고, 다음날부터 AWS에 대해 알아가기 시작했습니다알아가면 알아갈수록 정말 신기했습니다… 제가 정작 3시간이 걸려 컴퓨터 조립 및 운영체제 설치를 끝낸 것을 AWS는 단 클릭 몇 번만으로 5분 만에 컴퓨터가 장만 되었고… 한 컴퓨터 안에 데이터베이스, 메일 전송, 데이터 저장 공간을 두는 것이 아니라 개별 서비스로 연결해서 쓸 수 있었던 면에서도 깜짝 놀랐습니다이때부터 저는 AWS를 심도 있게 사용해보고 있으며, 2019년 4월 18일에 있었던 AWS SUMMIT Seoul 컨퍼런스도 다녀오게 되었습니다제 AWS 사용 동기는 아래와 같습니다 저와 같은 사람이 있을 것이라 생각하며, 또 AWS에 이제 관심을 갖기 시작한 사람들에게 제 블로그가 도움이 되었으면 합니다솔직히 말해 AWS에 대해서 깊이 다뤄보지 못했지만 AWS가 이런 것이다에 대해서 이해만 하길 바라며 읽어주시면 감사하겠습니다\nAWS는 어디에 위치해있는가?\n\nAWS region 참조 관련 이미지Amazon Web Services는 다음 그림과 같이 여러 지역(regions)에 위치해있습니다 다음 그림에 표시된 곳에 엄청난 크기와 양의 컴퓨터가 있고, 우리는 AWS의 멤버(회원)이 되어 컴퓨터를 ‘빌려’ 쓴다고 생각하면 됩니다 다시말해 AWS에서 제공해주는 서비스를 이용해 내가 지금 내 컴퓨터에서 아마존 컴퓨터를 원격으로 사용하는 것 입니다 이 말이 즉 클라우드 컴퓨팅이라고 생각하면 되겠습니다\n\n","dateCreated":"2019-04-26T19:42:56+09:00","dateModified":"2020-06-23T10:16:10+09:00","datePublished":"2019-04-26T19:42:56+09:00","description":"AWS가 뭐야?이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다.\nAWS Amazon Web Services Infra 비용은? 이게뭔데!","headline":"AWS? AWS가 뭐야? - [Cloud Infra]","image":["aws-thumbnail.png","noImage.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2019/04/26/cloud-aws/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2019/04/26/cloud-aws/","keywords":"Infra, AWS, Cloud","thumbnailUrl":"aws-thumbnail.png"}</script>
+    <meta name="description" content="AWS가 뭐야?이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다. AWS Amazon Web Services Infra 비용은? 이게뭔데!">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="AWS? AWS가 뭐야? - [Cloud Infra]">
+<meta property="og:url" content="https://msnodeve.github.io/2019/04/26/cloud-aws/index.html">
+<meta property="og:site_name" content="msnodevLog">
+<meta property="og:description" content="AWS가 뭐야?이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다. AWS Amazon Web Services Infra 비용은? 이게뭔데!">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://msnodeve.github.io/image/infra/aws/infra-aws-server.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/infra/aws/infra-aws-region.png">
+<meta property="article:published_time" content="2019-04-26T10:42:56.000Z">
+<meta property="article:modified_time" content="2020-06-23T01:16:10.518Z">
+<meta property="article:author" content="Myeong Seok KIM">
+<meta property="article:tag" content="Infra">
+<meta property="article:tag" content="AWS">
+<meta property="article:tag" content="Clude">
+<meta property="article:tag" content="아마존">
+<meta property="article:tag" content="웹">
+<meta property="article:tag" content="서비스">
+<meta property="article:tag" content="Amazon">
+<meta property="article:tag" content="Web">
+<meta property="article:tag" content="Services">
+<meta property="article:tag" content="EC2">
+<meta property="article:tag" content="S3">
+<meta property="article:tag" content="RDS">
+<meta property="article:tag" content="비용">
+<meta property="article:tag" content="AWS란?">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://msnodeve.github.io/image/infra/aws/infra-aws-server.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2019/04/26/cloud-aws/aws-thumbnail.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/04/26/cloud-aws/aws-thumbnail.png"/>
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2019/04/26/cloud-aws/noImage.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/04/26/cloud-aws/noImage.png"/>
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/all.css">
+
+    
+<link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+
+    
+<link rel="stylesheet" href="/assets/css/thumbs.css">
+
+    
+<link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153775936-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-153775936-1');
+    </script>
+
+
+    
+
+    
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2019/04/26/cloud-aws/"/>
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            msnodevLog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="/about"
+                aria-label="링크 열기: /about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Myeong Seok KIM</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/msnodeve"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/Kstoo2"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+        <div class="post-header-cover
+                    text-left
+                    post-header-cover--partial"
+             style="background-image:url('/2019/04/26/cloud-aws/noImage.png');"
+             data-behavior="4">
+            
+                <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            AWS? AWS가 뭐야? - [Cloud Infra]
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-04-26T19:42:56+09:00">
+	
+		    2019/04/26
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/infra/">infra</a>, <a class="category-link" href="/categories/infra/aws/">aws</a>, <a class="category-link" href="/categories/infra/aws/cloud/">cloud</a>
+
+
+    
+</div>
+
+    
+</div>
+
+            
+        </div>
+
+            <div id="main" data-behavior="4"
+                 class="hasCover
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<h2 id="AWS-Amazon-Web-Services"><a href="#AWS-Amazon-Web-Services" class="headerlink" title="AWS(Amazon Web Services)"></a>AWS(Amazon Web Services)</h2><p>요즘 클라우드에 많은 관심을 갖고 있거나 서버를 다뤄본 개발자라면… 아마 AWS라는 단어를 들어보았을 겁니다<br><u>제가 왜 <strong>AWS</strong>를 사용하게 되었는지부터 설명하겠습니다</u><br></br><br>서버에 대한 기본 배경지식은 2018년 여름방학 때 <code>부산 ETRI 연구연수생</code>으로 인턴 과정을 하며 서버(리눅스 운영체제 기반 ; <u>CentOS7</u>기준)를 알게 되었고, 이로 인해 서버는 컴퓨터 한 대가 필요하다는 것을 느끼게 되었습니다</br><br>당시 AWS의 존재조차 모르고 있었던 3학년 이였고 졸업을 1년 앞둔 저는 졸업작품을 제작해야 한다는 과제를 마주하게 되었습니다 그래도 <code>안드로이드 애플리케이션</code>을 건드릴 줄 알고 있던 저는 애플리케이션을 제작해서 졸업 과제를 수행해야겠다는 생각을 하게 되었습니다</br><br>2명의 디자이너와 5명의 디벨로퍼로 내가 메인 디벨로퍼 겸 팀장을 맡아 팀원에게 할 일을 분배하며 팀 프로젝트를 진행하고 있었으며 시작은 좋았고(기획은 그럴싸했고 아이디어도 좋다는 생각이 듦), 기능 구현도 매우 훌륭하게 진행되고 있었습니다(클라이언트 만..)</br><br>기획 때 클라이언트 부분을 깊게 생각하며 기획을 진행했었고, 서버 부분은 틀만 잡아놓고 나중에 천천히 구조를 짜야 겠다고 했습니다 사용자가 늘어감에 따라 서버와 어떻게 통신을 해야 할지 서버 구조는 어떻게 짜야 할지에 대해 아무런 구조를 짜놓은 상태가 아니었습니다 기능 구현이 점차 점차 완성됨에 따라 서버가 필요했고, 그로 인해 저는 서버용 컴퓨터를 한대 사야겠다는 결심을 내린 뒤 무작정 부품들을 하나하나 사기 시작했습니다 맞춘 컴퓨터의 사양은 다음과 같았습니다<br></br></p>
+<img src="/image/infra/aws/infra-aws-server.png" width="100%" height="100%">
+</br></br></br>
+
+
+<p>글을 읽는 사람들 중 서버로 사용하기에 <strong>“엥?”</strong> 하는 사람 물론 있을 것입니다 알고 있습니다… 저는 그냥 컴퓨터 한 대가 필요했고 서버에 대한 적합한 사양을 몰랐었습니다 그래도 이러한 컴퓨터를 기반으로 서버에 대해서 많은 것을 알게 되었으니 저는 만족합니다 주문으로 온 부품들을 하나하나 조립했고, 운영체제는 <code>CentOS7</code>을 설치했습니다 배웠던 기본 지식으로 서버 세팅을 완료하고 안드로이드와 서버 통신을 하기 시작했다. 이때 사용한 <font size="4em" color="red"><u>기술 스택</u></font>은 다른 포스트에서 설명하도록 하겠습니다</br><br>어느 한날 같은 연구실 졸업 선배가 밥을 사준다고 나오라고 했으며, 그때 졸업작품에 대해서 이야기를 시작했습니다 클라이언트와 서버가 잘 통신되고 있던 저에게 선배가 다음과 같은 말을 했습니다 “왜 너는 굳이 노동을 하고 있느냐? 요즘 클라우드 서비스가 대세인데 하나 한 세팅을 언제 하며 몇 번의 클릭만으로 지금까지 구현해놓은 서비스를 다 할 수 있을 텐데 왜 그렇게 시간 낭비를 하고 있냐?”<br>라고… 서버 컴퓨터는 당연히 있어야 통신을 하는 건 알고 있겠으려니 하며 그 말을 들은 저는 한편으론 의아해하며 또 한편으론 신기했습니다 조금만 익숙해지면 충분히 사용 가능하다며 저에게 제안을 했고, 다음날부터 AWS에 대해 알아가기 시작했습니다</br><br>알아가면 알아갈수록 정말 신기했습니다… 제가 정작 3시간이 걸려 컴퓨터 조립 및 운영체제 설치를 끝낸 것을 <code>AWS</code>는 단 클릭 몇 번만으로 <code>5분</code> 만에 컴퓨터가 장만 되었고… 한 컴퓨터 안에 <code>데이터베이스</code>, <code>메일 전송</code>, <code>데이터 저장 공간</code>을 두는 것이 아니라 <code>개별 서비스</code>로 연결해서 쓸 수 있었던 면에서도 깜짝 놀랐습니다</br><br>이때부터 저는 <code>AWS</code>를 심도 있게 사용해보고 있으며, 2019년 4월 18일에 있었던 <code>AWS SUMMIT Seoul</code> 컨퍼런스도 다녀오게 되었습니다</br><br>제 <code>AWS</code> 사용 동기는 아래와 같습니다 <u>저와 같은 사람</u>이 있을 것이라 생각하며, 또 <u>AWS에 이제 관심을 갖기 시작한 사람들</u>에게 제 블로그가 도움이 되었으면 합니다<br></br><br>솔직히 말해 AWS에 대해서 깊이 다뤄보지 못했지만 AWS가 이런 것이다에 대해서 이해만 하길 바라며 읽어주시면 감사하겠습니다</br></br></br></br></br></br></p>
+<h2 id="AWS는-어디에-위치해있는가"><a href="#AWS는-어디에-위치해있는가" class="headerlink" title="AWS는 어디에 위치해있는가?"></a>AWS는 어디에 위치해있는가?</h2><img src="/image/infra/aws/infra-aws-region.png" width="100%">
+
+<p><a href="http://jayendrapatil.com/aws-regions-availability-zones-and-edge-locations/" target="_blank" rel="noopener">AWS region 참조</a> 관련 이미지</br></br><br><code>Amazon Web Services</code>는 다음 그림과 같이 여러 지역(regions)에 위치해있습니다 다음 그림에 표시된 곳에 엄청난 크기와 양의 컴퓨터가 있고, 우리는 AWS의 멤버(회원)이 되어 컴퓨터를 ‘빌려’ 쓴다고 생각하면 됩니다 다시말해 AWS에서 제공해주는 서비스를 이용해 내가 지금 내 컴퓨터에서 아마존 컴퓨터를 원격으로 사용하는 것 입니다 이 말이 즉 클라우드 컴퓨팅이라고 생각하면 되겠습니다</p>
+<p></br></br></p>
+<!-- 이 블로그에서는 `프리티어(12개월 무료)` 기준에 대해서 설명하며 AWS에서 제공하는 서비스에서 `EC2`, `RDS`, `S3`를 중심으로 여러가지를 살펴 보도록 하겠습니다
+
+</br>`AWS`에 대해서 좀더 생각나면 쓰도록 하며 `EC2`에 대한 이야기를 시작하려면 다음 블로그로 이동합시다!
+
+## [EC2에 대한 이야기!](https://msnodeve.github.io/2019/05/01/Infra-AWS-EC2/) -->
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/aws/" rel="tag">AWS</a> <a class="tag tag--primary tag--small t-link" href="/tags/cloud/" rel="tag">Cloud</a> <a class="tag tag--primary tag--small t-link" href="/tags/infra/" rel="tag">Infra</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/05/01/cloud-aws-ec2/"
+                    data-tooltip="AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                    aria-label="이전: AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Myeong Seok KIM. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/05/01/cloud-aws-ec2/"
+                    data-tooltip="AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                    aria-label="이전: AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+            <h4 id="about-card-name">Myeong Seok KIM</h4>
+        
+            <div id="about-card-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>SSAFY 3rd 교육생</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Seoul, Republic of Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">포스트가 없습니다.</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                            aria-label=": AWS? AWS가 뭐야? - [Cloud Infra]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/04/26/cloud-aws/aws-thumbnail.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                            aria-label=": AWS? AWS가 뭐야? - [Cloud Infra]"
+                        >
+                            <h3 class="media-heading">AWS? AWS가 뭐야? - [Cloud Infra]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 4월 26일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="AWS가-뭐야"><a href="#AWS가-뭐야" class="headerlink" title="AWS가 뭐야?"></a>AWS가 뭐야?</h3><p>이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>AWS</code> <code>Amazon Web Services</code> <code>Infra</code> <code>비용은?</code> <code>이게뭔데!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/"
+                            aria-label=": AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/aws-thumbnail.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/"
+                            aria-label=": AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                        >
+                            <h3 class="media-heading">AWS EC2에 대해서 알아보기 - [Cloud Infra]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 5월 1일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="AWS가-뭐야"><a href="#AWS가-뭐야" class="headerlink" title="AWS가 뭐야?"></a>AWS가 뭐야?</h3><p>이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>AWS</code> <code>Amazon Web Services</code> <code>Infra</code> <code>비용은?</code> <code>이게뭔데!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/"
+                            aria-label=": Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/flask-thumbnail1.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/"
+                            aria-label=": Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 7월 30일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="첫번째-단계"><a href="#첫번째-단계" class="headerlink" title="첫번째 단계"></a>첫번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework 프로젝트를 생성하고 실행해보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>프로젝트 생성하는 방법!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/"
+                            aria-label=": Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/flask-thumbnail2.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/"
+                            aria-label=": Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 1일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="두번째-단계"><a href="#두번째-단계" class="headerlink" title="두번째 단계"></a>두번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework 설정 및 MySQL에 관하여 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>MySQL</code> <code>설정</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/"
+                            aria-label=": Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/flask-thumbnail3.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/"
+                            aria-label=": Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 4일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="세번째-단계"><a href="#세번째-단계" class="headerlink" title="세번째 단계"></a>세번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework ORM, Model에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>ORM</code> <code>Model</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                            aria-label=": Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/flask-thumbnail4.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                            aria-label=": Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 5일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="네번째-단계"><a href="#네번째-단계" class="headerlink" title="네번째 단계"></a>네번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework MVC, Swagger API 문서 자동화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>Swagger</code> <code>MVC</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/"
+                            aria-label=": Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/flask-thumbnail5.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/"
+                            aria-label=": Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 6일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="다섯번째-단계"><a href="#다섯번째-단계" class="headerlink" title="다섯번째 단계"></a>다섯번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework Auth, 암호화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>암호화</code> <code>Auth</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/09/devlog-linux-crontab/"
+                            aria-label=": Linux, CentOS 작업 스케쥴러 - Crontab"
+                        >
+                            <h3 class="media-heading">Linux, CentOS 작업 스케쥴러 - Crontab</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 9일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab?"></a>Crontab?</h1><p><code>Cron</code> 은 리눅스 에서 특정한 <code>명령</code>이나 <code>스크립트</code>를 지정한 <code>날짜/시간</code>에 자동으로 실행해 주는 <code>스케쥴러</code> 입니다.</p>
+<p>주기적으로 시스템 백업 스크립트를 실행하는 등 시스템 관리자에 의해 많이 사용되며, 이외 반복적인 작업을 하기위해 사용될 수 있습니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/ssafy.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/"
+                            aria-label=": SSAFY 3기를 시작하며![합격 후기]"
+                        >
+                            <h3 class="media-heading">SSAFY 3기를 시작하며![합격 후기]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 12월 24일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="SSAFY"><a href="#SSAFY" class="headerlink" title="SSAFY"></a>SSAFY</h1><p><code>Samsung Software Academy For Youth</code>(삼성 청년 소프트웨어 아카데미) 서울 지역에 합격했습니다! 😘</p>
+<p>그런 의미로 이야기를 한 번 써내려 가려 합니다.</p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/hexo-syntax.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2020/03/13/devlog-hexo-syntax/"
+                            aria-label=": Hexo[Tranquilpeak] 사용방법"
+                        >
+                            <h3 class="media-heading">Hexo[Tranquilpeak] 사용방법</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2020년 3월 13일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h1 id="Hexo-tranquilpeak-테마"><a href="#Hexo-tranquilpeak-테마" class="headerlink" title="Hexo[tranquilpeak 테마]"></a>Hexo[tranquilpeak 테마]</h1><p>이번 포스트에서는 Hexo 테마 중 Tranquilpeak, 어떻게 사용하는지에 대해 알아 보려고 합니다.</p>
+<p><code>Tag</code> <code>Alert</code> <code>Highlight Text</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="포스트가 없습니다."
+                data-message-one="1 개의 포스트가 있습니다."
+                data-message-other="{n} 개의 포스트가 있습니다.">
+                16 개의 포스트가 있습니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/jquery.js"></script>
+
+
+<script src="/assets/js/jquery.fancybox.js"></script>
+
+
+<script src="/assets/js/thumbs.js"></script>
+
+
+<script src="/assets/js/tranquilpeak.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+    
+<script src="/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('R1M5F6PCKT', 'c742103764cdb380400cb1b22f428418');
+      var algoliaIndex = algoliaClient.initIndex('msnodeve_blog');
+    </script>
+
+
+    </body>
+</html>
