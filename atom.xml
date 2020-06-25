@@ -577,6 +577,38 @@
   </entry>
   
   <entry>
+    <title>Docker Compose 설치하기</title>
+    <link href="https://msnodeve.github.io/2019/01/08/infra-install-docker-compose/"/>
+    <id>https://msnodeve.github.io/2019/01/08/infra-install-docker-compose/</id>
+    <published>2019-01-08T09:44:36.000Z</published>
+    <updated>2020-06-25T05:36:17.583Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --><h1 id="Docker-설치"><a href="#Docker-설치" class="headerlink" title="Docker 설치"></a>Docker 설치</h1><h2 id="필수-패키지-설치"><a href="#필수-패키지-설치" class="headerlink" title="필수 패키지 설치"></a>필수 패키지 설치</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line">$ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line">$ yum makecache fast</span><br></pre></td></tr></table></figure><p></br></br></p><h2 id="다운로드"><a href="#다운로드" class="headerlink" title="다운로드"></a>다운로드</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum install docker-ce</span><br></pre></td></tr></table></figure><p></br></br></p><h2 id="실행"><a href="#실행" class="headerlink" title="실행"></a>실행</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl start docker</span><br><span class="line">$ systemctl <span class="built_in">enable</span> docker</span><br><span class="line">$ docker --version</span><br></pre></td></tr></table></figure><div style="text-align: center;"><img src="/image/infra/docker/install-docker1.png" width="100%"></div></br></br><h1 id="Docker-compose-설치"><a href="#Docker-compose-설치" class="headerlink" title="Docker-compose 설치"></a>Docker-compose 설치</h1><h2 id="다운로드-1"><a href="#다운로드-1" class="headerlink" title="다운로드"></a>다운로드</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://github.com/infra/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` &gt; /usr/<span class="built_in">local</span>/bin/docker-compose</span><br></pre></td></tr></table></figure><p></br></br></p><h2 id="권한-부여-및-실행"><a href="#권한-부여-및-실행" class="headerlink" title="권한 부여 및 실행"></a>권한 부여 및 실행</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ chmod +x /usr/<span class="built_in">local</span>/bin/docker-compose</span><br><span class="line">$ docker-compose --version</span><br></pre></td></tr></table></figure><div style="text-align: center;"><img src="/image/infra/docker/install-docker2.png" width="100%"></div></br></br><h1 id="수고하셨습니다"><a href="#수고하셨습니다" class="headerlink" title="수고하셨습니다"></a>수고하셨습니다</h1><p>Docker, Docker Compose 를 설치 했습니다</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Docker-Compose-설치하기&quot;&gt;&lt;a href=&quot;#Docker-Compose-설치하기&quot; class=&quot;headerlink&quot; title=&quot;Docker Compose 설치하기&quot;&gt;&lt;/a&gt;Docker Compose 설치하기&lt;/h3&gt;&lt;p&gt;이번 포스트에서는 도커를 설치하는 방법에 대해서 알아 보도록 하겠습니다.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;도커&lt;/code&gt; &lt;code&gt;도커컴포즈&lt;/code&gt; &lt;code&gt;Docker&lt;/code&gt; &lt;code&gt;Docker Compose&lt;/code&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="infra" scheme="https://msnodeve.github.io/categories/infra/"/>
+    
+      <category term="docker" scheme="https://msnodeve.github.io/categories/infra/docker/"/>
+    
+      <category term="docker compose" scheme="https://msnodeve.github.io/categories/infra/docker/docker-compose/"/>
+    
+    
+      <category term="Infra" scheme="https://msnodeve.github.io/tags/infra/"/>
+    
+      <category term="Docker" scheme="https://msnodeve.github.io/tags/docker/"/>
+    
+      <category term="Docker Compose" scheme="https://msnodeve.github.io/tags/docker-compose/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Mac에서 멋진 터미널 만들기</title>
     <link href="https://msnodeve.github.io/2018/10/23/mac-settings/"/>
     <id>https://msnodeve.github.io/2018/10/23/mac-settings/</id>

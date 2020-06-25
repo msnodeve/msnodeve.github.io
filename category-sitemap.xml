@@ -8,6 +8,27 @@
     </url>
 
     <url>
+        <loc>https://msnodeve.github.io/categories/infra/docker/docker-compose/</loc>
+        <lastmod>2020-06-25T05:36:17.583Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/infra/docker/</loc>
+        <lastmod>2020-06-25T05:36:17.583Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/infra/</loc>
+        <lastmod>2020-06-25T05:36:17.583Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://msnodeve.github.io/categories/mac/settings/</loc>
         <lastmod>2020-06-24T05:20:33.578Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -30,13 +51,6 @@
 
     <url>
         <loc>https://msnodeve.github.io/categories/infra/aws/</loc>
-        <lastmod>2020-06-23T01:16:59.361Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/categories/infra/</loc>
         <lastmod>2020-06-23T01:16:59.361Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
