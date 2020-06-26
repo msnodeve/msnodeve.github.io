@@ -1,0 +1,1180 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="msnodevLog">
+    <title>Hexo Blog 만들기 - msnodevLog</title>
+    <meta name="author" content="Myeong Seok KIM">
+    <script data-ad-client="ca-pub-2766237193476584" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+        <meta name="keywords" content="algorithm,Hexo,Blog,시작하기,블로그,깃허브,Github">
+    
+    
+        <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"ㅤ\n개발 환경\n\n\n\n\n본 블로그는 Homebrew, iTerm 이 설치 되어있는 mac에서 진행 되었다는 점 참고 바랍니다.\nBlog를 만들기에 앞서 구성 환경 준비\nNode.js, Git, npm을 설치하도록 하겠습니다.\n\n12$ brew install node$ node -v\n\nNode.js가 정상적으로 설치 되었다면 다음과 같은 화면을 확인 할 수 있습니다\n\n\n\n\n\n12$ brew install git$ git --version\n\nGit이 정상적으로 설치가 되었다면 다음과 같은 화면을 확인 할 수 있습니다\n\n\n\n\n\n12$ /usr/bin/ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"$ npm -v\n\nnpm이 정상적으로 설치가 되었다면 다음과 같은 화면을 확인 할 수 있습니다\n\n\n\n\n\nnpm을 이용해서 hexo 설치하기1$ npm install -g hexo-cli\n\nhexo가 정상적으로 설치가 되었다면 다음과 같은 화면을 확인 할 수 있습니다\n\n\n\n\n\nHexo 시작하기1234567891011121314151617$ hexo init testBlog$ cd testBlog$ npm install```    다음과 같은 폴더 구조를 확인 할 수 있습니다&lt;div style=\"text-align: center;\"&gt;&lt;img src=\"/image/blog/blog6.png\" width=\"100%\"&gt;&lt;/div&gt;```text    _config.yml 설정 파일    scaffolds   양식    source      초안, 포스트 폴더    themes      테마 폴더    package.json\n\n로컬 에서 블로그를 실행해 보도록 하겠습니다\n1$ hexo server\n\n\n\n\n\nhttp://localhost:4000 로 접속하게 되면 다음과 같은 화면을 확인 할 수 있습니다\n\n\n\n\n\n포스트 작성하기1$ hexo new post [Post Name]\n\n./source/_posts/ 폴더에 생성한 [Post Name] md 파일을 확인 할 수 있습니다\n\n\n\n\n\n1$ hexo server\nhexo를 실행해 보면 [Post Name]이름으로 작성된 포스트를 확인 할 수 있습니다\nGithub 계정 URL 만들기Github Repo &gt; Settings &gt; Options &gt; Github Pages 의 site url를 정해 주도록 합니다.\n\n\n\n\n\nGithub Repo에 배포 준비하기_config.yml 을 수정 하도록 하겠습니다\n123456789101112131415161718192021# Sitetitle: [제목]subtitle: [부 제목]description: [설명]keywords: [키 워드]author: [저자]language: en [언어]timezone: Asia/Seoul [시간]# URLurl: https://msnodeve.github.io/ [위에서 정해준 Github url]root: /permalink: :year/:month/:day/:title/permalink_defaults:pretty_urls:  trailing_index: true # Set to false to remove trailing index.html from permalinks# Deploymentdeploy:  type: git  repo: https://github.com/msnodeve/msnodeve.github.io.git [Github repo 주소]\n[참고] Github repo 주소는 아래와 같이 확인 할 수 있습니다\n\n\n\n\n\nGithub Repo에 빌드 및 배포하기123$ npm install hexo-deployer-git --save$ hexo generate$ hexo deploy\n\nhexo generate 와 hexo deploy 를 간략히 다음과 같이 표현 할 수 있습니다\n1$ hexo g -d\n\n로컬 에서 포스트 작성, 설정 및 변경을 하고 결과를 확인한 후, 빌드 및 배포하는 식으로 작업합니다 배포가 되면 msnodeve.github.io 으로 접속해서 확인합니다\n그렇다고 로컬에서 변경된 사항이 Github Repo에 Commit 된 것은 아닙니다 따라서 최종적인 확인 끝에 변경 사항과 수정 사항을 체크하여 Commit을 하는 것이 좋습니다\n","dateCreated":"2019-10-31T15:51:02+09:00","dateModified":"2020-06-26T23:02:50+09:00","datePublished":"2019-10-31T15:51:02+09:00","description":"ㅤ","headline":"Hexo Blog 만들기","image":[null,"noImage.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2019/10/31/hexo-blog-init/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2019/10/31/hexo-blog-init/","keywords":"Hexo, Blog","thumbnailUrl":"noImage.png"}</script>
+    <meta name="description" content="ㅤ">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Hexo Blog 만들기">
+<meta property="og:url" content="https://msnodeve.github.io/2019/10/31/hexo-blog-init/index.html">
+<meta property="og:site_name" content="msnodevLog">
+<meta property="og:description" content="ㅤ">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog1.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog2.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog3.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog4.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog5.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog7.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog8.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog9.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog10.png">
+<meta property="og:image" content="https://msnodeve.github.io/image/blog/blog11.png">
+<meta property="article:published_time" content="2019-10-31T06:51:02.000Z">
+<meta property="article:modified_time" content="2020-06-26T14:02:50.626Z">
+<meta property="article:author" content="Myeong Seok KIM">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="Blog">
+<meta property="article:tag" content="시작하기">
+<meta property="article:tag" content="블로그">
+<meta property="article:tag" content="깃허브">
+<meta property="article:tag" content="Github">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://msnodeve.github.io/image/blog/blog1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
+    
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2019/10/31/hexo-blog-init/noImage.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2019/10/31/hexo-blog-init/noImage.png"/>
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/all.css">
+
+    
+<link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+
+    
+<link rel="stylesheet" href="/assets/css/thumbs.css">
+
+    
+<link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153775936-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-153775936-1');
+    </script>
+
+
+    
+
+    
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2019/10/31/hexo-blog-init/"/>
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            msnodevLog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="/about"
+                aria-label="링크 열기: /about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Myeong Seok KIM</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/msnodeve"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/Kstoo2"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+        <div class="post-header-cover
+                    text-left
+                    post-header-cover--partial"
+             style="background-image:url('/2019/10/31/hexo-blog-init/noImage.png');"
+             data-behavior="4">
+            
+                <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Hexo Blog 만들기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-10-31T15:51:02+09:00">
+	
+		    2019/10/31
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/blog/">blog</a>, <a class="category-link" href="/categories/blog/hexo/">hexo</a>
+
+
+    
+</div>
+
+    
+</div>
+
+            
+        </div>
+
+            <div id="main" data-behavior="4"
+                 class="hasCover
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>ㅤ<a id="more"></a></p>
+<h1 id="개발-환경"><a href="#개발-환경" class="headerlink" title="개발 환경"></a>개발 환경</h1><div style="text-align: center;">
+<img src="/image/blog/blog1.png" width="100%">
+</div>
+</br></br>
+
+<p><em>본 블로그는 Homebrew, iTerm 이 설치 되어있는 mac에서 진행 되었다는 점 참고 바랍니다.</em><br></br></br></p>
+<h1 id="Blog를-만들기에-앞서-구성-환경-준비"><a href="#Blog를-만들기에-앞서-구성-환경-준비" class="headerlink" title="Blog를 만들기에 앞서 구성 환경 준비"></a><code>Blog</code>를 만들기에 앞서 구성 환경 준비</h1><blockquote>
+<p>Node.js, Git, npm을 설치하도록 하겠습니다.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew install node</span><br><span class="line">$ node -v</span><br></pre></td></tr></table></figure>
+<p></br></br></p>
+<p><code>Node.js</code>가 정상적으로 설치 되었다면 다음과 같은 화면을 확인 할 수 있습니다</p>
+<div style="text-align: center;">
+<img src="/image/blog/blog2.png" width="100%">
+</div>
+</br></br>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ brew install git</span><br><span class="line">$ git --version</span><br></pre></td></tr></table></figure>
+<p></be></be></p>
+<p><code>Git</code>이 정상적으로 설치가 되었다면 다음과 같은 화면을 확인 할 수 있습니다</p>
+<div style="text-align: center;">
+<img src="/image/blog/blog3.png" width="100%">
+</div>
+<br><br>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ /usr/bin/ruby -e <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></span><br><span class="line">$ npm -v</span><br></pre></td></tr></table></figure>
+
+<p><code>npm</code>이 정상적으로 설치가 되었다면 다음과 같은 화면을 확인 할 수 있습니다</p>
+<div style="text-align: center;">
+<img src="/image/blog/blog4.png" width="100%">
+</div>
+<br><br>
+
+<h1 id="npm을-이용해서-hexo-설치하기"><a href="#npm을-이용해서-hexo-설치하기" class="headerlink" title="npm을 이용해서 hexo 설치하기"></a><code>npm</code>을 이용해서 <code>hexo</code> 설치하기</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>hexo가 정상적으로 설치가 되었다면 다음과 같은 화면을 확인 할 수 있습니다</p>
+<div style="text-align: center;">
+<img src="/image/blog/blog5.png" width="100%">
+</div>
+
+<p><br><br></p>
+<h1 id="Hexo-시작하기"><a href="#Hexo-시작하기" class="headerlink" title="Hexo 시작하기"></a><code>Hexo</code> 시작하기</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init testBlog</span><br><span class="line">$ <span class="built_in">cd</span> testBlog</span><br><span class="line">$ npm install</span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line">다음과 같은 폴더 구조를 확인 할 수 있습니다</span><br><span class="line"></span><br><span class="line">&lt;div style=<span class="string">"text-align: center;"</span>&gt;</span><br><span class="line">&lt;img src=<span class="string">"/image/blog/blog6.png"</span> width=<span class="string">"100%"</span>&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">```text</span><br><span class="line">    _config.yml 설정 파일</span><br><span class="line">    scaffolds   양식</span><br><span class="line">    <span class="built_in">source</span>      초안, 포스트 폴더</span><br><span class="line">    themes      테마 폴더</span><br><span class="line">    package.json</span><br></pre></td></tr></table></figure>
+<p><br><br></p>
+<p>로컬 에서 블로그를 실행해 보도록 하겠습니다</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<div style="text-align: center;">
+<img src="/image/blog/blog7.png" width="100%">
+</div>
+
+<p><a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000</a> 로 접속하게 되면 다음과 같은 화면을 확인 할 수 있습니다</p>
+<div style="text-align: center;">
+<img src="/image/blog/blog8.png" width="100%">
+</div>
+<br><br>
+
+<h1 id="포스트-작성하기"><a href="#포스트-작성하기" class="headerlink" title="포스트 작성하기"></a>포스트 작성하기</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new post [Post Name]</span><br></pre></td></tr></table></figure>
+
+<p><code>./source/_posts/</code> 폴더에 생성한 <code>[Post Name] md</code> 파일을 확인 할 수 있습니다</p>
+<div style="text-align: center;">
+<img src="/image/blog/blog9.png" width="100%">
+</div>
+<br><br>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p><code>hexo</code>를 실행해 보면 <code>[Post Name]</code>이름으로 작성된 포스트를 확인 할 수 있습니다<br><br><br></p>
+<h1 id="Github-계정-URL-만들기"><a href="#Github-계정-URL-만들기" class="headerlink" title="Github 계정 URL 만들기"></a>Github 계정 URL 만들기</h1><p><code>Github Repo</code> &gt; <code>Settings</code> &gt; <code>Options</code> &gt; <code>Github Pages</code> 의 <code>site url</code>를 정해 주도록 합니다.</p>
+<div style="text-align: center;">
+<img src="/image/blog/blog10.png" width="100%">
+</div>
+<br><br>
+
+<h1 id="Github-Repo에-배포-준비하기"><a href="#Github-Repo에-배포-준비하기" class="headerlink" title="Github Repo에 배포 준비하기"></a><code>Github Repo</code>에 배포 준비하기</h1><p><code>_config.yml</code> 을 수정 하도록 하겠습니다</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Site</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">[제목]</span></span><br><span class="line"><span class="attr">subtitle:</span> <span class="string">[부</span> <span class="string">제목]</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">[설명]</span></span><br><span class="line"><span class="attr">keywords:</span> <span class="string">[키</span> <span class="string">워드]</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">[저자]</span></span><br><span class="line"><span class="attr">language:</span> <span class="string">en</span> <span class="string">[언어]</span></span><br><span class="line"><span class="attr">timezone:</span> <span class="string">Asia/Seoul</span> <span class="string">[시간]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="attr">url:</span> <span class="string">https://msnodeve.github.io/</span> <span class="string">[위에서</span> <span class="string">정해준</span> <span class="string">Github</span> <span class="string">url]</span></span><br><span class="line"><span class="attr">root:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">permalink:</span> <span class="string">:year/:month/:day/:title/</span></span><br><span class="line"><span class="attr">permalink_defaults:</span></span><br><span class="line"><span class="attr">pretty_urls:</span></span><br><span class="line">  <span class="attr">trailing_index:</span> <span class="literal">true</span> <span class="comment"># Set to false to remove trailing index.html from permalinks</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">https://github.com/msnodeve/msnodeve.github.io.git</span> <span class="string">[Github</span> <span class="string">repo</span> <span class="string">주소]</span></span><br></pre></td></tr></table></figure>
+<p>[참고] <code>Github repo</code> 주소는 아래와 같이 확인 할 수 있습니다<br></br></br></p>
+<div style="text-align: center;">
+<img src="/image/blog/blog11.png" width="100%">
+</div>
+</br></br>
+
+<h1 id="Github-Repo에-빌드-및-배포하기"><a href="#Github-Repo에-빌드-및-배포하기" class="headerlink" title="Github Repo에 빌드 및 배포하기"></a><code>Github Repo</code>에 빌드 및 배포하기</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br><span class="line">$ hexo generate</span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p><code>hexo generate</code> 와 <code>hexo deploy</code> 를 간략히 다음과 같이 표현 할 수 있습니다</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g -d</span><br></pre></td></tr></table></figure>
+
+<p></br></br><br>로컬 에서 포스트 작성, 설정 및 변경을 하고 결과를 확인한 후, 빌드 및 배포하는 식으로 작업합니다 배포가 되면 <a href="https://msnodeve.github.io/">msnodeve.github.io</a> 으로 접속해서 확인합니다</p>
+<p>그렇다고 로컬에서 변경된 사항이 <code>Github Repo</code>에 <code>Commit</code> 된 것은 아닙니다 따라서 최종적인 확인 끝에 변경 사항과 수정 사항을 체크하여 <code>Commit</code>을 하는 것이 좋습니다</p>
+
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/blog/" rel="tag">Blog</a> <a class="tag tag--primary tag--small t-link" href="/tags/hexo/" rel="tag">Hexo</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/12/09/devlog-linux-crontab/"
+                    data-tooltip="Linux, CentOS 작업 스케쥴러 - Crontab"
+                    aria-label="이전: Linux, CentOS 작업 스케쥴러 - Crontab"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/08/06/flask-restapi-example5/"
+                    data-tooltip="Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                    aria-label="다음: Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Myeong Seok KIM. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/12/09/devlog-linux-crontab/"
+                    data-tooltip="Linux, CentOS 작업 스케쥴러 - Crontab"
+                    aria-label="이전: Linux, CentOS 작업 스케쥴러 - Crontab"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2019/08/06/flask-restapi-example5/"
+                    data-tooltip="Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                    aria-label="다음: Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+            <h4 id="about-card-name">Myeong Seok KIM</h4>
+        
+            <div id="about-card-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>SSAFY 3rd 교육생</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Seoul, Republic of Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">포스트가 없습니다.</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2018/10/23/mac-settings/"
+                            aria-label=": Mac에서 멋진 터미널 만들기"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2018/10/23/mac-settings/agnoster.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2018/10/23/mac-settings/"
+                            aria-label=": Mac에서 멋진 터미널 만들기"
+                        >
+                            <h3 class="media-heading">Mac에서 멋진 터미널 만들기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2018년 10월 23일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="멋진-맥-터미널-만들기"><a href="#멋진-맥-터미널-만들기" class="headerlink" title="멋진 맥 터미널 만들기!"></a>멋진 맥 터미널 만들기!</h3><p>이번 포스트에서는 멋진 맥 개발환경을 만들어 보도록 하겠습니다.</p>
+<p><code>맥</code> <code>개발환경</code> <code>만들어보자!</code> <code>터미널</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/01/08/infra-install-docker-compose/"
+                            aria-label=": Docker Compose 설치하기"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/01/08/infra-install-docker-compose/docker-thumbnail.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/01/08/infra-install-docker-compose/"
+                            aria-label=": Docker Compose 설치하기"
+                        >
+                            <h3 class="media-heading">Docker Compose 설치하기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 1월 8일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="Docker-Compose-설치하기"><a href="#Docker-Compose-설치하기" class="headerlink" title="Docker Compose 설치하기"></a>Docker Compose 설치하기</h3><p>이번 포스트에서는 도커를 설치하는 방법에 대해서 알아 보도록 하겠습니다.</p>
+<p><code>도커</code> <code>도커컴포즈</code> <code>Docker</code> <code>Docker Compose</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                            aria-label=": AWS? AWS가 뭐야? - [Cloud Infra]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/04/26/cloud-aws/aws-thumbnail.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                            aria-label=": AWS? AWS가 뭐야? - [Cloud Infra]"
+                        >
+                            <h3 class="media-heading">AWS? AWS가 뭐야? - [Cloud Infra]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 4월 26일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="AWS가-뭐야"><a href="#AWS가-뭐야" class="headerlink" title="AWS가 뭐야?"></a>AWS가 뭐야?</h3><p>이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>AWS</code> <code>Amazon Web Services</code> <code>Infra</code> <code>비용은?</code> <code>이게뭔데!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/"
+                            aria-label=": AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/aws-thumbnail.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/"
+                            aria-label=": AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                        >
+                            <h3 class="media-heading">AWS EC2에 대해서 알아보기 - [Cloud Infra]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 5월 1일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="AWS가-뭐야"><a href="#AWS가-뭐야" class="headerlink" title="AWS가 뭐야?"></a>AWS가 뭐야?</h3><p>이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>AWS</code> <code>Amazon Web Services</code> <code>Infra</code> <code>비용은?</code> <code>이게뭔데!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/"
+                            aria-label=": Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/flask-thumbnail1.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/"
+                            aria-label=": Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 7월 30일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="첫번째-단계"><a href="#첫번째-단계" class="headerlink" title="첫번째 단계"></a>첫번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework 프로젝트를 생성하고 실행해보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>프로젝트 생성하는 방법!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/"
+                            aria-label=": Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/flask-thumbnail2.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/"
+                            aria-label=": Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 1일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="두번째-단계"><a href="#두번째-단계" class="headerlink" title="두번째 단계"></a>두번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework 설정 및 MySQL에 관하여 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>MySQL</code> <code>설정</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/"
+                            aria-label=": Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/flask-thumbnail3.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/"
+                            aria-label=": Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 4일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="세번째-단계"><a href="#세번째-단계" class="headerlink" title="세번째 단계"></a>세번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework ORM, Model에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>ORM</code> <code>Model</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                            aria-label=": Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/flask-thumbnail4.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                            aria-label=": Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 5일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="네번째-단계"><a href="#네번째-단계" class="headerlink" title="네번째 단계"></a>네번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework MVC, Swagger API 문서 자동화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>Swagger</code> <code>MVC</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/"
+                            aria-label=": Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/flask-thumbnail5.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/"
+                            aria-label=": Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 6일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="다섯번째-단계"><a href="#다섯번째-단계" class="headerlink" title="다섯번째 단계"></a>다섯번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework Auth, 암호화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>암호화</code> <code>Auth</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                            aria-label=": Hexo Blog 만들기"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/10/31/hexo-blog-init/noImage.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                            aria-label=": Hexo Blog 만들기"
+                        >
+                            <h3 class="media-heading">Hexo Blog 만들기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 10월 31일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><p>ㅤ</div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="포스트가 없습니다."
+                data-message-one="1 개의 포스트가 있습니다."
+                data-message-other="{n} 개의 포스트가 있습니다.">
+                19 개의 포스트가 있습니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/jquery.js"></script>
+
+
+<script src="/assets/js/jquery.fancybox.js"></script>
+
+
+<script src="/assets/js/thumbs.js"></script>
+
+
+<script src="/assets/js/tranquilpeak.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+    
+<script src="/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('R1M5F6PCKT', 'c742103764cdb380400cb1b22f428418');
+      var algoliaIndex = algoliaClient.initIndex('msnodeve_blog');
+    </script>
+
+
+    </body>
+</html>
