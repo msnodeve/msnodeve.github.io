@@ -8,6 +8,20 @@
     </url>
 
     <url>
+        <loc>https://msnodeve.github.io/categories/mac/settings/</loc>
+        <lastmod>2020-06-28T14:42:24.284Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/mac/</loc>
+        <lastmod>2020-06-28T14:42:24.284Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://msnodeve.github.io/categories/blog/hexo/</loc>
         <lastmod>2020-06-27T14:13:10.667Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -38,20 +52,6 @@
     <url>
         <loc>https://msnodeve.github.io/categories/infra/</loc>
         <lastmod>2020-06-25T05:36:17.583Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/categories/mac/settings/</loc>
-        <lastmod>2020-06-24T05:20:33.578Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/categories/mac/</loc>
-        <lastmod>2020-06-24T05:20:33.578Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
