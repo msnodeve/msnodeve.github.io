@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://msnodeve.github.io/"/>
-  <updated>2020-06-21T04:17:27.807Z</updated>
+  <updated>2020-07-02T09:34:14.148Z</updated>
   <id>https://msnodeve.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>운영체제의 역사</title>
+    <link href="https://msnodeve.github.io/2020/07/02/os-history/"/>
+    <id>https://msnodeve.github.io/2020/07/02/os-history/</id>
+    <published>2020-07-02T08:32:57.000Z</published>
+    <updated>2020-07-02T09:34:14.148Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --><h4 id="키워드로-한번-알아-보도록-하자"><a href="#키워드로-한번-알아-보도록-하자" class="headerlink" title="키워드로 한번 알아 보도록 하자"></a>키워드로 한번 알아 보도록 하자</h4><h2 id="초창기-컴퓨터-1940년대"><a href="#초창기-컴퓨터-1940년대" class="headerlink" title="초창기 컴퓨터(1940년대)"></a>초창기 컴퓨터(1940년대)</h2><h4 id="최초의-컴퓨터"><a href="#최초의-컴퓨터" class="headerlink" title="최초의 컴퓨터"></a>최초의 컴퓨터</h4><blockquote><p>에니악, 30톤 규모의 거대한 계산기로 미사일 탄도를 계산하기 위해 제작<br>물론 운영체제가 없었음</p></blockquote><br><h4 id="초기의-컴퓨터"><a href="#초기의-컴퓨터" class="headerlink" title="초기의 컴퓨터"></a>초기의 컴퓨터</h4><blockquote><p>키보드, 마우스, 모니터와 같은 주변장치가 없었다.</p></blockquote><br><h4 id="하드와이어링"><a href="#하드와이어링" class="headerlink" title="하드와이어링"></a>하드와이어링</h4><blockquote><p>전선을 연결하여 논리회로를 구성하는 것</p></blockquote><p><br><br><br></p><h2 id="일괄-작업-시스템-1950년대"><a href="#일괄-작업-시스템-1950년대" class="headerlink" title="일괄 작업 시스템(1950년대)"></a>일괄 작업 시스템(1950년대)</h2><h4 id="현대적인-모습의-컴퓨터가-탄생"><a href="#현대적인-모습의-컴퓨터가-탄생" class="headerlink" title="현대적인 모습의 컴퓨터가 탄생"></a>현대적인 모습의 컴퓨터가 탄생</h4><blockquote><p>미약하지만 중앙처리장치 CPU 와 메인메모리 RAM가 존재<br>키보드, 마우스, 모니터와 같은 입력 및 출력장치가 없었음</p></blockquote><br><h4 id="입력장치"><a href="#입력장치" class="headerlink" title="입력장치"></a>입력장치</h4><blockquote><p>천공 카드리더, 카드에 구멍을 뚫어 문자를 입력</p></blockquote><br><h4 id="출력장치"><a href="#출력장치" class="headerlink" title="출력장치"></a>출력장치</h4><blockquote><p>라인 프린터, 한 번에 한 줄씩 출력</p></blockquote><br><h4 id="일괄-작업-시스템-일괄-처리-시스템"><a href="#일괄-작업-시스템-일괄-처리-시스템" class="headerlink" title="일괄 작업 시스템, 일괄 처리 시스템"></a>일괄 작업 시스템, 일괄 처리 시스템</h4><blockquote><p>모든 작업을 한꺼번에 처리해야 하고 프로그램 실행 중간에 사용자가 데이터를 입력하거나 수정하는 것이 불가능</p></blockquote><p><br><br><br></p><h2 id="대화형-시스템-1960년대-초반"><a href="#대화형-시스템-1960년대-초반" class="headerlink" title="대화형 시스템(1960년대 초반)"></a>대화형 시스템(1960년대 초반)</h2><blockquote><p>키보드와 모니터가 등장<br>이로써 작업 중간에 사용자가 입력, 중간 결과값을 볼 수 있게 되었음</p></blockquote><br><h4 id="대화형-시스템"><a href="#대화형-시스템" class="headerlink" title="대화형 시스템"></a>대화형 시스템</h4><blockquote><p>컴퓨터와 사용자의 대화를 통해 작업이 이루어지는 시스템</p></blockquote><br><h4 id="CPU-집중-작업"><a href="#CPU-집중-작업" class="headerlink" title="CPU 집중 작업"></a>CPU 집중 작업</h4><blockquote><p>일괄 작업 시스템에서 프로그램이 실행되는 동안 입출력이 불가능하기 때문에 대부분의 작업이 CPU만 사용하는 계산 작업</p></blockquote><br><h4 id="입출력-집중-작업"><a href="#입출력-집중-작업" class="headerlink" title="입출력 집중 작업"></a>입출력 집중 작업</h4><blockquote><p>대화형 시스템에서 프로그램이 실행되는 동안 입출력이 가능하기 때문에 입출력 집중작업이 생겨남</p></blockquote><p><br><br><br></p><h2 id="시분할-시스템-1960년대-후반"><a href="#시분할-시스템-1960년대-후반" class="headerlink" title="시분할 시스템(1960년대 후반)"></a>시분할 시스템(1960년대 후반)</h2><blockquote><p>다중 프로그래밍이 가능하게 되는 시점<br>CPU 사용 시간을 아주 잘게 쪼개어 여러 작업에 나누어 줌</p></blockquote><br><h4 id="시분할-시스템"><a href="#시분할-시스템" class="headerlink" title="시분할 시스템"></a>시분할 시스템</h4><blockquote><p>여러 작업을 조금씩 처리하여 작업이 동시에 이루어지는 것처럼 보이게 하는 것<br>오늘날의 컴퓨터에 대부분 사용</p></blockquote><br><h4 id="타임-슬라이스-타임-퀀텀"><a href="#타임-슬라이스-타임-퀀텀" class="headerlink" title="타임 슬라이스, 타임 퀀텀"></a>타임 슬라이스, 타임 퀀텀</h4><blockquote><p>잘게 나뉜 시간 한 조각</p></blockquote><br><h4 id="실시간-시스템"><a href="#실시간-시스템" class="headerlink" title="실시간 시스템"></a>실시간 시스템</h4><blockquote><p>특정 시스템에서 일정 시간 안에 작업이 처리되도록 보장</p></blockquote><p><br><br><br></p><h2 id="분산-시스템-1970년대-후반"><a href="#분산-시스템-1970년대-후반" class="headerlink" title="분산 시스템(1970년대 후반)"></a>분산 시스템(1970년대 후반)</h2><blockquote><p>스티브 잡스가 최초의 개인용 컴퓨터 애플II를 발표<br>개인이 소유하기 쉬워짐<br>인터넷이 등장한 시기<br>TCP/IP 프로토콜이 정의됨</p></blockquote><br><h4 id="운영체제"><a href="#운영체제" class="headerlink" title="운영체제"></a>운영체제</h4><blockquote><p>애플의 매킨토시<br>마이크로소프트의 MS-DOS<br>가 많이 사용됨</p></blockquote><br><h4 id="분산-시스템"><a href="#분산-시스템" class="headerlink" title="분산 시스템"></a>분산 시스템</h4><blockquote><p>네트워크상에 분산되어 있는 여러 컴퓨터로 작업을 처리하고 그 결과를 상호 교환하도록 구성한 시스템</p></blockquote><p><br><br><br></p><h2 id="클라이언트-서버-시스템-1990년대-현재"><a href="#클라이언트-서버-시스템-1990년대-현재" class="headerlink" title="클라이언트/서버 시스템(1990년대~현재)"></a>클라이언트/서버 시스템(1990년대~현재)</h2><blockquote><p>분산 시스템은 시스템에 참가하는 모든 컴퓨터가 동일한 지위이기 때문에 컴퓨터가 고장나거나 추가되면 작업을 분배하고 모으기 쉽지않다<br>이런 문제점을 해결</p></blockquote><br><h4 id="웹-시스템"><a href="#웹-시스템" class="headerlink" title="웹 시스템"></a>웹 시스템</h4><blockquote><p>클라이언트가 요청하고, 서버는 요청받은 작업을 응답해주는 이중 구조</p></blockquote><br><h4 id="문제점"><a href="#문제점" class="headerlink" title="문제점"></a>문제점</h4><blockquote><p>서버 과부하를 문제점으로 볼 수 있음<br>수십만 명의 클라이언트를 처리하기 위해서는 많은 서버와 큰 용량의 네트워크가 필요함</p></blockquote><p><br><br><br></p><h2 id="그리드-컴퓨팅"><a href="#그리드-컴퓨팅" class="headerlink" title="그리드 컴퓨팅"></a>그리드 컴퓨팅</h2><blockquote><p>분산 시스템의 한 분야로, 서로 다른 기종의 컴퓨터들을 묶어 대용량의 컴퓨터 풀을 구성하고 이를 원격지와 연결하여 대용량 연산을 수행하는 컴퓨팅 환경<br>예) 웹하드 서비스, 무료로 웹 하드 이용권을 나누어주는 것은 서비스 가입자 몰래 그리드 딜리버리 프로그램을 깔아서 서버의 부하를 줄이기 위함<br>이게 무슨 말이냐 하면 서버에있는 데이터를 내려 받는게 아니라 이미 내려받은 컴퓨터로부터 몰래 데이터를 빼와서 전달하는 것<br><del>내 컴퓨터 자원을 빼앗기기 싫다면 사용 금지</del></p></blockquote><p><br><br><br></p><h2 id="SaaS-Software-as-a-Service"><a href="#SaaS-Software-as-a-Service" class="headerlink" title="SaaS(Software as a Service)"></a>SaaS(Software as a Service)</h2><blockquote><p>사용자가 필요할 때 소프트웨어 기능을 이용하고 그 만큼만 비용을 지불하는 개념</p></blockquote><p><br><br><br></p><h2 id="클라우드-컴퓨팅"><a href="#클라우드-컴퓨팅" class="headerlink" title="클라우드 컴퓨팅"></a>클라우드 컴퓨팅</h2><blockquote><p>언제 어디서나 응용 프로그램과 데이터를 자유롭게 사용할 수 있는 컴퓨팅 환경으로<br>그리드 컴퓨팅 + SaaS</p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;운영체제의-역사&quot;&gt;&lt;a href=&quot;#운영체제의-역사&quot; class=&quot;headerlink&quot; title=&quot;운영체제의 역사&quot;&gt;&lt;/a&gt;운영체제의 역사&lt;/h3&gt;&lt;p&gt;&lt;code&gt;운영체제&lt;/code&gt; &lt;code&gt;역사&lt;/code&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="os" scheme="https://msnodeve.github.io/categories/os/"/>
+    
+      <category term="history" scheme="https://msnodeve.github.io/categories/os/history/"/>
+    
+    
+      <category term="Operating System" scheme="https://msnodeve.github.io/tags/operating-system/"/>
+    
+      <category term="OS" scheme="https://msnodeve.github.io/tags/os/"/>
+    
+      <category term="History" scheme="https://msnodeve.github.io/tags/history/"/>
+    
+  </entry>
   
   <entry>
     <title>SpringBoot Database 활용하기(3) - [Backend Framework]</title>

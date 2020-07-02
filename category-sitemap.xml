@@ -8,6 +8,20 @@
     </url>
 
     <url>
+        <loc>https://msnodeve.github.io/categories/os/history/</loc>
+        <lastmod>2020-07-02T09:34:14.148Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/os/</loc>
+        <lastmod>2020-07-02T09:34:14.148Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://msnodeve.github.io/categories/mac/settings/</loc>
         <lastmod>2020-06-28T14:42:24.284Z</lastmod>
         <changefreq>weekly</changefreq>
