@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://msnodeve.github.io/"/>
-  <updated>2020-07-02T09:34:14.148Z</updated>
+  <updated>2020-07-03T05:48:46.750Z</updated>
   <id>https://msnodeve.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>운영체제의 구조</title>
+    <link href="https://msnodeve.github.io/2020/07/03/os-structure/"/>
+    <id>https://msnodeve.github.io/2020/07/03/os-structure/</id>
+    <published>2020-07-03T05:04:20.000Z</published>
+    <updated>2020-07-03T05:48:46.750Z</updated>
+    
+    <content type="html"><![CDATA[<!-- excerpt --><h2 id="커널과-인터페이스"><a href="#커널과-인터페이스" class="headerlink" title="커널과 인터페이스"></a>커널과 인터페이스</h2><p><br><br></p><h3 id="커널"><a href="#커널" class="headerlink" title="커널"></a>커널</h3><blockquote><p>프로세스 관리, 메모리 관리, 저장장치 관리와 같은 운영체제의 핵심적인 기능을 모아놓은 것<br>운영체제의 성능은 커널이 좌우함</p></blockquote><br><h4 id="운영체제는-크게-두-부분으로-나뉨"><a href="#운영체제는-크게-두-부분으로-나뉨" class="headerlink" title="운영체제는 크게 두 부분으로 나뉨"></a>운영체제는 크게 두 부분으로 나뉨</h4><div style="text-align: center;"><img src="/image/study/os/os-structure.png" width="100%"></div><blockquote><p>이미지의 출처는 <a href="https://www.google.com/search?q=%EC%9A%B4%EC%98%81%EC%B2%B4%EC%A0%9C%EC%9D%98+%EA%B5%AC%EC%A1%B0&sxsrf=ALeKk00s37_KPmH-Ix6TKRxUce0nZaHFlw:1593752645923&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjGq8eip7DqAhXJy4sBHYxdAkAQ_AUoAXoECBcQAw&biw=1920&bih=1040#imgrc=sz21lF5azr2XTM" target="_blank" rel="noopener">구글 이미지 검색</a>에서 가져왔음을 밝힙니다.</p></blockquote><p><br><br></p><h2 id="시스템-호출과-디바이스-드라이버"><a href="#시스템-호출과-디바이스-드라이버" class="headerlink" title="시스템 호출과 디바이스 드라이버"></a>시스템 호출과 디바이스 드라이버</h2><br><h4 id="시스템-호출"><a href="#시스템-호출" class="headerlink" title="시스템 호출"></a>시스템 호출</h4><blockquote><p>커널이 자신을 보호하기 위한 인터페이스<br>커널이 제공하는 시스템 관련 서비스를 모아놓은 것(함수형태로 제공)<br>사용자나 응용 프로그램으로부터 컴퓨터의 자원을 보호하기 위해 자원에 직접 접근하는 것을 차단</p></blockquote><p><br><br></p><div class="alert info"><p>API?</p></div><blockquote><p>응용프로그램이 자신과 연관된 프로그램을 만들 수 있도록 제공하는 인터페이스</p></blockquote><br><div class="alert info"><p>SDK?</p></div><blockquote><p>프로그램 개발자를 위해 API 및 API 사용메뉴얼 뿐만아니라 프로그램 개발에 필요한 코드 편집기와 에뮬레이터 같은 각종 개발용 응용 프로그램까지 하나로 묶어서 배포하는 개발 툴</p></blockquote><p><br><br></p><h4 id="드라이버"><a href="#드라이버" class="headerlink" title="드라이버"></a>드라이버</h4><blockquote><p>커널과 하드웨어의 인터페이스를 담당<br>마우스, 키보드와 같이 복잡하지 않은 디바이스 드라이버는 커널에 포함되어 있지만, 크래픽카드, 프린터와 같이 크기가 크고 복잡한 디바이스 드라이버는 사용자가 직접 설치해야함</p></blockquote><p><br><br><br></p><h2 id="커널의-구성"><a href="#커널의-구성" class="headerlink" title="커널의 구성"></a>커널의 구성</h2><table><thead><tr><th>핵심 기능</th><th>설명</th></tr></thead><tbody><tr><td>프로세스 관리</td><td>프로세스에 CPU를 배분하고 작업에 필요한 제반 환경을 제공</td></tr><tr><td>메모리 관리</td><td>프로세스에 작업 공간을 배치하고 실제 메모리보다 큰 가상공간을 제공</td></tr><tr><td>파일 시스템 관리</td><td>데이터를 저장하고 접근할 수 있는 인터페이스를 제공</td></tr><tr><td>입출력 관리</td><td>필요한 입력과 출력 서비스를 제공</td></tr><tr><td>프로세스 간 통신 관리</td><td>공동 작업을 위한 각 프로세스 간 통신 환경을 지원</td></tr></tbody></table><br><h4 id="단일형-구조-커널"><a href="#단일형-구조-커널" class="headerlink" title="단일형 구조 커널"></a>단일형 구조 커널</h4><blockquote><p>초창기의 운영체제 구조<br>구분 없이 핵심 기능을 하나로 구성<br>MS-DOS, VMS, 초기의 운영체제들이 대표적</p></blockquote><h5 id="장점"><a href="#장점" class="headerlink" title="장점"></a>장점</h5><blockquote><p>모듈이 거의 분리되지 않았기 때문에 모듈 간의 통신 비용이 줄어들어 효율적인 운영이 가능</p></blockquote><h5 id="단점"><a href="#단점" class="headerlink" title="단점"></a>단점</h5><blockquote><p>모듈이 하나로 묶여있기 때문에 버그나 오류를 처리하기 어려움<br>상호 의존성이 높기 때문에 기능상의 작은 결함이 시스템의 전체로 확산될 위험<br>다양한 환경의 시스템에 적용이 어려움</p></blockquote><p><br><br></p><h4 id="계층형-구조-커널"><a href="#계층형-구조-커널" class="headerlink" title="계층형 구조 커널"></a>계층형 구조 커널</h4><blockquote><p>단일형 구조 커널이 발전된 커널<br>비슷한 모듈을 묶어서 하나의 계층으로 만들고 계층 간의 통신을 통해 운영체제의 구현하는 방식<br>모듈화로 인해 버그 및 오류를 쉽게 처리가 가능<br>마이크로소프트의 윈도우를 비롯한 운영체제는 대부분 이 구조로 이루어짐</p></blockquote><p><br><br></p><h4 id="마이크로-구조-커널"><a href="#마이크로-구조-커널" class="headerlink" title="마이크로 구조 커널"></a>마이크로 구조 커널</h4><blockquote><p>프로세스 관리, 메모리 관리, 프로세스 간 통신 관리 등 가장 기본적인 기능만 제공<br>사용자 영역에 많은 부분이 구현되어 있음<br>각 모듈은 세분화되어 존재하며 모듈 간의 정보 교환은 프로세스 간 통신을 통해 이루어짐<br>각 모듈은 독립적으로 작동하기 때문에 하나의 모듈이 실패해도 전체 운영체제가 멈추지 않는다.<br>커널이 가벼워, CPU 용량이 작은 시스템에도 적용이 가능</p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;운영체제의-구조&quot;&gt;&lt;a href=&quot;#운영체제의-구조&quot; class=&quot;headerlink&quot; title=&quot;운영체제의 구조&quot;&gt;&lt;/a&gt;운영체제의 구조&lt;/h3&gt;&lt;p&gt;&lt;code&gt;운영체제&lt;/code&gt; &lt;code&gt;구조&lt;/code&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="os" scheme="https://msnodeve.github.io/categories/os/"/>
+    
+      <category term="structure" scheme="https://msnodeve.github.io/categories/os/structure/"/>
+    
+    
+      <category term="Operating System" scheme="https://msnodeve.github.io/tags/operating-system/"/>
+    
+      <category term="OS" scheme="https://msnodeve.github.io/tags/os/"/>
+    
+      <category term="Structure" scheme="https://msnodeve.github.io/tags/structure/"/>
+    
+  </entry>
   
   <entry>
     <title>운영체제의 역사</title>
@@ -661,36 +690,6 @@
       <category term="Docker" scheme="https://msnodeve.github.io/tags/docker/"/>
     
       <category term="Docker Compose" scheme="https://msnodeve.github.io/tags/docker-compose/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mac에서 멋진 터미널 만들기</title>
-    <link href="https://msnodeve.github.io/2018/10/23/mac-settings/"/>
-    <id>https://msnodeve.github.io/2018/10/23/mac-settings/</id>
-    <published>2018-10-23T10:18:19.000Z</published>
-    <updated>2020-06-28T14:42:24.284Z</updated>
-    
-    <content type="html"><![CDATA[<!-- excerpt --><h1 id="iTerm2-설치"><a href="#iTerm2-설치" class="headerlink" title="iTerm2 설치"></a><a href="https://www.iterm2.com/downloads.html" target="_blank" rel="noopener">iTerm2</a> 설치</h1><p><a href="https://www.iterm2.com/downloads.html" target="_blank" rel="noopener">iTerm2 다운로드 페이지</a>에 접속한 뒤, <code>iTerm2</code> 를 설치합니다<br><img src="/image/settings/iTerm2_download_site.png" width="100%"><br></br></br></p><h1 id="HomeBrew-설치"><a href="#HomeBrew-설치" class="headerlink" title="HomeBrew 설치"></a><a href="https://brew.sh" target="_blank" rel="noopener">HomeBrew</a> 설치</h1><div style="text-align: center;"><img src="/image/settings/HomeBrew_img.png" width="30%" height="30%"></div><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/ruby -e <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></span><br></pre></td></tr></table></figure><p></br></br></p><h1 id="Zsh-설치"><a href="#Zsh-설치" class="headerlink" title="Zsh 설치"></a>Zsh 설치</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install zsh</span><br></pre></td></tr></table></figure><p></br></br></p><h1 id="OhMyZsh-설치"><a href="#OhMyZsh-설치" class="headerlink" title="OhMyZsh 설치"></a>OhMyZsh 설치</h1><p>설치시 <code>mac</code> 잠금 해제 암호를 물어봅니다, 입력해도 <code>*</code> 이 뜨지않으니 그냥 입력 후 엔터하시면 됩니다</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c <span class="string">"<span class="variable">$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>"</span></span><br></pre></td></tr></table></figure><p></br></br></p><h1 id="Oceanic-Next-iTerm-색-테마-입히기"><a href="#Oceanic-Next-iTerm-색-테마-입히기" class="headerlink" title="Oceanic Next iTerm 색 테마 입히기"></a>Oceanic Next iTerm 색 테마 입히기</h1><div style="text-align: center;"><img src="/image/settings/Oceanic_color_iterm.png" width="100%"></div></br></br><p><a href="https://github.com/mhartington/oceanic-next-iterm/archive/master.zip" target="_blank" rel="noopener">master.zip</a>을 다운로드 후 압축을 해제합니다</p><div style="text-align: center;"><img src="/image/settings/Oceanic_next1.png" width="100%"></div></br></br><p>iTerm2 &gt; Preferences… &gt; 클릭 합니다</p><div style="text-align: center;"><img src="/image/settings/Oceanic_next2.png" width="100%"></div></br></br><p>Profile &gt; Default &gt; Colors &gt; Color Presets… &gt; Oceanic-Next &gt; 클릭 후 완료 합니다</p><div style="text-align: center;"><img src="/image/settings/Oceanic_next3.png" width="100%"></div></br></br><h1 id="Agnoster-테마-설치"><a href="#Agnoster-테마-설치" class="headerlink" title="Agnoster 테마 설치"></a>Agnoster 테마 설치</h1><div style="text-align: center;"><img src="/image/settings/agnoster.png" width="100%"></div></br></br><p>명령어 입력후 10번째 줄을 다음과 같이 입력 합니다</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.zshrc</span><br><span class="line">ZSH_THEME=<span class="string">"agnoster"</span></span><br></pre></td></tr></table></figure><div style="text-align: center;"><img src="/image/settings/agnoster.zshrc.png" width="100%"></div></br></br><h1 id="Ubuntu-Mono-derivative-Powerline-폰트-설치-amp-설정"><a href="#Ubuntu-Mono-derivative-Powerline-폰트-설치-amp-설정" class="headerlink" title="Ubuntu Mono derivative Powerline 폰트 설치 &amp; 설정"></a>Ubuntu Mono derivative Powerline 폰트 설치 &amp; 설정</h1><p><a href="https://beomi.github.io/others/Ubuntu_Mono_derivative_Powerline.ttf" target="_blank" rel="noopener">Ubuntu_Mono_derivative_Powerline.ttf</a>를 다운로드 합니다</p><p>iTerm2 &gt; Preferences… &gt; 클릭 합니다</p><div style="text-align: center;"><img src="/image/settings/Oceanic_next2.png" width="100%"></div></br></br><p>Profile &gt; Default &gt; Text &gt; Change Font &gt; Ubuntu Mono derivative &gt; 클릭 후 완료 합니다</p><div style="text-align: center;"><img src="/image/settings/iTerm2_Ubuntu_Mono1.png" width="100%"></div></br></br><h1 id="zsh-syntax-highlighting-설치"><a href="#zsh-syntax-highlighting-설치" class="headerlink" title="zsh-syntax-highlighting 설치"></a>zsh-syntax-highlighting 설치</h1><p>아래 두줄을 터미널에 입력합니다</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zsh-users/zsh-syntax-highlighting.git</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"source <span class="variable">$&#123;(q-)PWD&#125;</span>/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"</span> &gt;&gt; <span class="variable">$&#123;ZDOTDIR:-$HOME&#125;</span>/.zshrc</span><br></pre></td></tr></table></figure><p></br></br></p><h1 id="수고하셨습니다"><a href="#수고하셨습니다" class="headerlink" title="수고하셨습니다"></a>수고하셨습니다</h1><p>이제 iTerm2를 완전히 종료한 후에 다시 실행하여 멋진 터미널을 이용해 보세요</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;멋진-맥-터미널-만들기&quot;&gt;&lt;a href=&quot;#멋진-맥-터미널-만들기&quot; class=&quot;headerlink&quot; title=&quot;멋진 맥 터미널 만들기!&quot;&gt;&lt;/a&gt;멋진 맥 터미널 만들기!&lt;/h3&gt;&lt;p&gt;이번 포스트에서는 멋진 맥 개발환경을 만들어 보도록 하겠습니다.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;맥&lt;/code&gt; &lt;code&gt;개발환경&lt;/code&gt; &lt;code&gt;만들어보자!&lt;/code&gt; &lt;code&gt;터미널&lt;/code&gt;&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="mac" scheme="https://msnodeve.github.io/categories/mac/"/>
-    
-      <category term="settings" scheme="https://msnodeve.github.io/categories/mac/settings/"/>
-    
-    
-      <category term="Mac" scheme="https://msnodeve.github.io/tags/mac/"/>
-    
-      <category term="Zsh" scheme="https://msnodeve.github.io/tags/zsh/"/>
-    
-      <category term="Homebrew" scheme="https://msnodeve.github.io/tags/homebrew/"/>
     
   </entry>
   

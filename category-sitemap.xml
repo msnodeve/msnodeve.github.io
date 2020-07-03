@@ -8,14 +8,21 @@
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/categories/os/history/</loc>
-        <lastmod>2020-07-02T09:34:14.148Z</lastmod>
+        <loc>https://msnodeve.github.io/categories/os/structure/</loc>
+        <lastmod>2020-07-03T05:48:46.750Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://msnodeve.github.io/categories/os/</loc>
+        <lastmod>2020-07-03T05:48:46.750Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/os/history/</loc>
         <lastmod>2020-07-02T09:34:14.148Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
