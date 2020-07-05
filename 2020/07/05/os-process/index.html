@@ -6,11 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="msnodevLog">
-    <title>태그: Bit - msnodevLog</title>
+    <title>운영체제 프로세스 - msnodevLog</title>
     <meta name="author" content="Myeong Seok KIM">
     <script data-ad-client="ca-pub-2766237193476584" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
-        <meta name="keywords" content="algorithm,">
+        <meta name="keywords" content="algorithm,OS,Operating,System,운영체제,프로세스,Process">
     
     
         <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
@@ -20,16 +20,23 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{}</script>
-    <meta name="description" content="대부분의 개발자들 처럼 이것저것 아무거나 다 손대보고 익숙해지는게 최선인 것 같다. 그렇다면 한 번이 아닌 두 번이상 개발을 해보며 익숙해 지는게 공부같다.">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\n\n프로그램\n저장장치에 저장되어 있는 정적인 상태\n\n\n\n프로세스\n실행을 위해 메모리에 올라온 동적인 상태\n\n\n\n프로세스의 상태일괄 작업 시스템에서\n프로세스가 생성된 후 CPU를 얻어 실행하고 작업을 마치면 종료생성, 실행, 완료\n\n\n\n시분할 시스템에서\nCPU를 얻어 실행 중인 프로세스가 중간에 다른 프로세스에 CPU를 넘겨주는 일이 빈번프로세스 제어 블록(Process Controll Block, PCB) 생성\n생성 상태프로세스가 메모리에 올라와 실행 준비를 완료한 상태\n준비 상태생성된 프로세스가 CPU를 얻을 때 까지 기다리는 상태\n실행 상태준비 상태에 있는 프로세스 중 하나가 CPU를 얻어 실제 작업을 수행하는 상태실행 상태에 들어간 프로세스는 일정 시간동안 CPU를 사용할 권리를 가짐주어진 시간을 다 사용하고도 작업이 끝나지 않았다면 프로세스는 준비 상태로 감\n완료 상태실행 상태의 프로세스가 주어진 시간 동안 작업을 마치면 완료 상태로 진입프로세스 제어 블록(Process Controll Block, PCB) 제거\n\n\n\nCPU 스케쥴러\n준비 상태에 있는 여러 프로세스 중 다음에 실행할 프로세스를 선정준비 상태에서 큐를 몇 개 운영할지, 큐에 있는 어떤 프로세스의 프로세스 제어 블록을 실행 상태로 보낼지 결정\n\n\n\n디스패치(Dispatch)\n준비 상태의 프로세스 중 하나를 골라 실행 상태로 바꾸는 작업\n\n\n\n타임 슬라이스, 퀀텀\nCPU 스케쥴러에 의해 선택된 프로세스는 실행 상태에서 일정 기간 동안 작업하는데, 프로세스에 배당된 작업 시간\n\n\n\n타임 아웃\n자신에게 주어진 하나의 타임 슬라이스 동안 작업을 끝내지 못하면 다시 준비상태로 돌아가는 것\n\n\n프로세스의 다섯 가지 상태\n프로세스는 생성, 준비, 실행, 완료 네 가지 상태만으로도 작업을 진행하는 데 큰 문제는 없으나운영체제의 효율성을 고려해 한가지 상태를 더 추가(대기 상태)\n\n\n\n\n상태\n설명\n작업\n\n\n\n생성\n프로그램을 메모리에 가져와 실행 준비가 완료된 상태\n메모리 할당, 프로세스 제어 블록 생성\n\n\n준비\n실행을 기다리는 모든 프로세스가 자기 차례를 기다리는 상태실행될 프로세스를 CPU 스케쥴러가 선택\ndispatch(PID): 준비 -&gt; 실행\n\n\n실행\n선택된 프로세스가 타임 슬라이스를 얻어 CPU를 사용하는 상태\ntimeout(PID): 실행 -&gt; 준비exit(PID): 실행 -&gt; 완료block(PID): 실행 -&gt; 대기\n\n\n대기\n실행 상태에 있는 프로세스가 입출력을 요청하면 입출력이 완료될 떄까지 기다리는 상태입출력이 완료 되면 준비 상태로 감\nwakeup(PID): 대기 -&gt; 준비\n\n\n완료\n프로세스가 종료된 상태사용하던 모든 데이터가 정리\n메모리 삭제, 프로세스 제어블록 삭제\n\n\n\n\ndispatch(PID)\n해당 프로레스가 준비 상태에서 실행 상태로 바뀌어 작업이 이루어짐\n\ntimeout(PID)\n타임 슬라이스 시간을 다 사용하면 실행제어 블록을 실행 상태에서 준비 상태로 옮김\n\nexit(PID)\n실행 상태 동안 작업이 완료되면 실행프로세스 정상 종료\n\nblock(PID)\n실행 상태에 있는 프로세스가 입출력을 요청하면 CPU는 입출력 관리자에게 입출력을 요청하고 실행입출력이 완료될 떄까지 작업을 진행할 수 없기 때문에 대기 상태로 옮김이 후 CPU 스케쥴러는 새로운 프로세스를 실행 상태로 가져옴(Dispatch)\n\n대기 상태 추가 설명\nwait status라고도 부르며, 작업의 효율을 위해 만들어 졌음입출력이 완료되면 인터럽트가 발생대기 상태에 있는 여러 프로세스 중 해당 인터럽트로 깨어날 프로세스를 찾음(wakeup(PID))인터럽트 때문에 대기 상태에서 준비 상태로 이동함\n","dateCreated":"2020-07-05T15:14:30+09:00","dateModified":"2020-07-05T15:50:23+09:00","datePublished":"2020-07-05T15:14:30+09:00","description":"운영체제 프로세스운영체제 프로세스","headline":"운영체제 프로세스","image":["noImage.png","noImage.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/07/05/os-process/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/07/05/os-process/","keywords":"Operating System, OS, Process","thumbnailUrl":"noImage.png"}</script>
+    <meta name="description" content="운영체제 프로세스운영체제 프로세스">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="msnodevLog">
-<meta property="og:url" content="https://msnodeve.github.io/tags/bit/index.html">
+<meta property="og:title" content="운영체제 프로세스">
+<meta property="og:url" content="https://msnodeve.github.io/2020/07/05/os-process/index.html">
 <meta property="og:site_name" content="msnodevLog">
-<meta property="og:description" content="대부분의 개발자들 처럼 이것저것 아무거나 다 손대보고 익숙해지는게 최선인 것 같다. 그렇다면 한 번이 아닌 두 번이상 개발을 해보며 익숙해 지는게 공부같다.">
+<meta property="og:description" content="운영체제 프로세스운영체제 프로세스">
 <meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2020-07-05T06:14:30.000Z">
+<meta property="article:modified_time" content="2020-07-05T06:50:23.837Z">
 <meta property="article:author" content="Myeong Seok KIM">
-<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="OS">
+<meta property="article:tag" content="Operating">
+<meta property="article:tag" content="System">
+<meta property="article:tag" content="운영체제">
+<meta property="article:tag" content="프로세스">
+<meta property="article:tag" content="Process">
 <meta name="twitter:card" content="summary">
     
     
@@ -39,6 +46,12 @@
         <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
     
     
+        <meta property="og:image" content="https://msnodeve.github.io/2020/07/05/os-process/noImage.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2020/07/05/os-process/noImage.png"/>
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2020/07/05/os-process/noImage.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2020/07/05/os-process/noImage.png"/>
     
     
     <!--STYLES-->
@@ -69,7 +82,9 @@
     
 
     
-    <link rel="canonical" href="https://msnodeve.github.io/tags/bit/"/>
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2020/07/05/os-process/"/>
 </head>
     <body>
         <div id="blog">
@@ -277,8 +292,42 @@
 </nav>
 
             
+        <div class="post-header-cover
+                    text-left
+                    post-header-cover--partial"
+             style="background-image:url('/2020/07/05/os-process/noImage.png');"
+             data-behavior="4">
+            
+                <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            운영체제 프로세스
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-07-05T15:14:30+09:00">
+	
+		    2020/07/05
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/os/">os</a>, <a class="category-link" href="/categories/os/process/">process</a>
+
+
+    
+</div>
+
+    
+</div>
+
+            
+        </div>
+
             <div id="main" data-behavior="4"
-                 class="
+                 class="hasCover
                         hasCoverMetaIn
                         ">
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -292,69 +341,227 @@
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
                 
-    <section class="postShorten-group main-content-wrap">
+<article class="post">
     
     
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+
+<h2 id="프로그램"><a href="#프로그램" class="headerlink" title="프로그램"></a>프로그램</h2><blockquote>
+<p>저장장치에 저장되어 있는 정적인 상태</p>
+</blockquote>
+<br>
+
+<h2 id="프로세스"><a href="#프로세스" class="headerlink" title="프로세스"></a>프로세스</h2><blockquote>
+<p>실행을 위해 메모리에 올라온 동적인 상태</p>
+</blockquote>
+<br>
+
+<h2 id="프로세스의-상태"><a href="#프로세스의-상태" class="headerlink" title="프로세스의 상태"></a>프로세스의 상태</h2><h4 id="일괄-작업-시스템에서"><a href="#일괄-작업-시스템에서" class="headerlink" title="일괄 작업 시스템에서"></a>일괄 작업 시스템에서</h4><blockquote>
+<p>프로세스가 생성된 후 CPU를 얻어 실행하고 작업을 마치면 종료<br>생성, 실행, 완료</p>
+</blockquote>
+<br>
+
+<h4 id="시분할-시스템에서"><a href="#시분할-시스템에서" class="headerlink" title="시분할 시스템에서"></a>시분할 시스템에서</h4><blockquote>
+<p>CPU를 얻어 실행 중인 프로세스가 중간에 다른 프로세스에 CPU를 넘겨주는 일이 빈번<br>프로세스 제어 블록(Process Controll Block, PCB) 생성</p>
+<h5 id="생성-상태"><a href="#생성-상태" class="headerlink" title="생성 상태"></a>생성 상태</h5><p>프로세스가 메모리에 올라와 실행 준비를 완료한 상태</p>
+<h5 id="준비-상태"><a href="#준비-상태" class="headerlink" title="준비 상태"></a>준비 상태</h5><p>생성된 프로세스가 CPU를 얻을 때 까지 기다리는 상태</p>
+<h5 id="실행-상태"><a href="#실행-상태" class="headerlink" title="실행 상태"></a>실행 상태</h5><p>준비 상태에 있는 프로세스 중 하나가 CPU를 얻어 실제 작업을 수행하는 상태<br>실행 상태에 들어간 프로세스는 일정 시간동안 CPU를 사용할 권리를 가짐<br>주어진 시간을 다 사용하고도 작업이 끝나지 않았다면 프로세스는 준비 상태로 감</p>
+<h5 id="완료-상태"><a href="#완료-상태" class="headerlink" title="완료 상태"></a>완료 상태</h5><p>실행 상태의 프로세스가 주어진 시간 동안 작업을 마치면 완료 상태로 진입<br>프로세스 제어 블록(Process Controll Block, PCB) 제거</p>
+</blockquote>
+<br>
+
+<h4 id="CPU-스케쥴러"><a href="#CPU-스케쥴러" class="headerlink" title="CPU 스케쥴러"></a>CPU 스케쥴러</h4><blockquote>
+<p>준비 상태에 있는 여러 프로세스 중 다음에 실행할 프로세스를 선정<br>준비 상태에서 큐를 몇 개 운영할지, 큐에 있는 어떤 프로세스의 프로세스 제어 블록을 실행 상태로 보낼지 결정</p>
+</blockquote>
+<br>
+
+<h4 id="디스패치-Dispatch"><a href="#디스패치-Dispatch" class="headerlink" title="디스패치(Dispatch)"></a>디스패치(Dispatch)</h4><blockquote>
+<p>준비 상태의 프로세스 중 하나를 골라 실행 상태로 바꾸는 작업</p>
+</blockquote>
+<br>
+
+<h4 id="타임-슬라이스-퀀텀"><a href="#타임-슬라이스-퀀텀" class="headerlink" title="타임 슬라이스, 퀀텀"></a>타임 슬라이스, 퀀텀</h4><blockquote>
+<p>CPU 스케쥴러에 의해 선택된 프로세스는 실행 상태에서 일정 기간 동안 작업하는데, 프로세스에 배당된 작업 시간</p>
+</blockquote>
+<br>
+
+<h4 id="타임-아웃"><a href="#타임-아웃" class="headerlink" title="타임 아웃"></a>타임 아웃</h4><blockquote>
+<p>자신에게 주어진 하나의 타임 슬라이스 동안 작업을 끝내지 못하면 다시 준비상태로 돌아가는 것</p>
+</blockquote>
+<p><br><br><br></p>
+<h2 id="프로세스의-다섯-가지-상태"><a href="#프로세스의-다섯-가지-상태" class="headerlink" title="프로세스의 다섯 가지 상태"></a>프로세스의 다섯 가지 상태</h2><blockquote>
+<p>프로세스는 생성, 준비, 실행, 완료 네 가지 상태만으로도 작업을 진행하는 데 큰 문제는 없으나<br>운영체제의 효율성을 고려해 한가지 상태를 더 추가(대기 상태)</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>상태</th>
+<th>설명</th>
+<th>작업</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>생성</td>
+<td>프로그램을 메모리에 가져와 실행 준비가 완료된 상태</td>
+<td>메모리 할당, 프로세스 제어 블록 생성</td>
+</tr>
+<tr>
+<td>준비</td>
+<td>실행을 기다리는 모든 프로세스가 자기 차례를 기다리는 상태<br>실행될 프로세스를 CPU 스케쥴러가 선택</td>
+<td>dispatch(PID): 준비 -&gt; 실행</td>
+</tr>
+<tr>
+<td>실행</td>
+<td>선택된 프로세스가 타임 슬라이스를 얻어 CPU를 사용하는 상태</td>
+<td>timeout(PID): 실행 -&gt; 준비<br>exit(PID): 실행 -&gt; 완료<br>block(PID): 실행 -&gt; 대기</td>
+</tr>
+<tr>
+<td>대기</td>
+<td>실행 상태에 있는 프로세스가 입출력을 요청하면 입출력이 완료될 떄까지 기다리는 상태<br>입출력이 완료 되면 준비 상태로 감</td>
+<td>wakeup(PID): 대기 -&gt; 준비</td>
+</tr>
+<tr>
+<td>완료</td>
+<td>프로세스가 종료된 상태<br>사용하던 모든 데이터가 정리</td>
+<td>메모리 삭제, 프로세스 제어블록 삭제</td>
+</tr>
+</tbody></table>
+<br>
+
+<h5 id="dispatch-PID"><a href="#dispatch-PID" class="headerlink" title="dispatch(PID)"></a>dispatch(PID)</h5><blockquote>
+<p>해당 프로레스가 준비 상태에서 실행 상태로 바뀌어 작업이 이루어짐</p>
+</blockquote>
+<h5 id="timeout-PID"><a href="#timeout-PID" class="headerlink" title="timeout(PID)"></a>timeout(PID)</h5><blockquote>
+<p>타임 슬라이스 시간을 다 사용하면 실행<br>제어 블록을 실행 상태에서 준비 상태로 옮김</p>
+</blockquote>
+<h5 id="exit-PID"><a href="#exit-PID" class="headerlink" title="exit(PID)"></a>exit(PID)</h5><blockquote>
+<p>실행 상태 동안 작업이 완료되면 실행<br>프로세스 정상 종료</p>
+</blockquote>
+<h5 id="block-PID"><a href="#block-PID" class="headerlink" title="block(PID)"></a>block(PID)</h5><blockquote>
+<p>실행 상태에 있는 프로세스가 입출력을 요청하면 CPU는 입출력 관리자에게 입출력을 요청하고 실행<br>입출력이 완료될 떄까지 작업을 진행할 수 없기 때문에 대기 상태로 옮김<br>이 후 CPU 스케쥴러는 새로운 프로세스를 실행 상태로 가져옴(Dispatch)</p>
+</blockquote>
+<h5 id="대기-상태-추가-설명"><a href="#대기-상태-추가-설명" class="headerlink" title="대기 상태 추가 설명"></a>대기 상태 추가 설명</h5><blockquote>
+<p>wait status라고도 부르며, 작업의 효율을 위해 만들어 졌음<br>입출력이 완료되면 인터럽트가 발생<br>대기 상태에 있는 여러 프로세스 중 해당 인터럽트로 깨어날 프로세스를 찾음(wakeup(PID))<br>인터럽트 때문에 대기 상태에서 준비 상태로 이동함</p>
+</blockquote>
             
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a
-                            class="link-unstyled"
-                            href="/2020/05/23/algorithm-subset/"
-                            aria-label=": SubSet(부분집합) - [Algorithm Skill]"
-                        >
-                            SubSet(부분집합) - [Algorithm Skill]
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2020-05-23T18:43:26+09:00">
-	
-		    2020/05/23
-    	
-    </time>
-    
-        <span>카테고리 </span>
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
         
-    <a class="category-link" href="/categories/algorithm/">algorithm</a>, <a class="category-link" href="/categories/algorithm/skill/">skill</a>, <a class="category-link" href="/categories/algorithm/skill/subset/">subset</a>, <a class="category-link" href="/categories/algorithm/skill/subset/bitmask/">bitmask</a>
-
-
-    
-</div>
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/os/" rel="tag">OS</a> <a class="tag tag--primary tag--small t-link" href="/tags/operating-system/" rel="tag">Operating System</a> <a class="tag tag--primary tag--small t-link" href="/tags/process/" rel="tag">Process</a>
 
             </div>
-            
-                <div class="postShorten-excerpt">
-                    <h5 id="알고리즘의-기본적인-스킬을-다룹니다"><a href="#알고리즘의-기본적인-스킬을-다룹니다" class="headerlink" title="알고리즘의 기본적인 스킬을 다룹니다."></a>알고리즘의 기본적인 스킬을 다룹니다.</h5><p>이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.</p>
-<p><code>Subset</code> <code>BitMask</code></p>
-                    
-                        <a
-                            href="/2020/05/23/algorithm-subset/"
-                            class="postShorten-excerpt_link link"
-                            aria-label=": SubSet(부분집합) - [Algorithm Skill]"
-                        >
-                            계속 읽기
-                        </a>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
                         
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
                     
-                </div>
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/07/03/os-structure/"
+                    data-tooltip="운영체제의 구조"
+                    aria-label="다음: 운영체제의 구조"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
             
-        </div>
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/07/05/os-process/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
         
-    </article>
-    
-    <div class="pagination-bar">
-    <ul class="pagination">
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/07/05/os-process/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/07/05/os-process/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
         
         
-        <li class="pagination-number">page 1 of 1</li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
     </ul>
 </div>
 
-</section>
+
+        
+        
+            
+        
+    </div>
+</article>
+
 
 
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -374,6 +581,151 @@
 </footer>
 
             </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/07/03/os-structure/"
+                    data-tooltip="운영체제의 구조"
+                    aria-label="다음: 운영체제의 구조"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/07/05/os-process/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/07/05/os-process/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/07/05/os-process/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/07/05/os-process/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/07/05/os-process/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/07/05/os-process/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
             
         </div>
         
@@ -804,6 +1156,8 @@
 
 <!--SCRIPTS END-->
 
+
+    
 
 
 

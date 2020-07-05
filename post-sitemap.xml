@@ -8,6 +8,22 @@
     </url>
 
     <url>
+        <loc>https://msnodeve.github.io/2019/10/31/hexo-blog-init/</loc>
+        <lastmod>2020-07-05T06:52:57.510Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/2020/07/05/os-process/</loc>
+        <lastmod>2020-07-05T06:50:23.837Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://msnodeve.github.io/2020/07/03/os-structure/</loc>
         <lastmod>2020-07-03T05:48:46.750Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -26,14 +42,6 @@
     <url>
         <loc>https://msnodeve.github.io/2018/10/23/mac-settings/</loc>
         <lastmod>2020-06-28T14:42:24.284Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/2019/10/31/hexo-blog-init/</loc>
-        <lastmod>2020-06-27T14:13:10.667Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
