@@ -20,7 +20,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\n알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.목차는 다음과 같습니다.\n1. 배열체크로 부분집합 구하기2. 비트마스크로 부분집합 구하기3. 관련 알고리즘 문제\n\n\nSubset 배열체크부분집합이라는 단어는 고등학생때 많이 들어봤던 것 같습니다.일단 부분집합에 대해서 간단하게 알아 보도록 하죠.원소의 개수가 N일때, 부분집합의 개수는 2^N 입니다.  \n어떻게 그럴까요?1234567891011121314151617181920원소의 개수가 &#123;1, 2&#125; 라고할 때, 다음과 같이 부분 집합이 나올 수 있습니다.∅121, 2총 개수 : 4개원소의 개수가 &#123;1, 2, 3&#125; 라고할 때, 다음과 같이 부분 집합이 나올 수 있습니다.∅1231, 21, 32, 31, 2, 3총 개수 : 8개\n\n그렇다면 이제 코드로 한번 작성해서 확인해 보도록 하겠습니다.\n123456789101112131415161718192021222324252627282930313233343536373839404142434445import java.util.Scanner;public class Subset_Visit &#123;    static int N, totalCnt; // 원소의 개수, 총 경우의 수    static int[] inputs;    static boolean[] visit;    public static void main(String[] args) &#123;        // 부분 집합을 구하기 위해서 원소 입력        Scanner sc = new Scanner(System.in);        N = sc.nextInt();        inputs = new int[N];        visit = new boolean[N];        for (int i = 0; i &lt; N; i++) &#123;            inputs[i] = sc.nextInt();        &#125;        // 부분집합 시작        getSubset(0);        // 출력        System.out.println(\"총 경우의 수 : \" +  totalCnt);    &#125;    private static void getSubset(int cnt) &#123;        // cnt가 원소의 개수만큼 돌았다면        if(cnt == N)&#123;            totalCnt++;            for (int i = 0; i &lt; N; i++) &#123;                // 선택된 배열과 선택되지 않은 배열 출력                System.out.print((visit[i] ? inputs[i] : \"X\") + \"\\t\");            &#125;            System.out.println();            return;        &#125;        // 현재 원소를 선택하고 다음        visit[cnt] = true;        getSubset(cnt+1);        // 현재 원소를 선택하지 않고 다음        visit[cnt] = false;        getSubset(cnt+1);    &#125;&#125;\n\n위 코드를 실행해보면 아래와 같은 결과를 얻을 수 있습니다.\n1234567891011121314151617181941 2 3 41\t2\t3\t4\t1\t2\t3\tX\t1\t2\tX\t4\t1\t2\tX\tX\t1\tX\t3\t4\t1\tX\t3\tX\t1\tX\tX\t4\t1\tX\tX\tX\tX\t2\t3\t4\tX\t2\t3\tX\tX\t2\tX\t4\tX\t2\tX\tX\tX\tX\t3\t4\tX\tX\t3\tX\tX\tX\tX\t4\tX\tX\tX\tX\t총 경우의 수 : 16\n\n\n\nSubset 비트마스킹위에서 봤던 방문배열을 사용하게 되면 원소의 개수가 커졌을 때, 메모리 사용량이 많이 들어갈 수 있습니다.이번에는 비트마스킹을 이용해서 부분집합을 구해 보도록 하겠습니다.  \n\n\n1234567891011121314151617181920212223242526272829303132import java.util.Scanner;public class Subset_Bitmask &#123;    static int N; // 원소의 개수    static int[] inputs;    public static void main(String[] args) &#123;        // 부분 집합을 구하기 위해서 원소 입력        Scanner sc = new Scanner(System.in);        N = sc.nextInt();        inputs = new int[N];        for (int i = 0; i &lt; N; i++) &#123;            inputs[i] = sc.nextInt();        &#125;        // 부분집합 시작        getSubset(1 &lt;&lt; N);        // 출력        System.out.println(\"총 경우의 수 : \" +  (1 &lt;&lt; N));    &#125;    private static void getSubset(int cnt) &#123;        for (int flag = 0; flag &lt; cnt; flag++) &#123;            // 0, 1, 2 ... flag 비트열 별로 원소 수만큼 각 자리 비트를 확인            for (int i = 0; i &lt; N; i++) &#123;                System.out.print((((flag &amp; (1 &lt;&lt; i)) != 0) ? inputs[i] : \"X\") + \"\\t\");            &#125;            System.out.println();        &#125;    &#125;&#125;\n\n위 코드의 실행 원리를 예시를 들며 설명 하겠습니다.\n\n2개의 원소가 있다고 가정하면 총 경우의 수는 4.8을 Binary로 표현하면 1 0 0 이며, 4번을 돌며 각자리 입력 받은 원소의 개수만큼 비트 이동을 합니다.\n1234567891011121314151617181920212223242526flag -&gt; 0 &#x3D; 0 0 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 0i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 0따라서 X, X 로 표현 됩니다.flag -&gt; 1 &#x3D; 0 1 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 1i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 0따라서 1, X 로 표현 됩니다.flag -&gt; 2 &#x3D; 1 0 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 0i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 1따라서 X, 1 로 표현 됩니다.flag -&gt; 3 &#x3D; 1 1 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 1i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 1따라서 1, 2 로 표현 됩니다.\n\n위 코드를 실행해보면 아래처럼 결과가 나오는 것을 확인 할 수 있습니다.\n123456721 2X\tX\t1\tX\tX\t2\t1\t2\t총 경우의 수 : 4\n\n\n이렇게 부분집합에 대해서 알아 보았습니다.그럼 관련 알고리즘 문제 링크를 걸어드리며 마무리 짓도록 하겠습니다. 감사합니다.😁\n관련 알고리즘 문제&nbsp;&nbsp;부분수열의 합","dateCreated":"2020-05-23T18:43:26+09:00","dateModified":"2020-05-23T19:40:47+09:00","datePublished":"2020-05-23T18:43:26+09:00","description":"알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.\nSubset BitMask","headline":"SubSet(부분집합) - [Algorithm Skill]","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/05/23/algorithm-subset/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/05/23/algorithm-subset/","keywords":"Algorithm, Subset, Bit, BitMask"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\n알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.목차는 다음과 같습니다.\n1. 배열체크로 부분집합 구하기2. 비트마스크로 부분집합 구하기3. 관련 알고리즘 문제\n\n\nSubset 배열체크부분집합이라는 단어는 고등학생때 많이 들어봤던 것 같습니다.일단 부분집합에 대해서 간단하게 알아 보도록 하죠.원소의 개수가 N일때, 부분집합의 개수는 2^N 입니다.  \n어떻게 그럴까요?1234567891011121314151617181920원소의 개수가 &#123;1, 2&#125; 라고할 때, 다음과 같이 부분 집합이 나올 수 있습니다.∅121, 2총 개수 : 4개원소의 개수가 &#123;1, 2, 3&#125; 라고할 때, 다음과 같이 부분 집합이 나올 수 있습니다.∅1231, 21, 32, 31, 2, 3총 개수 : 8개\n\n그렇다면 이제 코드로 한번 작성해서 확인해 보도록 하겠습니다.\n123456789101112131415161718192021222324252627282930313233343536373839404142434445import java.util.Scanner;public class Subset_Visit &#123;    static int N, totalCnt; // 원소의 개수, 총 경우의 수    static int[] inputs;    static boolean[] visit;    public static void main(String[] args) &#123;        // 부분 집합을 구하기 위해서 원소 입력        Scanner sc = new Scanner(System.in);        N = sc.nextInt();        inputs = new int[N];        visit = new boolean[N];        for (int i = 0; i &lt; N; i++) &#123;            inputs[i] = sc.nextInt();        &#125;        // 부분집합 시작        getSubset(0);        // 출력        System.out.println(\"총 경우의 수 : \" +  totalCnt);    &#125;    private static void getSubset(int cnt) &#123;        // cnt가 원소의 개수만큼 돌았다면        if(cnt == N)&#123;            totalCnt++;            for (int i = 0; i &lt; N; i++) &#123;                // 선택된 배열과 선택되지 않은 배열 출력                System.out.print((visit[i] ? inputs[i] : \"X\") + \"\\t\");            &#125;            System.out.println();            return;        &#125;        // 현재 원소를 선택하고 다음        visit[cnt] = true;        getSubset(cnt+1);        // 현재 원소를 선택하지 않고 다음        visit[cnt] = false;        getSubset(cnt+1);    &#125;&#125;\n\n위 코드를 실행해보면 아래와 같은 결과를 얻을 수 있습니다.\n1234567891011121314151617181941 2 3 41\t2\t3\t4\t1\t2\t3\tX\t1\t2\tX\t4\t1\t2\tX\tX\t1\tX\t3\t4\t1\tX\t3\tX\t1\tX\tX\t4\t1\tX\tX\tX\tX\t2\t3\t4\tX\t2\t3\tX\tX\t2\tX\t4\tX\t2\tX\tX\tX\tX\t3\t4\tX\tX\t3\tX\tX\tX\tX\t4\tX\tX\tX\tX\t총 경우의 수 : 16\n\n\n\nSubset 비트마스킹위에서 봤던 방문배열을 사용하게 되면 원소의 개수가 커졌을 때, 메모리 사용량이 많이 들어갈 수 있습니다.이번에는 비트마스킹을 이용해서 부분집합을 구해 보도록 하겠습니다.  \n\n\n1234567891011121314151617181920212223242526272829303132import java.util.Scanner;public class Subset_Bitmask &#123;    static int N; // 원소의 개수    static int[] inputs;    public static void main(String[] args) &#123;        // 부분 집합을 구하기 위해서 원소 입력        Scanner sc = new Scanner(System.in);        N = sc.nextInt();        inputs = new int[N];        for (int i = 0; i &lt; N; i++) &#123;            inputs[i] = sc.nextInt();        &#125;        // 부분집합 시작        getSubset(1 &lt;&lt; N);        // 출력        System.out.println(\"총 경우의 수 : \" +  (1 &lt;&lt; N));    &#125;    private static void getSubset(int cnt) &#123;        for (int flag = 0; flag &lt; cnt; flag++) &#123;            // 0, 1, 2 ... flag 비트열 별로 원소 수만큼 각 자리 비트를 확인            for (int i = 0; i &lt; N; i++) &#123;                System.out.print((((flag &amp; (1 &lt;&lt; i)) != 0) ? inputs[i] : \"X\") + \"\\t\");            &#125;            System.out.println();        &#125;    &#125;&#125;\n\n위 코드의 실행 원리를 예시를 들며 설명 하겠습니다.\n\n2개의 원소가 있다고 가정하면 총 경우의 수는 4.8을 Binary로 표현하면 1 0 0 이며, 4번을 돌며 각자리 입력 받은 원소의 개수만큼 비트 이동을 합니다.\n1234567891011121314151617181920212223242526flag -&gt; 0 &#x3D; 0 0 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 0i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 0따라서 X, X 로 표현 됩니다.flag -&gt; 1 &#x3D; 0 1 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 1i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 0따라서 1, X 로 표현 됩니다.flag -&gt; 2 &#x3D; 1 0 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 0i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 1따라서 X, 1 로 표현 됩니다.flag -&gt; 3 &#x3D; 1 1 일때i -&gt; 0 &#x3D; (1 &lt;&lt; 0) &#x3D; 01,      flag &amp; i &#x3D;&gt; 1i -&gt; 1 &#x3D; (1 &lt;&lt; 1) &#x3D; 10,      flag &amp; i &#x3D;&gt; 1따라서 1, 2 로 표현 됩니다.\n\n위 코드를 실행해보면 아래처럼 결과가 나오는 것을 확인 할 수 있습니다.\n123456721 2X\tX\t1\tX\tX\t2\t1\t2\t총 경우의 수 : 4\n\n\n이렇게 부분집합에 대해서 알아 보았습니다.그럼 관련 알고리즘 문제 링크를 걸어드리며 마무리 짓도록 하겠습니다. 감사합니다.😁\n관련 알고리즘 문제&nbsp;&nbsp;부분수열의 합","dateCreated":"2020-05-23T18:43:26+09:00","dateModified":"2020-07-07T15:43:58+09:00","datePublished":"2020-05-23T18:43:26+09:00","description":"알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다.\nSubset BitMask","headline":"SubSet(부분집합) - [Algorithm Skill]","image":["algorithm.png","noImage.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/05/23/algorithm-subset/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/05/23/algorithm-subset/","keywords":"Algorithm, Subset, Bit, BitMask","thumbnailUrl":"algorithm.png"}</script>
     <meta name="description" content="알고리즘의 기본적인 스킬을 다룹니다.이번 포스트에서는 알고리즘의 스킬 중 부분집합(Subset)에 대해서 알아 보려고 합니다. Subset BitMask">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="SubSet(부분집합) - [Algorithm Skill]">
@@ -30,7 +30,7 @@
 <meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="chrome-extension://anenheoccfogllpbpcmbbpcbjpogeehe/svg/9.svg">
 <meta property="article:published_time" content="2020-05-23T09:43:26.000Z">
-<meta property="article:modified_time" content="2020-05-23T10:40:47.067Z">
+<meta property="article:modified_time" content="2020-07-07T06:43:58.314Z">
 <meta property="article:author" content="Myeong Seok KIM">
 <meta property="article:tag" content="Algorithm">
 <meta property="article:tag" content="Skill">
@@ -54,6 +54,12 @@
         <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
     
     
+        <meta property="og:image" content="https://msnodeve.github.io/2020/05/23/algorithm-subset/algorithm.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2020/05/23/algorithm-subset/algorithm.png"/>
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2020/05/23/algorithm-subset/noImage.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2020/05/23/algorithm-subset/noImage.png"/>
     
     
     <!--STYLES-->
@@ -294,25 +300,13 @@
 </nav>
 
             
-            <div id="main" data-behavior="4"
-                 class="
-                        hasCoverMetaIn
-                        ">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-2766237193476584"
-     data-ad-slot="5907900553"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-                
-<article class="post">
-    
-    
-        <div class="post-header main-content-wrap text-left">
+        <div class="post-header-cover
+                    text-left
+                    post-header-cover--partial"
+             style="background-image:url('/2020/05/23/algorithm-subset/noImage.png');"
+             data-behavior="4">
+            
+                <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
             SubSet(부분집합) - [Algorithm Skill]
@@ -337,6 +331,26 @@
     
 </div>
 
+            
+        </div>
+
+            <div id="main" data-behavior="4"
+                 class="hasCover
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
@@ -1065,7 +1079,7 @@
                 data-message-zero="포스트가 없습니다."
                 data-message-one="1 개의 포스트가 있습니다."
                 data-message-other="{n} 개의 포스트가 있습니다.">
-                22 개의 포스트가 있습니다.
+                23 개의 포스트가 있습니다.
             </p>
         </div>
     </div>

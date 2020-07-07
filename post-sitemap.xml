@@ -8,16 +8,24 @@
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/2019/10/31/hexo-blog-init/</loc>
-        <lastmod>2020-07-05T06:52:57.510Z</lastmod>
+        <loc>https://msnodeve.github.io/2020/05/24/algorithm-lis/</loc>
+        <lastmod>2020-07-07T06:44:00.439Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/2020/07/05/os-process/</loc>
-        <lastmod>2020-07-05T06:50:23.837Z</lastmod>
+        <loc>https://msnodeve.github.io/2020/05/23/algorithm-subset/</loc>
+        <lastmod>2020-07-07T06:43:58.314Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/2020/03/17/algorithm-recursive/</loc>
+        <lastmod>2020-07-07T06:43:55.357Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -25,7 +33,15 @@
 
     <url>
         <loc>https://msnodeve.github.io/2020/07/03/os-structure/</loc>
-        <lastmod>2020-07-03T05:48:46.750Z</lastmod>
+        <lastmod>2020-07-07T06:41:38.593Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/2020/07/07/os-process-operation/</loc>
+        <lastmod>2020-07-07T06:41:35.668Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -33,7 +49,23 @@
 
     <url>
         <loc>https://msnodeve.github.io/2020/07/02/os-history/</loc>
-        <lastmod>2020-07-02T09:34:14.148Z</lastmod>
+        <lastmod>2020-07-07T06:41:31.800Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/2020/07/05/os-process/</loc>
+        <lastmod>2020-07-07T06:41:28.221Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/2019/10/31/hexo-blog-init/</loc>
+        <lastmod>2020-07-05T06:52:57.510Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -136,32 +168,8 @@
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/2020/05/24/algorithm-lis/</loc>
-        <lastmod>2020-05-24T08:04:24.158Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>https://msnodeve.github.io/2019/12/24/story-ssafy-3rd/</loc>
         <lastmod>2020-05-23T10:49:12.929Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/2020/05/23/algorithm-subset/</loc>
-        <lastmod>2020-05-23T10:40:47.067Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/2020/03/17/algorithm-recursive/</loc>
-        <lastmod>2020-05-05T05:23:05.208Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
