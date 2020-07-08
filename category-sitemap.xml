@@ -8,6 +8,20 @@
     </url>
 
     <url>
+        <loc>https://msnodeve.github.io/categories/os/thread/</loc>
+        <lastmod>2020-07-08T14:00:23.200Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/os/</loc>
+        <lastmod>2020-07-08T14:00:23.200Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://msnodeve.github.io/categories/algorithm/skill/lis/dp/binary-search/</loc>
         <lastmod>2020-07-07T06:44:00.439Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -65,13 +79,6 @@
 
     <url>
         <loc>https://msnodeve.github.io/categories/os/structure/</loc>
-        <lastmod>2020-07-07T06:41:38.593Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://msnodeve.github.io/categories/os/</loc>
         <lastmod>2020-07-07T06:41:38.593Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
