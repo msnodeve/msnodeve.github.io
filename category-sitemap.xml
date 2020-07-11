@@ -8,14 +8,21 @@
     </url>
 
     <url>
-        <loc>https://msnodeve.github.io/categories/os/thread/</loc>
-        <lastmod>2020-07-08T14:00:23.200Z</lastmod>
+        <loc>https://msnodeve.github.io/categories/os/cpu-schedulinig/</loc>
+        <lastmod>2020-07-11T14:04:31.002Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://msnodeve.github.io/categories/os/</loc>
+        <lastmod>2020-07-11T14:04:31.002Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://msnodeve.github.io/categories/os/thread/</loc>
         <lastmod>2020-07-08T14:00:23.200Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>

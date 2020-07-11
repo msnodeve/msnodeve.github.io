@@ -8,6 +8,14 @@
     </url>
 
     <url>
+        <loc>https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/</loc>
+        <lastmod>2020-07-11T14:04:31.002Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://msnodeve.github.io/2020/07/08/os-thread/</loc>
         <lastmod>2020-07-08T14:00:23.200Z</lastmod>
         <changefreq>weekly</changefreq>

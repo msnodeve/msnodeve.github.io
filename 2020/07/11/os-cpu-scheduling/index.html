@@ -1,0 +1,1140 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="msnodevLog">
+    <title>CPU 스케줄링[운영체제] - msnodevLog</title>
+    <meta name="author" content="Myeong Seok KIM">
+    <script data-ad-client="ca-pub-2766237193476584" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+        <meta name="keywords" content="algorithm,OS,Operating,System,운영체제,CPU Scheduling,CPU 스케줄링,스케줄링,스케쥴링,CPU">
+    
+    
+        <link rel="icon" href="https://msnodeve.github.io/assets/images/cover.jpg">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png"},"articleBody":"\n\nCPU 스케줄링\nCPU 스케줄러는 프로세스가 생성된 후 종료될 때까지 모든 상태 변화를 조정하는 일을 하며, CPU 스케줄링은 CPU 스케줄러가 하는 모든 작업을 가리킴\n\n\n스케줄링의 단계\n고수준 스케줄링시스템 내의 전체 프로세스 수를 조절하는 것전체 시스템의 부하를 고여하여 작업을 시작할지 말지를 결정멀티프로그래밍 정도(degree of multiprogramming)\n중간 수준 스케줄링전체 시스템의 활성화된 프로세스 수를 조절하여 과부하를 막는 것\n저수준 스케줄링어떤 프로세스에 CPU를 할당할지, 어떤 프로세스를 대기 상태로 보낼지 등을 결정하는 것오늘날의 CPU 스케줄러는 대부분 중간 수준 스케줄링과 저수준 스케줄링으로 구성되어 있음\n\n\n스케줄링의 목적\n공평성모든 프로세스가 자원을 공평하게 배정받아야 하며, 자원 배정 과정에서 특정 프로세스가 배제되어서는 안됨\n효율성시스템 자원이 유휴 시간 없이 사용되도록 스케줄링을 하고, 유휴 자원을 사용하려는 프로세스에는 우선권을 주어야 함\n안정성우선순위를 사용하여 중요 프로세스가 먼저 작동하도록 배정함으로써 시스템 자원을 점유하거나 파괴하려는 프로세스로부터 자원을 보호해야 함\n확장성프로세스가 증가해도 시스템이 안정적으로 작동하도록 조치해야함시스템 자원이 늘어나는 경우 이 혜택이 시스템에 반영되게 해야함\n반응 시간 보장응답이 없는 경우 사용자는 시스템이 멈춘 것으로 가정하기 때문에 시스템은 적절한 시간안에 프로세스의 요구에 반응해야 함\n무한 연기 방지특정 프로세스의 작업이 무한히 연기되어서는 안됨\n\n\n스케줄링 시 고려 사항\n우선순위가 높은 프로세스에 CPU를 먼저 할당함.우선순위가 높은 프로세스는 커널 프로세스, 전면 프로세스, 대화형 프로세스, 입출력 집중 프로세스우선순위가 낮은 프로세스는 일반 프로세스, 후면 프로세스, 일괄 작업 프로세스, CPU 집중 프로세스\n\n\n다중 큐\n프로세스를 효율적으로 관리하기 위해 큐를 여러 개 두어 관리하는 것준비 상태에서는 우선순위에 따라 다중 큐를 운영대기 상태에서는 같은 입출력을 요구한 프로세스들을 모아 다중 큐를 운영\n\n\n선점형? 비선점형?\n선점형 스케줄링어떤 프로세스가 CPU를 할당받아 실행 중이더라도 운영체제가 CPU를 강제로 빼앗을 수 있는 스케줄링 방식\n비선점형 스케줄링어떤 프로세스가 CPU를 점유하면 다른 프로세스가 이를 빼앗을 수 없는 스케줄링 방식\n\n\n스케줄링 알고리즘\nFCFS(First Come First Served) 스케줄링준비 큐에 도착한 순서대로 CPU를 할당하는 비선점형 스케줄링 방식선입선출 스케줄링이라고도 함초기의 일괄 작업 시스템에서 사용됨모든 프로세스는 우선순위가 동일\nSJF(Shortest Job First) 스케줄링준비 큐에 있는 프로세스 중에서 실행 시간이 가장 짧은 작업부터 CPU를 할당하는 비선점형 방식최단 작업 우선 스케줄링이라고도 함\n단점운영체제가 프로세스의 종료 시간을 정확하게 예측하기 어렵다프로세스가 자신의 작업 시간을 운영체제에게 알려주어 해결가능공평하지 못하다에이징으로 해결가능프로세스가 자신의 순서를 양보할 때마다 나이를 한 실씩 먹어 최대 몇 살까지 양보하도록 규정하는 것어떤 기준으로 정할지 문제\nHRN(Highest Response Ratio Next) 스케줄링CPU를 할당받기 위해 기다린 시간과 CPU 사용 시간을 고려하여 스케줄링을 하는 비선점형 방식최고 응답률 우선 스케줄링이라고도 함우선순위 = (대기 시간 + CPU 사용 시간) / CPU 사용 시간\n라운드 로빈 스케줄링한 프로세스가 할당받은 시간(타임 슬라이스) 동안 작업을 하다가 작업을 완료하지 못하면 준비 큐의 맨 뒤로 가서 자기 차례를 기다리는 선점형 방식순서 순환 방식이라고도 함가장 단순한 선점형 스케줄링 방식\n타임 슬라이스가 큰 경우너무 크면 하나의 작업이 끝난 뒤 다음 작업이 시작 되는 것 처럼 보임\n타임 슬라이스가 작은 경우여러 프로그램이 동시에 실행되는 것처럼 느낄수 있으나, 문맥 교환(Context Swiching)이 너무 자주 일어나 걸리는 시간이 실제 작업 시간보다 상대적으로 커지며, 이는 실제 작업을 못하는 경우가 발생할 수 있음\nSRT(Shortest Remaing Time) 스케줄링기본적으로 라운드 로빈 스케줄링을 사용하지만, CPU를 할당받을 프로세스를 선택할 때 남아있는 작업 시간이 가장 적은 프로세스를 선택하는 선점형 방식최소 잔류 시간 우선 스케줄링이라고도 함\n우선순위 스케줄링프로세스는 중요도에 따라 우선순위를 갖는데 이러한 우선순위를 반영하여 CPU를 할당하는 방식선점형, 비선점형 방식으로 구현 가능\n다단계 큐 스케줄링우선순위에 따라 준비 큐를 여러 개 사용하는 비선점형 방식프로세스는 운영체제로부터 부여받은 우선순위에 따라 해당 우선순위 큐에 삽입되어 실행\n다단계 피드백 큐 스케줄링다단계 큐 스케줄링과 기본적인 형태가 같지만, CPU를 사용하고 난 프로세스가 원래의 큐로 되돌아가지 않고 우선순위가 하나 낮은 큐의 끝으로 들어감프로세스의 우선순위가 낮아진다고 할지라도 커널 프로세스가 일반 프로세스의 큐에 삽입되지는 않음오늘날의 운영체제가 CPU 스케줄링을 위해 일반적으로 사용하는 방식\n\n\n인터럽트 벡터\n시스템에는 많은 입출력 장치가 있기 때문에 입출력이 동시에 끝날 경우 여러개의 인터럽트가 한번에 처리됨동시에 끝나는 인터럽트를 처리하기 위해 인터럽트 벡터라는 자료구조를 사용\n\n\n인터럽트 처리 과정\n\n인터럽트가 발생하면 현재 실행 중인 프로세스는 일시 정지 상태가 되며, 재시작하기 위해 현재 프로세 관련 정보를 임시로 저장\n인터럽트 컨트롤러가 실행되어 인터럽트의 처리 순서를 결정. 이때 여러 개의 인터럽트가 동시에 발생했다면 인터럽트 우선순위를 고려하여 중요한 인터럽트부터 처리하도록 순서를 결정\n먼저 처리할 인터럽트가 결정되면 인터럽트 백터에 등록된 인터럽트 핸들러가 실행\n인터럽트 벡터에 연결된 핸들러가 인터럽트 처리를 마치면 일시 정지된 프로세스가 다시 실행되거나 종료됨\n\n","dateCreated":"2020-07-11T22:28:27+09:00","dateModified":"2020-07-11T23:04:31+09:00","datePublished":"2020-07-11T22:28:27+09:00","description":"운영체제 CPU 스케줄링 에 대해서 알아보자","headline":"CPU 스케줄링[운영체제]","image":["study.png","noImage.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"},"publisher":{"@type":"Organization","name":"Myeong Seok KIM","sameAs":["https://github.com/msnodeve","https://facebook.com/Kstoo2","https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"],"image":"dev_profile_logo.png","logo":{"@type":"ImageObject","url":"dev_profile_logo.png"}},"url":"https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/","keywords":"Operating System, OS, CPU Scheduling","thumbnailUrl":"study.png"}</script>
+    <meta name="description" content="운영체제 CPU 스케줄링 에 대해서 알아보자">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="CPU 스케줄링[운영체제]">
+<meta property="og:url" content="https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/index.html">
+<meta property="og:site_name" content="msnodevLog">
+<meta property="og:description" content="운영체제 CPU 스케줄링 에 대해서 알아보자">
+<meta property="og:locale" content="ko_KR">
+<meta property="article:published_time" content="2020-07-11T13:28:27.000Z">
+<meta property="article:modified_time" content="2020-07-11T14:04:31.002Z">
+<meta property="article:author" content="Myeong Seok KIM">
+<meta property="article:tag" content="OS">
+<meta property="article:tag" content="Operating">
+<meta property="article:tag" content="System">
+<meta property="article:tag" content="운영체제">
+<meta property="article:tag" content="CPU Scheduling">
+<meta property="article:tag" content="CPU 스케줄링">
+<meta property="article:tag" content="스케줄링">
+<meta property="article:tag" content="스케쥴링">
+<meta property="article:tag" content="CPU">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/assets/images/dev_profile_logo.png"/>
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/study.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/study.png"/>
+    
+    
+        <meta property="og:image" content="https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/noImage.png"/>
+        <meta class="swiftype" name="image" data-type="enum" content="https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/noImage.png"/>
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/all.css">
+
+    
+<link rel="stylesheet" href="/assets/css/jquery.fancybox.css">
+
+    
+<link rel="stylesheet" href="/assets/css/thumbs.css">
+
+    
+<link rel="stylesheet" href="/assets/css/tranquilpeak.css">
+
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-153775936-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-153775936-1');
+    </script>
+
+
+    
+
+    
+        
+    
+    <link rel="canonical" href="https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"/>
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/"
+            aria-label=""
+        >
+            msnodevLog
+        </a>
+    </div>
+    
+        
+            <a
+                class="header-right-picture "
+                href="/about"
+                aria-label="링크 열기: /about"
+            >
+        
+        
+            <img class="header-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="저자에 대해 더 알아보기"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+                </a>
+                <h4 class="sidebar-profile-name">Myeong Seok KIM</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="카테고리"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">카테고리</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="태그"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">태그</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="아카이브"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">아카이브</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="검색"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">검색</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/msnodeve"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/Kstoo2"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/in/myeongseok-kim-bb6b26188/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="false"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+        <div class="post-header-cover
+                    text-left
+                    post-header-cover--partial"
+             style="background-image:url('/2020/07/11/os-cpu-scheduling/noImage.png');"
+             data-behavior="4">
+            
+                <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            CPU 스케줄링[운영체제]
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2020-07-11T22:28:27+09:00">
+	
+		    2020/07/11
+    	
+    </time>
+    
+        <span>카테고리 </span>
+        
+    <a class="category-link" href="/categories/os/">os</a>, <a class="category-link" href="/categories/os/cpu-schedulinig/">cpu schedulinig</a>
+
+
+    
+</div>
+
+    
+</div>
+
+            
+        </div>
+
+            <div id="main" data-behavior="4"
+                 class="hasCover
+                        hasCoverMetaIn
+                        ">
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+                
+<article class="post">
+    
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+
+<h2 id="CPU-스케줄링"><a href="#CPU-스케줄링" class="headerlink" title="CPU 스케줄링"></a>CPU 스케줄링</h2><blockquote>
+<p>CPU 스케줄러는 프로세스가 생성된 후 종료될 때까지 모든 상태 변화를 조정하는 일을 하며, CPU 스케줄링은 CPU 스케줄러가 하는 모든 작업을 가리킴</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="스케줄링의-단계"><a href="#스케줄링의-단계" class="headerlink" title="스케줄링의 단계"></a>스케줄링의 단계</h2><blockquote>
+<h4 id="고수준-스케줄링"><a href="#고수준-스케줄링" class="headerlink" title="고수준 스케줄링"></a>고수준 스케줄링</h4><p>시스템 내의 전체 프로세스 수를 조절하는 것<br>전체 시스템의 부하를 고여하여 작업을 시작할지 말지를 결정<br>멀티프로그래밍 정도(degree of multiprogramming)</p>
+<h4 id="중간-수준-스케줄링"><a href="#중간-수준-스케줄링" class="headerlink" title="중간 수준 스케줄링"></a>중간 수준 스케줄링</h4><p>전체 시스템의 활성화된 프로세스 수를 조절하여 과부하를 막는 것</p>
+<h4 id="저수준-스케줄링"><a href="#저수준-스케줄링" class="headerlink" title="저수준 스케줄링"></a>저수준 스케줄링</h4><p>어떤 프로세스에 CPU를 할당할지, 어떤 프로세스를 대기 상태로 보낼지 등을 결정하는 것<br>오늘날의 CPU 스케줄러는 대부분 중간 수준 스케줄링과 저수준 스케줄링으로 구성되어 있음</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="스케줄링의-목적"><a href="#스케줄링의-목적" class="headerlink" title="스케줄링의 목적"></a>스케줄링의 목적</h2><blockquote>
+<h4 id="공평성"><a href="#공평성" class="headerlink" title="공평성"></a>공평성</h4><p>모든 프로세스가 자원을 공평하게 배정받아야 하며, 자원 배정 과정에서 특정 프로세스가 배제되어서는 안됨</p>
+<h4 id="효율성"><a href="#효율성" class="headerlink" title="효율성"></a>효율성</h4><p>시스템 자원이 유휴 시간 없이 사용되도록 스케줄링을 하고, 유휴 자원을 사용하려는 프로세스에는 우선권을 주어야 함</p>
+<h4 id="안정성"><a href="#안정성" class="headerlink" title="안정성"></a>안정성</h4><p>우선순위를 사용하여 중요 프로세스가 먼저 작동하도록 배정함으로써 시스템 자원을 점유하거나 파괴하려는 프로세스로부터 자원을 보호해야 함</p>
+<h4 id="확장성"><a href="#확장성" class="headerlink" title="확장성"></a>확장성</h4><p>프로세스가 증가해도 시스템이 안정적으로 작동하도록 조치해야함<br>시스템 자원이 늘어나는 경우 이 혜택이 시스템에 반영되게 해야함</p>
+<h4 id="반응-시간-보장"><a href="#반응-시간-보장" class="headerlink" title="반응 시간 보장"></a>반응 시간 보장</h4><p>응답이 없는 경우 사용자는 시스템이 멈춘 것으로 가정하기 때문에 시스템은 적절한 시간안에 프로세스의 요구에 반응해야 함</p>
+<h4 id="무한-연기-방지"><a href="#무한-연기-방지" class="headerlink" title="무한 연기 방지"></a>무한 연기 방지</h4><p>특정 프로세스의 작업이 무한히 연기되어서는 안됨</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="스케줄링-시-고려-사항"><a href="#스케줄링-시-고려-사항" class="headerlink" title="스케줄링 시 고려 사항"></a>스케줄링 시 고려 사항</h2><blockquote>
+<p>우선순위가 높은 프로세스에 CPU를 먼저 할당함.<br>우선순위가 높은 프로세스는 커널 프로세스, 전면 프로세스, 대화형 프로세스, 입출력 집중 프로세스<br>우선순위가 낮은 프로세스는 일반 프로세스, 후면 프로세스, 일괄 작업 프로세스, CPU 집중 프로세스</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="다중-큐"><a href="#다중-큐" class="headerlink" title="다중 큐"></a>다중 큐</h2><blockquote>
+<p>프로세스를 효율적으로 관리하기 위해 큐를 여러 개 두어 관리하는 것<br>준비 상태에서는 우선순위에 따라 다중 큐를 운영<br>대기 상태에서는 같은 입출력을 요구한 프로세스들을 모아 다중 큐를 운영</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="선점형-비선점형"><a href="#선점형-비선점형" class="headerlink" title="선점형? 비선점형?"></a>선점형? 비선점형?</h2><blockquote>
+<h4 id="선점형-스케줄링"><a href="#선점형-스케줄링" class="headerlink" title="선점형 스케줄링"></a>선점형 스케줄링</h4><p>어떤 프로세스가 CPU를 할당받아 실행 중이더라도 운영체제가 CPU를 강제로 빼앗을 수 있는 스케줄링 방식</p>
+<h4 id="비선점형-스케줄링"><a href="#비선점형-스케줄링" class="headerlink" title="비선점형 스케줄링"></a>비선점형 스케줄링</h4><p>어떤 프로세스가 CPU를 점유하면 다른 프로세스가 이를 빼앗을 수 없는 스케줄링 방식</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="스케줄링-알고리즘"><a href="#스케줄링-알고리즘" class="headerlink" title="스케줄링 알고리즘"></a>스케줄링 알고리즘</h2><blockquote>
+<h4 id="FCFS-First-Come-First-Served-스케줄링"><a href="#FCFS-First-Come-First-Served-스케줄링" class="headerlink" title="FCFS(First Come First Served) 스케줄링"></a>FCFS(First Come First Served) 스케줄링</h4><p>준비 큐에 도착한 순서대로 CPU를 할당하는 비선점형 스케줄링 방식<br>선입선출 스케줄링이라고도 함<br>초기의 일괄 작업 시스템에서 사용됨<br>모든 프로세스는 우선순위가 동일<br><br></p>
+<h4 id="SJF-Shortest-Job-First-스케줄링"><a href="#SJF-Shortest-Job-First-스케줄링" class="headerlink" title="SJF(Shortest Job First) 스케줄링"></a>SJF(Shortest Job First) 스케줄링</h4><p>준비 큐에 있는 프로세스 중에서 실행 시간이 가장 짧은 작업부터 CPU를 할당하는 비선점형 방식<br>최단 작업 우선 스케줄링이라고도 함</p>
+<h5 id="단점"><a href="#단점" class="headerlink" title="단점"></a>단점</h5><p><strong>운영체제가 프로세스의 종료 시간을 정확하게 예측하기 어렵다</strong><br>프로세스가 자신의 작업 시간을 운영체제에게 알려주어 해결가능<br><strong>공평하지 못하다</strong><br>에이징으로 해결가능<br>프로세스가 자신의 순서를 양보할 때마다 나이를 한 실씩 먹어 최대 몇 살까지 양보하도록 규정하는 것<br>어떤 기준으로 정할지 문제<br><br></p>
+<h4 id="HRN-Highest-Response-Ratio-Next-스케줄링"><a href="#HRN-Highest-Response-Ratio-Next-스케줄링" class="headerlink" title="HRN(Highest Response Ratio Next) 스케줄링"></a>HRN(Highest Response Ratio Next) 스케줄링</h4><p>CPU를 할당받기 위해 기다린 시간과 CPU 사용 시간을 고려하여 스케줄링을 하는 비선점형 방식<br>최고 응답률 우선 스케줄링이라고도 함<br>우선순위 = (대기 시간 + CPU 사용 시간) / CPU 사용 시간<br><br></p>
+<h4 id="라운드-로빈-스케줄링"><a href="#라운드-로빈-스케줄링" class="headerlink" title="라운드 로빈 스케줄링"></a>라운드 로빈 스케줄링</h4><p>한 프로세스가 할당받은 시간(타임 슬라이스) 동안 작업을 하다가 작업을 완료하지 못하면 준비 큐의 맨 뒤로 가서 자기 차례를 기다리는 선점형 방식<br>순서 순환 방식이라고도 함<br>가장 단순한 선점형 스케줄링 방식</p>
+<h5 id="타임-슬라이스가-큰-경우"><a href="#타임-슬라이스가-큰-경우" class="headerlink" title="타임 슬라이스가 큰 경우"></a>타임 슬라이스가 큰 경우</h5><p>너무 크면 하나의 작업이 끝난 뒤 다음 작업이 시작 되는 것 처럼 보임</p>
+<h5 id="타임-슬라이스가-작은-경우"><a href="#타임-슬라이스가-작은-경우" class="headerlink" title="타임 슬라이스가 작은 경우"></a>타임 슬라이스가 작은 경우</h5><p>여러 프로그램이 동시에 실행되는 것처럼 느낄수 있으나, 문맥 교환(Context Swiching)이 너무 자주 일어나 걸리는 시간이 실제 작업 시간보다 상대적으로 커지며, 이는 실제 작업을 못하는 경우가 발생할 수 있음<br><br></p>
+<h4 id="SRT-Shortest-Remaing-Time-스케줄링"><a href="#SRT-Shortest-Remaing-Time-스케줄링" class="headerlink" title="SRT(Shortest Remaing Time) 스케줄링"></a>SRT(Shortest Remaing Time) 스케줄링</h4><p>기본적으로 라운드 로빈 스케줄링을 사용하지만, CPU를 할당받을 프로세스를 선택할 때 남아있는 작업 시간이 가장 적은 프로세스를 선택하는 선점형 방식<br>최소 잔류 시간 우선 스케줄링이라고도 함<br><br></p>
+<h4 id="우선순위-스케줄링"><a href="#우선순위-스케줄링" class="headerlink" title="우선순위 스케줄링"></a>우선순위 스케줄링</h4><p>프로세스는 중요도에 따라 우선순위를 갖는데 이러한 우선순위를 반영하여 CPU를 할당하는 방식<br>선점형, 비선점형 방식으로 구현 가능<br><br></p>
+<h4 id="다단계-큐-스케줄링"><a href="#다단계-큐-스케줄링" class="headerlink" title="다단계 큐 스케줄링"></a>다단계 큐 스케줄링</h4><p>우선순위에 따라 준비 큐를 여러 개 사용하는 비선점형 방식<br>프로세스는 운영체제로부터 부여받은 우선순위에 따라 해당 우선순위 큐에 삽입되어 실행<br><br></p>
+<h4 id="다단계-피드백-큐-스케줄링"><a href="#다단계-피드백-큐-스케줄링" class="headerlink" title="다단계 피드백 큐 스케줄링"></a>다단계 피드백 큐 스케줄링</h4><p>다단계 큐 스케줄링과 기본적인 형태가 같지만, CPU를 사용하고 난 프로세스가 원래의 큐로 되돌아가지 않고 우선순위가 하나 낮은 큐의 끝으로 들어감<br>프로세스의 우선순위가 낮아진다고 할지라도 커널 프로세스가 일반 프로세스의 큐에 삽입되지는 않음<br>오늘날의 운영체제가 CPU 스케줄링을 위해 일반적으로 사용하는 방식</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="인터럽트-벡터"><a href="#인터럽트-벡터" class="headerlink" title="인터럽트 벡터"></a>인터럽트 벡터</h2><blockquote>
+<p>시스템에는 많은 입출력 장치가 있기 때문에 입출력이 동시에 끝날 경우 여러개의 인터럽트가 한번에 처리됨<br>동시에 끝나는 인터럽트를 처리하기 위해 인터럽트 벡터라는 자료구조를 사용</p>
+</blockquote>
+<p><br><br></p>
+<h2 id="인터럽트-처리-과정"><a href="#인터럽트-처리-과정" class="headerlink" title="인터럽트 처리 과정"></a>인터럽트 처리 과정</h2><blockquote>
+<ol>
+<li>인터럽트가 발생하면 현재 실행 중인 프로세스는 일시 정지 상태가 되며, 재시작하기 위해 현재 프로세 관련 정보를 임시로 저장</li>
+<li>인터럽트 컨트롤러가 실행되어 인터럽트의 처리 순서를 결정. 이때 여러 개의 인터럽트가 동시에 발생했다면 인터럽트 우선순위를 고려하여 중요한 인터럽트부터 처리하도록 순서를 결정</li>
+<li>먼저 처리할 인터럽트가 결정되면 인터럽트 백터에 등록된 인터럽트 핸들러가 실행</li>
+<li>인터럽트 벡터에 연결된 핸들러가 인터럽트 처리를 마치면 일시 정지된 프로세스가 다시 실행되거나 종료됨</li>
+</ol>
+</blockquote>
+            
+
+
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">태그</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/cpu-scheduling/" rel="tag">CPU Scheduling</a> <a class="tag tag--primary tag--small t-link" href="/tags/os/" rel="tag">OS</a> <a class="tag tag--primary tag--small t-link" href="/tags/operating-system/" rel="tag">Operating System</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/07/08/os-thread/"
+                    data-tooltip="스레드 [운영체제]"
+                    aria-label="다음: 스레드 [운영체제]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2766237193476584"
+     data-ad-slot="5907900553"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2020 Myeong Seok KIM. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">이전</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2020/07/08/os-thread/"
+                    data-tooltip="스레드 [운영체제]"
+                    aria-label="다음: 스레드 [운영체제]"
+                >
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">다음</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="이 포스트 공유하기"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                    title="Facebook에 공유하기"
+                    aria-label="Facebook에 공유하기"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                    title="Twitter에 공유하기"
+                    aria-label="Twitter에 공유하기"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                    title="Google+에 공유하기"
+                    aria-label="Google+에 공유하기"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="맨 위로">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                        aria-label="Facebook에 공유하기"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Facebook에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                        aria-label="Twitter에 공유하기"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Twitter에 공유하기</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=https://msnodeve.github.io/2020/07/11/os-cpu-scheduling/"
+                        aria-label="Google+에 공유하기"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Google+에 공유하기</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="/assets/images/dev_profile_logo.png" alt="저자 이미지"/>
+        
+            <h4 id="about-card-name">Myeong Seok KIM</h4>
+        
+            <div id="about-card-bio"><p>새로운 것, 필요하다면 일단 한 번은 해보자.</br>그리고 두 번 이상 개발 해보자.</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>SSAFY 3rd 교육생</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Seoul, Republic of Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="/assets/images/logo-algolia-nebula-blue-full.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">포스트가 없습니다.</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2018/10/23/mac-settings/"
+                            aria-label=": Mac에서 멋진 터미널 만들기"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2018/10/23/mac-settings/agnoster.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2018/10/23/mac-settings/"
+                            aria-label=": Mac에서 멋진 터미널 만들기"
+                        >
+                            <h3 class="media-heading">Mac에서 멋진 터미널 만들기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2018년 10월 23일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="멋진-맥-터미널-만들기"><a href="#멋진-맥-터미널-만들기" class="headerlink" title="멋진 맥 터미널 만들기!"></a>멋진 맥 터미널 만들기!</h3><p>이번 포스트에서는 멋진 맥 개발환경을 만들어 보도록 하겠습니다.</p>
+<p><code>맥</code> <code>개발환경</code> <code>만들어보자!</code> <code>터미널</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/01/08/infra-install-docker-compose/"
+                            aria-label=": Docker Compose 설치하기"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/01/08/infra-install-docker-compose/docker-thumbnail.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/01/08/infra-install-docker-compose/"
+                            aria-label=": Docker Compose 설치하기"
+                        >
+                            <h3 class="media-heading">Docker Compose 설치하기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 1월 8일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="Docker-Compose-설치하기"><a href="#Docker-Compose-설치하기" class="headerlink" title="Docker Compose 설치하기"></a>Docker Compose 설치하기</h3><p>이번 포스트에서는 도커를 설치하는 방법에 대해서 알아 보도록 하겠습니다.</p>
+<p><code>도커</code> <code>도커컴포즈</code> <code>Docker</code> <code>Docker Compose</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                            aria-label=": AWS? AWS가 뭐야? - [Cloud Infra]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/04/26/cloud-aws/aws-thumbnail.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/04/26/cloud-aws/"
+                            aria-label=": AWS? AWS가 뭐야? - [Cloud Infra]"
+                        >
+                            <h3 class="media-heading">AWS? AWS가 뭐야? - [Cloud Infra]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 4월 26일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="AWS가-뭐야"><a href="#AWS가-뭐야" class="headerlink" title="AWS가 뭐야?"></a>AWS가 뭐야?</h3><p>이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>AWS</code> <code>Amazon Web Services</code> <code>Infra</code> <code>비용은?</code> <code>이게뭔데!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/"
+                            aria-label=": AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/aws-thumbnail.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/05/01/cloud-aws-ec2/"
+                            aria-label=": AWS EC2에 대해서 알아보기 - [Cloud Infra]"
+                        >
+                            <h3 class="media-heading">AWS EC2에 대해서 알아보기 - [Cloud Infra]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 5월 1일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="AWS가-뭐야"><a href="#AWS가-뭐야" class="headerlink" title="AWS가 뭐야?"></a>AWS가 뭐야?</h3><p>이번 포스트에서는  AWS(Amazon Web Services)에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>AWS</code> <code>Amazon Web Services</code> <code>Infra</code> <code>비용은?</code> <code>이게뭔데!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/"
+                            aria-label=": Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/flask-thumbnail1.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/07/30/flask-restapi-example1/"
+                            aria-label=": Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 실행(1) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 7월 30일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="첫번째-단계"><a href="#첫번째-단계" class="headerlink" title="첫번째 단계"></a>첫번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework 프로젝트를 생성하고 실행해보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>프로젝트 생성하는 방법!</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/"
+                            aria-label=": Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/flask-thumbnail2.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/01/flask-restapi-example2/"
+                            aria-label=": Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 설정 및 MySQL(2) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 1일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="두번째-단계"><a href="#두번째-단계" class="headerlink" title="두번째 단계"></a>두번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework 설정 및 MySQL에 관하여 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>MySQL</code> <code>설정</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/"
+                            aria-label=": Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/flask-thumbnail3.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/04/flask-restapi-example3/"
+                            aria-label=": Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board ORM 그리고 Model(3) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 4일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="세번째-단계"><a href="#세번째-단계" class="headerlink" title="세번째 단계"></a>세번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework ORM, Model에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>ORM</code> <code>Model</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                            aria-label=": Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/flask-thumbnail4.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/05/flask-restapi-example4/"
+                            aria-label=": Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board 만들기 MVC 그리고 REST API Swagger(4) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 5일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="네번째-단계"><a href="#네번째-단계" class="headerlink" title="네번째 단계"></a>네번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework MVC, Swagger API 문서 자동화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>Swagger</code> <code>MVC</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/"
+                            aria-label=": Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/flask-thumbnail5.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/08/06/flask-restapi-example5/"
+                            aria-label=": Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]"
+                        >
+                            <h3 class="media-heading">Flask REST API CRUD Board Auth 그리고 암호화(5) - [Backend Framework]</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 8월 6일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="다섯번째-단계"><a href="#다섯번째-단계" class="headerlink" title="다섯번째 단계"></a>다섯번째 단계</h3><p>이번 포스트에서는 vscode 개발환경에서 Flask Framework Auth, 암호화에 대해서 알아보는 시간을 가져 보도록 하겠습니다.</p>
+<p><code>플라스크</code> <code>Flask</code> <code>vscode</code> <code>Framework</code> <code>암호화</code> <code>Auth</code></p></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                            aria-label=": Hexo Blog 만들기"
+                        >
+                            <img class="media-image" src="https://msnodeve.github.io/2019/10/31/hexo-blog-init/noImage.png" width="90" height="90"/>
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a
+                            class="link-unstyled"
+                            href="https://msnodeve.github.io/2019/10/31/hexo-blog-init/"
+                            aria-label=": Hexo Blog 만들기"
+                        >
+                            <h3 class="media-heading">Hexo Blog 만들기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2019년 10월 31일
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"><h3 id="Github-Hexo-Blog-만들어-보기"><a href="#Github-Hexo-Blog-만들어-보기" class="headerlink" title="Github Hexo Blog 만들어 보기"></a>Github Hexo Blog 만들어 보기</h3><p>ㅤ</div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="포스트가 없습니다."
+                data-message-one="1 개의 포스트가 있습니다."
+                data-message-other="{n} 개의 포스트가 있습니다.">
+                25 개의 포스트가 있습니다.
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/jquery.js"></script>
+
+
+<script src="/assets/js/jquery.fancybox.js"></script>
+
+
+<script src="/assets/js/thumbs.js"></script>
+
+
+<script src="/assets/js/tranquilpeak.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+    
+<script src="/assets/js/moment-with-locales.js"></script>
+
+    
+<script src="/assets/js/algoliasearch.js"></script>
+
+    <script>
+      var algoliaClient = algoliasearch('R1M5F6PCKT', 'c742103764cdb380400cb1b22f428418');
+      var algoliaIndex = algoliaClient.initIndex('msnodeve_blog');
+    </script>
+
+
+    </body>
+</html>
